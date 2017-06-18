@@ -2,8 +2,8 @@
 
 namespace Pnz\MattermostClient\Exception;
 
-use Pnz\MattermostClient\ExceptionInterface;
+use Pnz\MattermostClient\Exception;
 
-class HydrationException extends \RuntimeException implements ExceptionInterface
+class HydrationException extends \RuntimeException implements Exception
 {
 }

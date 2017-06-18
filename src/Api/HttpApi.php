@@ -6,8 +6,8 @@ namespace Pnz\MattermostClient\Api;
 
 use Http\Client\HttpClient;
 use Http\Message\MessageFactory;
-use Pnz\MattermostClient\Exception\ApiException;
 use Pnz\MattermostClient\Exception\Domain as DomainExceptions;
+use Pnz\MattermostClient\Exception\GenericApiException;
 use Pnz\MattermostClient\Hydrator\Hydrator;
 use Pnz\MattermostClient\Hydrator\ModelHydrator;
 use Pnz\MattermostClient\Model\Error;
@@ -162,7 +162,7 @@ abstract class HttpApi
      *
      * @param ResponseInterface $response
      *
-     * @throws ApiException
+     * @throws GenericApiException
      */
     protected function handleErrors(ResponseInterface $response)
     {
@@ -180,7 +180,7 @@ abstract class HttpApi
             case 501:
                 throw new DomainExceptions\DisabledFeatureException($response, $error);
             default:
-                throw new ApiException($response, $error);
+                throw new GenericApiException($response, $error);
         }
     }
 
