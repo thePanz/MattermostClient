@@ -2,8 +2,8 @@
 
 namespace Pnz\MattermostClient\Exception;
 
-use Pnz\MattermostClient\ExceptionInterface;
+use Pnz\MattermostClient\Exception;
 
-class InvalidArgumentException extends \InvalidArgumentException implements ExceptionInterface
+class InvalidArgumentException extends \InvalidArgumentException implements Exception
 {
 }

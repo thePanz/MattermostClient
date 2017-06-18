@@ -2,9 +2,9 @@
 
 namespace Pnz\MattermostClient\Exception\Domain;
 
-use Pnz\MattermostClient\Exception\ApiException;
 use Pnz\MattermostClient\Exception\DomainException;
+use Pnz\MattermostClient\Exception\GenericApiException;
 
-final class ValidationException extends ApiException implements DomainException
+final class ValidationException extends GenericApiException implements DomainException
 {
 }

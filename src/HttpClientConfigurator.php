@@ -25,7 +25,7 @@ final class HttpClientConfigurator
     /**
      * @var string
      */
-    private $endpoint = 'https://fake-twitter.com';
+    private $endpoint;
 
     /**
      * @var string
@@ -84,6 +84,10 @@ final class HttpClientConfigurator
      */
     public function createConfiguredClient(): HttpClient
     {
+        if (empty($this->endpoint)) {
+            throw new \InvalidArgumentException('Unable to configure the client, no API Endpoint provided');
+        }
+
         $plugins = $this->prependPlugins;
         $plugins[] = new Plugin\BaseUriPlugin($this->uriFactory->createUri($this->endpoint));
         $plugins[] = new Plugin\HeaderDefaultsPlugin([

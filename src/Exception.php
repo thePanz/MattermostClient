@@ -2,6 +2,6 @@
 
 namespace Pnz\MattermostClient;
 
-interface ExceptionInterface
+interface Exception
 {
 }

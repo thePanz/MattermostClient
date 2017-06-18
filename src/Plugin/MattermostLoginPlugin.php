@@ -7,8 +7,8 @@ namespace Pnz\MattermostClient\Plugin;
 use Http\Client\Common\Plugin;
 use Http\Message\Authentication\Bearer;
 use Http\Message\RequestFactory;
-use Pnz\MattermostClient\Exception\ApiException;
 use Pnz\MattermostClient\Exception\Domain\LoginFailedException;
+use Pnz\MattermostClient\Exception\GenericApiException;
 use Pnz\MattermostClient\Model\Error;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -16,6 +16,13 @@ use Psr\Http\Message\ResponseInterface;
 class MattermostLoginPlugin implements Plugin
 {
     const AUTHORIZATION_URL = '/users/login';
+
+    /**
+     * Flag to check if we are handling the first login through a request.
+     *
+     * @var bool
+     */
+    private $loginInProgress = false;
 
     /**
      * @var string
@@ -59,7 +66,8 @@ class MattermostLoginPlugin implements Plugin
      */
     public function handleRequest(RequestInterface $request, callable $next, callable $first)
     {
-        if (!$this->bearerAuthentication && false === strpos($request->getRequestTarget(), self::AUTHORIZATION_URL)) {
+        if (!$this->bearerAuthentication && !$this->loginInProgress) {
+            $this->loginInProgress = true;
             $this->authenticate($first);
         }
 
@@ -75,7 +83,7 @@ class MattermostLoginPlugin implements Plugin
      * @param callable $first
      *
      * @throws LoginFailedException when loginId/password are not valid
-     * @throws ApiException         When an unknown response is returned by the API while logging in
+     * @throws GenericApiException  When an unknown response is returned by the API while logging in
      */
     private function authenticate(callable $first)
     {
@@ -103,13 +111,13 @@ class MattermostLoginPlugin implements Plugin
                 break;
             case 401:
                 if (strpos($response->getHeaderLine('Content-Type'), 'application/json') === 0) {
-                    $contents = json_decode($response->getBody()->getContents(), true);
+                    $contents = json_decode((string) $response->getBody(), true);
                     $error = Error::createFromArray($contents);
                     throw new LoginFailedException($response, $error);
                 }
                 // Otherwise fallback to the default exception
             default:
-                throw new ApiException($response);
+                throw new GenericApiException($response);
         }
     }
 }
