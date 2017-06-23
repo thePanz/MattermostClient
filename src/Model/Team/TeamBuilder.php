@@ -53,6 +53,11 @@ class TeamBuilder extends ModelBuilder
      */
     protected function getRequiredFields($buildType = self::BUILD_FOR_CREATE)
     {
-        return ['type', 'name', 'display_name'];
+        switch ($buildType) {
+            case self::BUILD_FOR_CREATE:
+                return ['type', 'name', 'display_name'];
+            default:
+                return [];
+        }
     }
 }

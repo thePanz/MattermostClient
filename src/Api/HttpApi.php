@@ -60,8 +60,6 @@ abstract class HttpApi
             $path .= '?'.http_build_query($params);
         }
 
-        // var_dump([__CLASS__.'::'.__FUNCTION__ => [$path]]);
-
         return $this->httpClient->sendRequest(
             $this->messageFactory->createRequest('GET', $path, $requestHeaders)
         );
@@ -84,8 +82,6 @@ abstract class HttpApi
         if (count($pathParams) > 0) {
             $path .= '?'.http_build_query($pathParams);
         }
-
-        // var_dump([__CLASS__.'::'.__FUNCTION__ => [$path, $body]]);
 
         return $this->httpPostRaw($path, $body, $requestHeaders);
     }
@@ -166,7 +162,11 @@ abstract class HttpApi
      */
     protected function handleErrors(ResponseInterface $response)
     {
-        $error = $this->hydrator ? $this->hydrator->hydrate($response, Error::class) : null;
+        $error = null;
+        // We only hydrate the Error response if the hydrator is a Model one
+        if ($this->hydrator instanceof ModelHydrator) {
+            $error = $this->hydrator->hydrate($response, Error::class);
+        }
 
         switch ($response->getStatusCode()) {
             case 400:

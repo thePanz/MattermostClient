@@ -18,8 +18,6 @@ use Pnz\MattermostClient\Hydrator\ModelHydrator;
 
 final class ApiClient
 {
-    const LOGIN_URL = 'users/login';
-
     /**
      * @var HttpClient
      */

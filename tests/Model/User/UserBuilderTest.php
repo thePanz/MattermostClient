@@ -6,6 +6,9 @@ use PHPUnit\Framework\TestCase;
 use Pnz\MattermostClient\Exception\InvalidArgumentException;
 use Pnz\MattermostClient\Model\User\UserBuilder;
 
+/**
+ * @coversNothing
+ */
 class UserBuilderTest extends TestCase
 {
     /**
@@ -28,6 +31,7 @@ class UserBuilderTest extends TestCase
 
     /**
      * @dataProvider provideBuildTypesForFailure
+     *
      * @param string $buildType
      * @param string $expectedFailureMessage
      */
@@ -40,10 +44,9 @@ class UserBuilderTest extends TestCase
 
     public function testUserBuilderMinimal()
     {
-        $builder = new UserBuilder();
-        $builder->setUsername('username');
-        $builder->setPassword('password');
-        $builder->setEmail('email');
+        $this->builder->setUsername('username');
+        $this->builder->setPassword('password');
+        $this->builder->setEmail('email');
 
         $expected = [
             'username' => 'username',
@@ -51,6 +54,6 @@ class UserBuilderTest extends TestCase
             'email' => 'email',
         ];
 
-        $this->assertSame($expected, $builder->build());
+        $this->assertSame($expected, $this->builder->build());
     }
 }
