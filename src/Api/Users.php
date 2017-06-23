@@ -152,4 +152,46 @@ final class Users extends HttpApi
 
         return $this->handleResponse($response, User::class);
     }
+
+    /**
+     * Patch a user.
+     *
+     * @see https://api.mattermost.com/v4/#tag/users%2Fpaths%2F~1users~1%7Buser_id%7D~1patch%2Fput
+     *
+     * @param string $userId
+     * @param array  $params
+     *
+     * @return User|ResponseInterface
+     */
+    public function patchUser(string $userId, array $params)
+    {
+        if (empty($userId)) {
+            throw new InvalidArgumentException('UserId can not be empty');
+        }
+
+        $response = $this->httpPut(sprintf('/users/%s/patch', $userId), $params);
+
+        return $this->handleResponse($response, User::class);
+    }
+
+    /**
+     * Update a user, required parameter: 'id'.
+     *
+     * @see https://api.mattermost.com/v4/#tag/users%2Fpaths%2F~1users~1%7Buser_id%7D%2Fput
+     *
+     * @param string $userId
+     * @param array  $params
+     *
+     * @return User|ResponseInterface
+     */
+    public function updateUser(string $userId, array $params)
+    {
+        if (empty($userId)) {
+            throw new InvalidArgumentException('UserId can not be empty');
+        }
+
+        $response = $this->httpPut(sprintf('/users/%s', $userId), $params);
+
+        return $this->handleResponse($response, User::class);
+    }
 }
