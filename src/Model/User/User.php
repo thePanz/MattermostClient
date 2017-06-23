@@ -93,7 +93,7 @@ final class User extends Model
      */
     public function getLastName()
     {
-        return $this->data['las_name'];
+        return $this->data['last_name'];
     }
 
     /**
