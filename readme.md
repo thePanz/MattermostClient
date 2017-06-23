@@ -1,6 +1,9 @@
 # Mattermost API Client
 
-A PHP library providing a client for the REST API v4 of [Mattermost](https://www.mattermost.org), 
+A PHP library providing a client for the REST API v4 of [Mattermost](https://www.mattermost.org).
+
+*NOTE*: The implementation is still in progress (as today: 2017-06-23), feel free to add or
+    extend the current implementation
 
 ## Installation
 
