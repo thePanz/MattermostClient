@@ -47,6 +47,48 @@ class UserBuilder extends ModelBuilder
     }
 
     /**
+     * Set the user first name.
+     *
+     * @param $firstName
+     *
+     * @return $this
+     */
+    public function setFirstName($firstName)
+    {
+        $this->params['first_name'] = $firstName;
+
+        return $this;
+    }
+
+    /**
+     * Set the user last name.
+     *
+     * @param $lastName
+     *
+     * @return $this
+     */
+    public function setLastName($lastName)
+    {
+        $this->params['last_name'] = $lastName;
+
+        return $this;
+    }
+
+    /**
+     * Set the user's nickname.
+     *
+     * @param $nickname
+     *
+     * @return $this
+     */
+    public function setNickname($nickname)
+    {
+        $this->params['nickname'] = $nickname;
+
+        return $this;
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function getRequiredFields($buildType = self::BUILD_FOR_CREATE)
