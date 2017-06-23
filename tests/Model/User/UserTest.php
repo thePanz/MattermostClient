@@ -5,6 +5,9 @@ namespace Pnz\MattermostClient\Tests\Model\User;
 use PHPUnit\Framework\TestCase;
 use Pnz\MattermostClient\Model\User\User;
 
+/**
+ * @coversNothing
+ */
 class UserTest extends TestCase
 {
     public function testUserCreationEmpty()
@@ -13,21 +16,20 @@ class UserTest extends TestCase
 
         $user = User::createFromArray($data);
 
-        $this->assertSame(null, $user->getId());
-        $this->assertSame(null, $user->getEmail());
-        $this->assertSame(null, $user->getUsername());
-        $this->assertSame(null, $user->getLastName());
-        $this->assertSame(null, $user->getFirstName());
-        $this->assertSame(null, $user->getLocale());
-        $this->assertSame(null, $user->getRoles());
-        $this->assertSame(null, $user->getAllowMarketing());
-        $this->assertSame(null, $user->getAuthData());
-        $this->assertSame(null, $user->getCreateAt());
-        $this->assertSame(null, $user->getEmailVerified());
-        $this->assertSame(null, $user->getNickname());
-        $this->assertSame(null, $user->getUpdateAt());
+        $this->assertNull($user->getId());
+        $this->assertNull($user->getEmail());
+        $this->assertNull($user->getUsername());
+        $this->assertNull($user->getLastName());
+        $this->assertNull($user->getFirstName());
+        $this->assertNull($user->getLocale());
+        $this->assertNull($user->getRoles());
+        $this->assertNull($user->getAllowMarketing());
+        $this->assertNull($user->getAuthData());
+        $this->assertNull($user->getCreateAt());
+        $this->assertNull($user->getEmailVerified());
+        $this->assertNull($user->getNickname());
+        $this->assertNull($user->getUpdateAt());
     }
-
 
     public function testUserCreation()
     {
@@ -64,5 +66,4 @@ class UserTest extends TestCase
         $this->assertSame($data['nickname'], $user->getNickname());
         $this->assertSame($data['update_at'], $user->getUpdateAt());
     }
-
 }

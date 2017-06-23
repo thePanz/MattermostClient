@@ -97,7 +97,6 @@ class ChannelBuilder extends ModelBuilder
             case self::BUILD_FOR_PATCH:
                 return ['id'];
             case self::BUILD_FOR_UPDATE:
-                // Fallback to the default empty list
             default:
                 return [];
         }

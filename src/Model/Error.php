@@ -11,7 +11,7 @@ final class Error extends Model
      */
     public function getId(): string
     {
-        return $this->data['id'];
+        return $this->data['id'] ?? '';
     }
 
     /**
@@ -19,7 +19,7 @@ final class Error extends Model
      */
     public function getMessage(): string
     {
-        return $this->data['message'];
+        return $this->data['message'] ?? '';
     }
 
     /**
@@ -27,7 +27,7 @@ final class Error extends Model
      */
     public function getDetailedError(): string
     {
-        return $this->data['detailed_error'];
+        return $this->data['detailed_error'] ?? '';
     }
 
     /**
@@ -35,7 +35,7 @@ final class Error extends Model
      */
     public function getStatusCode(): int
     {
-        return $this->data['status_code'];
+        return $this->data['status_code'] ?? 0;
     }
 
     /**
@@ -43,7 +43,7 @@ final class Error extends Model
      */
     public function getRequestId(): string
     {
-        return $this->data['request_id'];
+        return $this->data['request_id'] ?? '';
     }
 
     /**
