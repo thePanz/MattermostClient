@@ -54,3 +54,37 @@ try {
     var_dump($user->getUsername());
 
 ```
+
+### Creating a Team
+
+Specific Model Builders are available to help the entity creation, as an example,
+to create a Team use a `TeamBuilder()` instance, add the desired fields and call `build()`
+to obtain the data needed to invoke the `createTeam()` API. 
+
+
+``` php
+<?php
+
+require_once 'vendor/autoload.php';
+
+use Pnz\MattermostClient\Model\Team;
+
+$endpoint = 'http://mattermostserver.ext/api/v4';
+$username = 'username';
+$password = 'password';
+
+$configurator = (new HttpClientConfigurator())
+    ->setEndpoint($endpoint)
+    ->setCredentials($username, $password);
+$apiClient =  ApiClient::configure($configurator);
+
+try {
+    $teamData = (new Team\TeamBuilder())
+        ->setDisplayName('Team 01')
+        ->setName('team-01')
+        ->setType(Team\Team::TEAM_INVITE_ONLY)
+        ->build();
+
+    $team = $apiClient->teams()->createTeam($teamData);
+
+```
