@@ -21,7 +21,6 @@ abstract class Model implements CreatableFromArray
      */
     public static function createFromArray(array $data)
     {
-        var_dump([__CLASS__.'::'.__FUNCTION__ => $data]);
         // Clearing the data
         $emptyModel = array_fill_keys(static::getFields(), null);
 

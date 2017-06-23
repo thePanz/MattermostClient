@@ -247,7 +247,7 @@ final class Channels extends HttpApi
      * Get the posts for a channel.
      *
      * @param string $channelId
-     * @param array  $params    The listing params, 'page', 'per_page', 'before', 'after', 'since'
+     * @param array  $params    The listing params: 'page', 'per_page', 'before', 'after', 'since'
      *
      * @see: https://api.mattermost.com/v4/#tag/posts%2Fpaths%2F~1channels~1%7Bchannel_id%7D~1posts%2Fget
      *
@@ -260,7 +260,6 @@ final class Channels extends HttpApi
         }
 
         $response = $this->httpGet(sprintf('/channels/%s/posts', $channelId), $params);
-        var_dump($response->getBody()->getContents());
 
         return $this->handleResponse($response, Posts::class);
     }
