@@ -93,6 +93,14 @@ class UserBuilder extends ModelBuilder
      */
     protected function getRequiredFields($buildType = self::BUILD_FOR_CREATE)
     {
-        return ['username', 'email', 'password'];
+        switch ($buildType) {
+            case self::BUILD_FOR_CREATE:
+                return ['username', 'email', 'password'];
+            case self::BUILD_FOR_UPDATE:
+                return ['id'];
+            case self::BUILD_FOR_PATCH:
+            default:
+                return [];
+        }
     }
 }
