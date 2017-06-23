@@ -19,7 +19,7 @@ final class User extends Model
     /**
      * @return string
      */
-    public function getCreate_at()
+    public function getCreateAt()
     {
         return $this->data['create_at'];
     }
@@ -27,7 +27,7 @@ final class User extends Model
     /**
      * @return string
      */
-    public function getUpdate_at()
+    public function getUpdateAt()
     {
         return $this->data['update_at'];
     }
@@ -78,6 +78,30 @@ final class User extends Model
     public function getEmail()
     {
         return $this->data['email'];
+    }
+
+    /**
+     * @return string
+     */
+    public function getFirstName()
+    {
+        return $this->data['first_name'];
+    }
+
+    /**
+     * @return string
+     */
+    public function getLastName()
+    {
+        return $this->data['las_name'];
+    }
+
+    /**
+     * @return string
+     */
+    public function getNickname()
+    {
+        return $this->data['nickname'];
     }
 
     /**
