@@ -18,7 +18,7 @@ final class Posts extends HttpApi
      *
      * @return Post|ResponseInterface
      */
-    public function createPosts(array $params)
+    public function createPost(array $params)
     {
         $response = $this->httpPost('/posts',
             $params
