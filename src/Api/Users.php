@@ -46,17 +46,17 @@ final class Users extends HttpApi
     /**
      * Returns an user by its ID, use "me" to get the current logged in user.
      *
-     * @param string $id
+     * @param string $userId
      *
      * @return User|ResponseInterface
      */
-    public function getUserById($id)
+    public function getUserById($userId)
     {
-        if (empty($id)) {
-            throw new InvalidArgumentException('Id can not be empty');
+        if (empty($userId)) {
+            throw new InvalidArgumentException('UserId can not be empty');
         }
 
-        $response = $this->httpGet(sprintf('/users/%s', $id));
+        $response = $this->httpGet(sprintf('/users/%s', $userId));
 
         return $this->handleResponse($response, User::class);
     }
@@ -64,17 +64,17 @@ final class Users extends HttpApi
     /**
      * Returns a collection of users matching the given IDs.
      *
-     * @param array $ids
+     * @param array $userIds
      *
      * @return UsersCollection|ResponseInterface
      */
-    public function getUsersByIds(array $ids)
+    public function getUsersByIds(array $userIds)
     {
-        if (empty($ids)) {
-            throw new InvalidArgumentException('IDs can not be empty');
+        if (empty($userIds)) {
+            throw new InvalidArgumentException('UserIDs can not be empty');
         }
 
-        $response = $this->httpPost('/users/ids', $ids);
+        $response = $this->httpPost('/users/ids', $userIds);
 
         return $this->handleResponse($response, UsersCollection::class);
     }
@@ -118,19 +118,19 @@ final class Users extends HttpApi
     /**
      * Deactivate a user.
      *
-     * @param string $id The user ID
+     * @param string $userId The user ID
      *
      * @see https://api.mattermost.com/v4/#tag/users%2Fpaths%2F~1users~1%7Buser_id%7D%2Fdelete
      *
      * @return Status|ResponseInterface
      */
-    public function deactivateUser($id)
+    public function deactivateUser($userId)
     {
-        if (empty($email)) {
+        if (empty($userId)) {
             throw new InvalidArgumentException('User ID can not be empty');
         }
 
-        $response = $this->httpDelete(sprintf('/users/%s', $id));
+        $response = $this->httpDelete(sprintf('/users/%s', $userId));
 
         return $this->handleResponse($response, Status::class);
     }
