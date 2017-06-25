@@ -11,7 +11,7 @@ final class Status extends Model
      */
     public function getStatus(): string
     {
-        return $this->data['status'];
+        return $this->data['status'] ?? '';
     }
 
     /**
