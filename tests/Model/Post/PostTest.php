@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Pnz\MattermostClient\Model\Post\Post;
 
 /**
- * @coversNothing
+ * @coversDefaultClass \Pnz\MattermostClient\Model\Post\Post
  */
 class PostTest extends TestCase
 {

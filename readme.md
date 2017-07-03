@@ -3,7 +3,8 @@
 A PHP library providing a client for the REST API v4 of [Mattermost](https://www.mattermost.org).
 
 *NOTE*: The implementation is still in progress (as today: 2017-06-23), feel free to add or
-    extend the current implementation
+    extend the current implementation.
+    To track the available API endpoints, visit this [Google Spreadsheet](https://docs.google.com/spreadsheets/d/1mLH2aYC8mMv8sLf_mZWxW8H-67juDYJ9M8dCxwWXdf4/edit?usp=sharing) document.
 
 ## Installation
 

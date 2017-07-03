@@ -18,17 +18,17 @@ final class Channels extends HttpApi
     /**
      * Returns an channel by its ID.
      *
-     * @param string $id
+     * @param string $channelId
      *
      * @return Channel|ResponseInterface
      */
-    public function getChannelById($id)
+    public function getChannelById(string $channelId)
     {
-        if (empty($id)) {
+        if (empty($channelId)) {
             throw new InvalidArgumentException('Id can not be empty');
         }
 
-        $response = $this->httpGet(sprintf('/channels/%s', $id));
+        $response = $this->httpGet(sprintf('/channels/%s', $channelId));
 
         return $this->handleResponse($response, Channel::class);
     }
@@ -41,7 +41,7 @@ final class Channels extends HttpApi
      *
      * @return Channel|ResponseInterface
      */
-    public function getChannelByName($teamId, $channelName)
+    public function getChannelByName(string $teamId, string $channelName)
     {
         if (empty($teamId) || empty($channelName)) {
             throw new InvalidArgumentException('Team ID and channel name can not be empty');
@@ -98,9 +98,7 @@ final class Channels extends HttpApi
      */
     public function createChannel(array $params)
     {
-        $response = $this->httpPost('/channels',
-            $params
-        );
+        $response = $this->httpPost('/channels', $params);
 
         return $this->handleResponse($response, Channel::class);
     }
@@ -219,6 +217,10 @@ final class Channels extends HttpApi
      */
     public function removeChannelMember(string $channelId, string $userId)
     {
+        if (empty($channelId) || empty($userId)) {
+            throw new InvalidArgumentException('Channel ID or user ID can not be empty');
+        }
+
         $response = $this->httpDelete(sprintf('/channels/%s/members/%s', $channelId, $userId));
 
         return $this->handleResponse($response, Status::class);

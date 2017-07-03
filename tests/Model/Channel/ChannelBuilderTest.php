@@ -7,7 +7,7 @@ use Pnz\MattermostClient\Exception\InvalidArgumentException;
 use Pnz\MattermostClient\Model\Channel\ChannelBuilder;
 
 /**
- * @coversNothing
+ * @coversDefaultClass \Pnz\MattermostClient\Model\Channel\ChannelBuilder
  */
 class ChannelBuilderTest extends TestCase
 {

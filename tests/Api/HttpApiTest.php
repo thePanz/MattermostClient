@@ -16,7 +16,7 @@ use Pnz\MattermostClient\Model\Error;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * @coversNothing
+ * @coversDefaultClass \HttpApi
  */
 class HttpApiTest extends TestCase
 {

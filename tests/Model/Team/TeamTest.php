@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Pnz\MattermostClient\Model\Team\Team;
 
 /**
- * @coversNothing
+ * @coversDefaultClass \Pnz\MattermostClient\Model\Team\Team
  */
 class TeamTest extends TestCase
 {

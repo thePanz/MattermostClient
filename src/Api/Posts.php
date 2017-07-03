@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Pnz\MattermostClient\Api;
 
-use InvalidArgumentException;
+use Pnz\MattermostClient\Exception\InvalidArgumentException;
 use Pnz\MattermostClient\Model\Post\Post;
 use Pnz\MattermostClient\Model\Status;
 use Psr\Http\Message\ResponseInterface;
@@ -20,9 +20,7 @@ final class Posts extends HttpApi
      */
     public function createPost(array $params)
     {
-        $response = $this->httpPost('/posts',
-            $params
-        );
+        $response = $this->httpPost('/posts', $params);
 
         return $this->handleResponse($response, Post::class);
     }

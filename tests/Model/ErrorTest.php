@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Pnz\MattermostClient\Model\Error;
 
 /**
- * @coversNothing
+ * @coversDefaultClass \Pnz\MattermostClient\Model\Error
  */
 class ErrorTest extends TestCase
 {

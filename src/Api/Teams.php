@@ -53,19 +53,35 @@ final class Teams extends HttpApi
     /**
      * Returns a collection of teams.
      *
-     * @param int $page
-     * @param int $perPage
+     * @param array $params The listing params, 'page', 'per_page'
      *
      * @return TeamsCollection|ResponseInterface
      */
-    public function getTeams($page = 0, $perPage = 60)
+    public function getTeams(array $params = [])
     {
-        $response = $this->httpGet('/teams', [
-            'page' => $page,
-            'per_page' => $perPage,
-        ]);
+        $response = $this->httpGet('/teams', $params);
 
         return $this->handleResponse($response, TeamsCollection::class);
+    }
+
+    /**
+     * Delete a team softly and put in archived only.
+     *
+     * @see https://api.mattermost.com/v4/#tag/teams%2Fpaths%2F~1teams~1%7Bteam_id%7D%2Fdelete
+     *
+     * @param string $teamId The user ID
+     *
+     * @return Status|ResponseInterface
+     */
+    public function deleteTeam(string $teamId)
+    {
+        if (empty($teamId)) {
+            throw new InvalidArgumentException('User ID can not be empty');
+        }
+
+        $response = $this->httpDelete(sprintf('/teams/%s', $teamId));
+
+        return $this->handleResponse($response, Status::class);
     }
 
     /**
@@ -77,6 +93,10 @@ final class Teams extends HttpApi
      */
     public function getTeamByName($name)
     {
+        if (empty($name)) {
+            throw new InvalidArgumentException('TeamName can not be empty');
+        }
+
         $response = $this->httpGet(sprintf('/teams/name/%s', $name));
 
         return $this->handleResponse($response, Team::class);
@@ -96,6 +116,10 @@ final class Teams extends HttpApi
      */
     public function addTeamMember($teamId, $userId, $roles = '', $pathParams = [])
     {
+        if (empty($teamId) || empty($userId)) {
+            throw new InvalidArgumentException('Team ID or user ID can not be empty');
+        }
+
         $body = [
             'team_id' => $teamId,
             'user_id' => $userId,
@@ -111,18 +135,19 @@ final class Teams extends HttpApi
      * Return the team members.
      *
      * @param string $teamId The Team ID
+     * @param array  $params The listing params, 'page', 'per_page'
      *
      * @see https://api.mattermost.com/v4/#tag/teams%2Fpaths%2F~1teams~1%7Bteam_id%7D~1members%2Fget
      *
      * @return TeamMembers
      */
-    public function getTeamMembers(string $teamId)
+    public function getTeamMembers(string $teamId, array $params = [])
     {
         if (empty($teamId)) {
             throw new InvalidArgumentException('TeamID can not be empty');
         }
 
-        $response = $this->httpGet(sprintf('/teams/%s/members', $teamId));
+        $response = $this->httpGet(sprintf('/teams/%s/members', $teamId), $params);
 
         return $this->handleResponse($response, TeamMembers::class);
     }
@@ -151,22 +176,18 @@ final class Teams extends HttpApi
     /**
      * Return the list of public channels in the given team.
      *
-     * @param string $teamId  The team ID
-     * @param int    $page    Pagination: page number
-     * @param int    $perPage Pagination: channels per page
+     * @param string $teamId The team ID
+     * @param array  $params The listing params, 'page', 'per_page'
      *
      * @return ChannelsCollection|ResponseInterface
      */
-    public function getTeamPublicChannels(string $teamId, int $page = 0, int $perPage = 60)
+    public function getTeamPublicChannels(string $teamId, array $params = [])
     {
         if (empty($teamId)) {
             throw new InvalidArgumentException('TeamID can not be empty');
         }
 
-        $response = $this->httpGet(sprintf('/teams/%s/channels', $teamId), [
-            'page' => $page,
-            'per_page' => $perPage,
-        ]);
+        $response = $this->httpGet(sprintf('/teams/%s/channels', $teamId), $params);
 
         return $this->handleResponse($response, ChannelsCollection::class);
     }
@@ -187,5 +208,47 @@ final class Teams extends HttpApi
         $response = $this->httpGet(sprintf('/teams/%s/stats', $teamId));
 
         return $this->handleResponse($response, TeamStats::class);
+    }
+
+    /**
+     * Patch a team.
+     *
+     * @see https://api.mattermost.com/v4/#tag/teams%2Fpaths%2F~1teams~1%7Bteam_id%7D~1patch%2Fput
+     *
+     * @param string $teamId
+     * @param array  $params
+     *
+     * @return Team|ResponseInterface
+     */
+    public function patchTeam(string $teamId, array $params)
+    {
+        if (empty($teamId)) {
+            throw new InvalidArgumentException('TeamId can not be empty');
+        }
+
+        $response = $this->httpPut(sprintf('/teams/%s/patch', $teamId), $params);
+
+        return $this->handleResponse($response, Team::class);
+    }
+
+    /**
+     * Update a team.
+     *
+     * @see https://api.mattermost.com/v4/#tag/teams%2Fpaths%2F~1teams~1%7Bteam_id%7D%2Fput
+     *
+     * @param string $teamId
+     * @param array  $params, required paramaters: display_name, description, company_name, allowed_domains, invite_id, allow_open_invite
+     *
+     * @return Team|ResponseInterface
+     */
+    public function updateTeam(string $teamId, array $params)
+    {
+        if (empty($teamId)) {
+            throw new InvalidArgumentException('TeamId can not be empty');
+        }
+
+        $response = $this->httpPut(sprintf('/teams/%s', $teamId), $params);
+
+        return $this->handleResponse($response, Team::class);
     }
 }
