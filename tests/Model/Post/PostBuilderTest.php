@@ -7,7 +7,7 @@ use Pnz\MattermostClient\Exception\InvalidArgumentException;
 use Pnz\MattermostClient\Model\Post\PostBuilder;
 
 /**
- * @coversNothing
+ * @coversDefaultClass \Pnz\MattermostClient\Model\Post\PostBuilder
  */
 class PostBuilderTest extends TestCase
 {

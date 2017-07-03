@@ -7,7 +7,7 @@ use Pnz\MattermostClient\Exception\InvalidArgumentException;
 use Pnz\MattermostClient\Model\Team\TeamBuilder;
 
 /**
- * @coversNothing
+ * @coversDefaultClass \Pnz\MattermostClient\Model\Team\TeamBuilder
  */
 class TeamBuilderTest extends TestCase
 {

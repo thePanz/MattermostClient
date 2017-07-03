@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Pnz\MattermostClient\Model\Status;
 
 /**
- * @coversNothing
+ * @coversDefaultClass \Pnz\MattermostClient\Model\Status
  */
 class StatusTest extends TestCase
 {

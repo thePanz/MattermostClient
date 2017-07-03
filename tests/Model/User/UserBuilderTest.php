@@ -7,7 +7,7 @@ use Pnz\MattermostClient\Exception\InvalidArgumentException;
 use Pnz\MattermostClient\Model\User\UserBuilder;
 
 /**
- * @coversNothing
+ * @coversDefaultClass \Pnz\MattermostClient\Model\User\UserBuilder
  */
 class UserBuilderTest extends TestCase
 {

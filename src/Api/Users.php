@@ -50,7 +50,7 @@ final class Users extends HttpApi
      *
      * @return User|ResponseInterface
      */
-    public function getUserById($userId)
+    public function getUserById(string $userId)
     {
         if (empty($userId)) {
             throw new InvalidArgumentException('UserId can not be empty');
@@ -86,7 +86,7 @@ final class Users extends HttpApi
      *
      * @return User|ResponseInterface
      */
-    public function getUserByEmail($email)
+    public function getUserByEmail(string $email)
     {
         if (empty($email)) {
             throw new InvalidArgumentException('Email can not be empty');
@@ -100,17 +100,19 @@ final class Users extends HttpApi
     /**
      * Returns a collection of users matching the given usernames.
      *
-     * @param array $usernames
+     * @param array $userNames
      *
      * @see https://api.mattermost.com/v4/#tag/users%2Fpaths%2F~1users~1usernames%2Fpost
      *
      * @return UsersCollection|ResponseInterface
      */
-    public function getUsersByUsernames(array $usernames)
+    public function getUsersByUsernames(array $userNames)
     {
-        $response = $this->httpPost('/users/usernames',
-            $usernames
-        );
+        if (empty($userNames)) {
+            throw new InvalidArgumentException('Usernames can not be empty');
+        }
+
+        $response = $this->httpPost('/users/usernames', $userNames);
 
         return $this->handleResponse($response, UsersCollection::class);
     }
@@ -124,7 +126,7 @@ final class Users extends HttpApi
      *
      * @return Status|ResponseInterface
      */
-    public function deactivateUser($userId)
+    public function deactivateUser(string $userId)
     {
         if (empty($userId)) {
             throw new InvalidArgumentException('User ID can not be empty');
@@ -146,9 +148,7 @@ final class Users extends HttpApi
      */
     public function createUser(array $params)
     {
-        $response = $this->httpPost('/users',
-            $params
-        );
+        $response = $this->httpPost('/users', $params);
 
         return $this->handleResponse($response, User::class);
     }

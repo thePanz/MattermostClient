@@ -9,7 +9,7 @@ use Pnz\MattermostClient\Model\User\User;
 use Pnz\MattermostClient\Model\User\Users as UsersCollection;
 
 /**
- * @coversNothing
+ * @coversDefaultClass \Pnz\MattermostClient\Api\Users
  */
 class UsersTest extends BaseHttpApiTest
 {
@@ -51,12 +51,6 @@ class UsersTest extends BaseHttpApiTest
         $this->client->getUserByEmail($userEmail);
     }
 
-    public function testGetUserByEmailNullEmail()
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->client->getUserByEmail(null);
-    }
-
     public function testGetUserByEmailEmptyEmail()
     {
         $this->expectException(InvalidArgumentException::class);
@@ -87,12 +81,6 @@ class UsersTest extends BaseHttpApiTest
         $this->client->getUserById($userId);
     }
 
-    public function testGetUserByIdNullId()
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->client->getUserById(null);
-    }
-
     public function testGetUserByIdEmptyId()
     {
         $this->expectException(InvalidArgumentException::class);
@@ -121,12 +109,6 @@ class UsersTest extends BaseHttpApiTest
         $this->configureMessage('DELETE', '/users/'.$userId);
         $this->configureRequestAndResponse($code);
         $this->client->deactivateUser($userId);
-    }
-
-    public function testDeactivateUserNullId()
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->client->deactivateUser(null);
     }
 
     public function testDeactivateUserEmptyId()
