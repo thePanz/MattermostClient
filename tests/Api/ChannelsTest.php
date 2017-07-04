@@ -282,12 +282,6 @@ class ChannelsTest extends BaseHttpApiTest
         ]);
     }
 
-    public function testGetChannelPostsEmptyId()
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->client->getChannelPosts('');
-    }
-
     /**
      * @dataProvider getErrorCodesExceptions
      *
@@ -301,6 +295,12 @@ class ChannelsTest extends BaseHttpApiTest
         $this->configureMessage('GET', '/channels/'.$channelId.'/posts');
         $this->configureRequestAndResponse($code);
         $this->client->getChannelPosts($channelId);
+    }
+
+    public function testGetChannelPostsEmptyId()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->client->getChannelPosts('');
     }
 
     public function testDeleteChannelSuccess()
