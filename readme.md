@@ -1,5 +1,9 @@
 # Mattermost API Client
 
+[![Build Status](https://travis-ci.org/thePanz/MattermostClient.svg?branch=master)](https://travis-ci.org/thePanz/MattermostClient)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/thePanz/MattermostClient/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/thePanz/MattermostClient/?branch=master)
+
+
 A PHP library providing a client for the REST API v4 of [Mattermost](https://www.mattermost.org).
 
 *NOTE*: The implementation is still in progress (as today: 2017-06-23), feel free to add or
