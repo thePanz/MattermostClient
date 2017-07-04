@@ -35,11 +35,6 @@ class MattermostLoginPlugin implements Plugin
     private $password;
 
     /**
-     * @var string
-     */
-    private $token;
-
-    /**
      * @var Bearer
      */
     private $bearerAuthentication;
