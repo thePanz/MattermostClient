@@ -8,6 +8,7 @@ use Pnz\MattermostClient\Model\Channel\Channels;
 use Pnz\MattermostClient\Model\Status;
 use Pnz\MattermostClient\Model\Team\Team;
 use Pnz\MattermostClient\Model\Team\TeamMembers;
+use Pnz\MattermostClient\Model\Team\Teams as TeamsCollection;
 use Pnz\MattermostClient\Model\Team\TeamStats;
 
 /**
@@ -430,5 +431,32 @@ class TeamsTest extends BaseHttpApiTest
     {
         $this->expectException(InvalidArgumentException::class);
         $this->client->getTeamPublicChannels('');
+    }
+
+    public function testGetTeamsSuccess()
+    {
+        $this->configureMessage('GET', '/teams'.
+            '?per_page=1&page=2'
+        );
+        $this->configureRequestAndResponse(200);
+        $this->configureHydrator(TeamsCollection::class);
+        $this->client->getTeams([
+            'per_page' => 1,
+            'page' => 2,
+        ]);
+    }
+
+    /**
+     * @dataProvider getErrorCodesExceptions
+     *
+     * @param string $exception
+     * @param int    $code
+     */
+    public function testGetTeamsException($exception, $code)
+    {
+        $this->expectException($exception);
+        $this->configureMessage('GET', '/teams');
+        $this->configureRequestAndResponse($code);
+        $this->client->getTeams();
     }
 }
