@@ -10,6 +10,7 @@ use Http\Discovery\MessageFactoryDiscovery;
 use Http\Message\MessageFactory;
 use Http\Message\RequestFactory;
 use Pnz\MattermostClient\Api\Channels;
+use Pnz\MattermostClient\Api\Files;
 use Pnz\MattermostClient\Api\Posts;
 use Pnz\MattermostClient\Api\Teams;
 use Pnz\MattermostClient\Api\Users;
@@ -107,5 +108,15 @@ final class ApiClient
     public function posts(): Posts
     {
         return new Api\Posts($this->httpClient, $this->messageFactory, $this->hydrator);
+    }
+
+    /**
+     * Return a client handling the Files resources.
+     *
+     * @return Api\Files
+     */
+    public function files(): Files
+    {
+        return new Api\Files($this->httpClient, $this->messageFactory, $this->hydrator);
     }
 }
