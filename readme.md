@@ -1,8 +1,10 @@
 # Mattermost API Client
 
-[![Build Status](https://travis-ci.org/thePanz/MattermostClient.svg?branch=master)](https://travis-ci.org/thePanz/MattermostClient)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/thePanz/MattermostClient/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/thePanz/MattermostClient/?branch=master)
-
+[![Latest Version](https://img.shields.io/github/release/thePanz/MattermostClient.svg)](https://github.com/thePanz/MattermostClient/releases)
+[![Build Status](https://img.shields.io/travis/thePanz/MattermostClient.svg)](https://travis-ci.org/thePanz/MattermostClient)
+[![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/thePanz/MattermostClient.svg)](https://scrutinizer-ci.com/g/thePanz/MattermostClient)
+[![Quality Score](https://img.shields.io/scrutinizer/g/thePanz/MattermostClient.svg)](https://scrutinizer-ci.com/g/thePanz/MattermostClient)
+[![Total Downloads](https://img.shields.io/packagist/dt/pnz/mattermost-client.svg)](https://packagist.org/packages/pnz/mattermost-client)
 
 A PHP library providing a client for the REST API v4 of [Mattermost](https://www.mattermost.org).
 
