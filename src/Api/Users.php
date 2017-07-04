@@ -80,6 +80,20 @@ final class Users extends HttpApi
     }
 
     /**
+     * Returns a collection of users.
+     *
+     * @param array $params The listing params, 'page', 'per_page', 'in_channel', 'in_team', 'not_in_channel'
+     *
+     * @return UsersCollection|ResponseInterface
+     */
+    public function getUsers(array $params = [])
+    {
+        $response = $this->httpGet('/users', $params);
+
+        return $this->handleResponse($response, UsersCollection::class);
+    }
+
+    /**
      * Returns a user given its email.
      *
      * @param string $email
@@ -191,6 +205,24 @@ final class Users extends HttpApi
         }
 
         $response = $this->httpPut(sprintf('/users/%s', $userId), $params);
+
+        return $this->handleResponse($response, User::class);
+    }
+
+    /**
+     * Returns an user by its username, use "me" to get the current logged in user.
+     *
+     * @param string $username
+     *
+     * @return User|ResponseInterface
+     */
+    public function getUserByUsername(string $username)
+    {
+        if (empty($username)) {
+            throw new InvalidArgumentException('Username can not be empty');
+        }
+
+        $response = $this->httpGet(sprintf('/users/username/%s', $username));
 
         return $this->handleResponse($response, User::class);
     }

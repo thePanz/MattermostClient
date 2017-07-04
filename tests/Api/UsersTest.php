@@ -87,6 +87,37 @@ class UsersTest extends BaseHttpApiTest
         $this->client->getUserById('');
     }
 
+    //  **
+    public function testGetUserByUsernameSuccess()
+    {
+        $username = 'user-name';
+        $this->configureMessage('GET', '/users/username/'.$username);
+        $this->configureRequestAndResponse(200);
+        $this->configureHydrator(User::class);
+        $this->client->getUserByUsername($username);
+    }
+
+    /**
+     * @dataProvider getErrorCodesExceptions
+     *
+     * @param string $exception
+     * @param int    $code
+     */
+    public function testGetUserByUsernameException($exception, $code)
+    {
+        $this->expectException($exception);
+        $username = 'user-name';
+        $this->configureMessage('GET', '/users/username/'.$username);
+        $this->configureRequestAndResponse($code);
+        $this->client->getUserByUsername($username);
+    }
+
+    public function testGetUserByUsernameEmptyId()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->client->getUserByUsername('');
+    }
+
     public function testDeactivateUserSuccess()
     {
         $userId = '12345';
@@ -291,5 +322,42 @@ class UsersTest extends BaseHttpApiTest
     {
         $this->expectException(InvalidArgumentException::class);
         $this->client->updateUser('', []);
+    }
+
+    public function testGetUserSuccess()
+    {
+        $this->configureMessage('GET', '/users');
+        $this->configureRequestAndResponse(200);
+        $this->configureHydrator(UsersCollection::class);
+        $this->client->getUsers();
+    }
+
+    public function testGetUserParametersSuccess()
+    {
+        $this->configureMessage('GET', '/users'.
+            '?per_page=1&page=2&in_channel=channel&in_team=team&not_in_channel=channel-not-in');
+        $this->configureRequestAndResponse(200);
+        $this->configureHydrator(UsersCollection::class);
+        $this->client->getUsers([
+            'per_page' => 1,
+            'page' => 2,
+            'in_channel' => 'channel',
+            'in_team' => 'team',
+            'not_in_channel' => 'channel-not-in',
+        ]);
+    }
+
+    /**
+     * @dataProvider getErrorCodesExceptions
+     *
+     * @param string $exception
+     * @param int    $code
+     */
+    public function testGetChannelPostsException($exception, $code)
+    {
+        $this->expectException($exception);
+        $this->configureMessage('GET', '/users');
+        $this->configureRequestAndResponse($code);
+        $this->client->getUsers();
     }
 }
