@@ -97,7 +97,7 @@ abstract class HttpApi
      */
     protected function httpPostRaw(string $path, $body, array $requestHeaders = []): ResponseInterface
     {
-        return $response = $this->httpClient->sendRequest(
+        return $this->httpClient->sendRequest(
             $this->messageFactory->createRequest('POST', $path, $requestHeaders, $body)
         );
     }
