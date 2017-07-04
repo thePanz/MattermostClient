@@ -196,6 +196,10 @@ final class Channels extends HttpApi
      */
     public function addChannelMember(string $channelId, string $userId, string $roles = '')
     {
+        if (empty($channelId) || empty($userId)) {
+            throw new InvalidArgumentException('Channel ID or user ID can not be empty');
+        }
+
         $body = [
             'channel_id' => $channelId,
             'user_id' => $userId,

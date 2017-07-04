@@ -175,10 +175,10 @@ class UsersTest extends BaseHttpApiTest
         $this->client->getUsersByUsernames($userIds);
     }
 
-    public function testGetUsersByUsernamesEmptyId()
+    public function testGetUsersByUsernamesEmptyNames()
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->client->getUsersByIds([]);
+        $this->client->getUsersByUsernames([]);
     }
 
     public function testCreateUserSuccess()
