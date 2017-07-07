@@ -5,6 +5,7 @@ namespace Pnz\MattermostClient\Tests\Model\Channel;
 use PHPUnit\Framework\TestCase;
 use Pnz\MattermostClient\Exception\InvalidArgumentException;
 use Pnz\MattermostClient\Model\Channel\ChannelBuilder;
+use Pnz\MattermostClient\Model\ModelBuilder;
 
 /**
  * @coversDefaultClass \Pnz\MattermostClient\Model\Channel\ChannelBuilder
@@ -58,5 +59,33 @@ class ChannelBuilderTest extends TestCase
         ];
 
         $this->assertSame($expected, $this->builder->build());
+    }
+
+    public function testChannelBuilderFull()
+    {
+        $this->builder->setTeamId('team-id');
+
+        $this->builder->setName('name');
+        $this->builder->setDisplayName('display name');
+        $this->builder->setType('type');
+        $this->builder->setPurpose('Purpose');
+        $this->builder->setHeader('Header');
+
+        $expected = [
+            'team_id' => 'team-id',
+            'name' => 'name',
+            'display_name' => 'display name',
+            'type' => 'type',
+            'purpose' => 'Purpose',
+            'header' => 'Header',
+        ];
+
+        $this->assertSame($expected, $this->builder->build());
+    }
+
+    public function testChannelBuilderUpdate()
+    {
+        $expected = [];
+        $this->assertSame($expected, $this->builder->build(ModelBuilder::BUILD_FOR_UPDATE));
     }
 }

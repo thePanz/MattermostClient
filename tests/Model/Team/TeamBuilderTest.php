@@ -4,6 +4,7 @@ namespace Pnz\MattermostClient\Tests\Model\Team;
 
 use PHPUnit\Framework\TestCase;
 use Pnz\MattermostClient\Exception\InvalidArgumentException;
+use Pnz\MattermostClient\Model\ModelBuilder;
 use Pnz\MattermostClient\Model\Team\TeamBuilder;
 
 /**
@@ -39,6 +40,18 @@ class TeamBuilderTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage($expectedFailureMessage);
         $this->builder->build($buildType);
+    }
+
+    public function testTeamBuilderPatch()
+    {
+        $expected = [];
+        $this->assertSame($expected, $this->builder->build(ModelBuilder::BUILD_FOR_PATCH));
+    }
+
+    public function testTeamBuilderUpdate()
+    {
+        $expected = [];
+        $this->assertSame($expected, $this->builder->build(ModelBuilder::BUILD_FOR_UPDATE));
     }
 
     public function testTeamBuilderMinimal()

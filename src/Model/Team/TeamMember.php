@@ -47,8 +47,9 @@ final class TeamMember extends Model
     {
         return [
            'team_id',
-           'user_id',
-           'roles',
-       ];
+            'user_id',
+            'roles',
+            'create_at',
+        ];
     }
 }

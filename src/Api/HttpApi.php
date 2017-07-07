@@ -197,6 +197,7 @@ abstract class HttpApi
 
     /**
      * Builds the Query string given the parameters, null if no parameters are provided.
+     *
      * @param array $params
      *
      * @return string
