@@ -137,7 +137,7 @@ final class Post extends Model
     }
 
     /**
-     * @return array
+     * @return string
      */
     public function getPendingPostId(): string
     {
