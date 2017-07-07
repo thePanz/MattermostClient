@@ -5,6 +5,7 @@ namespace Pnz\MattermostClient\Tests\Api;
 use Http\Client\HttpClient;
 use Http\Message\Decorator\ResponseDecorator;
 use Http\Message\MessageFactory;
+use Http\Message\StreamFactory\GuzzleStreamFactory;
 use PHPUnit\Framework\TestCase;
 use Pnz\MattermostClient\Exception\Domain\DisabledFeatureException;
 use Pnz\MattermostClient\Exception\Domain\MissingAccessTokenException;
@@ -56,8 +57,9 @@ abstract class BaseHttpApiTest extends TestCase
         $this->response->method('getStatusCode')
             ->willReturn($responseCode);
 
+        $bodyStream = (new GuzzleStreamFactory())->createStream($body);
         $this->response->method('getBody')
-            ->willReturn($body);
+            ->willReturn($bodyStream);
         $this->response->method('getHeaderLine')
             ->with('Content-Type')
             ->willReturn($contentType);

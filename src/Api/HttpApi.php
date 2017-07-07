@@ -78,10 +78,7 @@ abstract class HttpApi
     protected function httpPost(string $path, array $params = [], array $pathParams = [], array $requestHeaders = []): ResponseInterface
     {
         $body = $this->createJsonBody($params);
-
-        if (count($pathParams) > 0) {
-            $path .= '?'.http_build_query($pathParams);
-        }
+        $path .= $this->buildPathParams($pathParams);
 
         return $this->httpPostRaw($path, $body, $requestHeaders);
     }
@@ -127,8 +124,10 @@ abstract class HttpApi
      *
      * @return ResponseInterface
      */
-    protected function httpDelete(string $path, array $params = [], array $requestHeaders = []): ResponseInterface
+    protected function httpDelete(string $path, array $params = [], array $pathParams = [], array $requestHeaders = []): ResponseInterface
     {
+        $path .= $this->buildPathParams($pathParams);
+
         return $this->httpClient->sendRequest(
             $this->messageFactory->createRequest('DELETE', $path, $requestHeaders, $this->createJsonBody($params))
         );
@@ -194,5 +193,18 @@ abstract class HttpApi
     private function createJsonBody(array $params)
     {
         return (count($params) === 0) ? null : json_encode($params, empty($params) ? JSON_FORCE_OBJECT : 0);
+    }
+
+    /**
+     * Builds the Query string given the parameters, null if no parameters are provided.
+     * @param array $params
+     *
+     * @return string
+     */
+    private function buildPathParams(array $params)
+    {
+        if (count($params) > 0) {
+            return '?'.http_build_query($params);
+        }
     }
 }

@@ -69,17 +69,20 @@ final class Teams extends HttpApi
      *
      * @see https://api.mattermost.com/v4/#tag/teams%2Fpaths%2F~1teams~1%7Bteam_id%7D%2Fdelete
      *
-     * @param string $teamId The user ID
+     * @param string $teamId    Team GUID
+     * @param bool   $permanent permanently delete the team, to be used for complience reasons only
      *
      * @return Status|ResponseInterface
      */
-    public function deleteTeam(string $teamId)
+    public function deleteTeam(string $teamId, bool $permanent = false)
     {
         if (empty($teamId)) {
             throw new InvalidArgumentException('User ID can not be empty');
         }
 
-        $response = $this->httpDelete(sprintf('/teams/%s', $teamId));
+        $pathParams = $permanent ? ['permanent' => true] : [];
+
+        $response = $this->httpDelete(sprintf('/teams/%s', $teamId), [], $pathParams);
 
         return $this->handleResponse($response, Status::class);
     }

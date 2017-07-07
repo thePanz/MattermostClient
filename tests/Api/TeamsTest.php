@@ -99,6 +99,15 @@ class TeamsTest extends BaseHttpApiTest
         $this->client->deleteTeam($teamId);
     }
 
+    public function testDeleteTeamPermanentSuccess()
+    {
+        $teamId = '12345';
+        $this->configureMessage('DELETE', '/teams/'.$teamId.'?permanent=1');
+        $this->configureRequestAndResponse(200);
+        $this->configureHydrator(Status::class);
+        $this->client->deleteTeam($teamId, true);
+    }
+
     /**
      * @dataProvider getErrorCodesExceptions
      *
