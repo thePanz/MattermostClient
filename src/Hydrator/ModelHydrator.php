@@ -13,7 +13,7 @@ use Psr\Http\Message\ResponseInterface;
  *
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
  */
-final class ModelHydrator implements Hydrator
+class ModelHydrator implements Hydrator
 {
     /**
      * {@inheritdoc}
