@@ -25,6 +25,60 @@ class UsersTest extends BaseHttpApiTest
         $this->client = new Users($this->httpClient, $this->messageFactory, $this->hydrator);
     }
 
+    public function testLoginSuccess()
+    {
+        $loginId = 'user@example.com';
+        $password = 'password';
+        $expectedToken = '123456';
+        $data = [
+            'login_id' => $loginId,
+            'password' => $password,
+        ];
+
+        $token = null;
+        $this->configureMessage('POST', '/users/login', [], json_encode($data));
+        $this->configureRequestAndResponse(200, '', ['Token' => [$expectedToken]]);
+        $this->configureHydrator(User::class);
+
+        $this->client->login($loginId, $password, $token);
+
+        $this->assertSame($expectedToken, $token, 'Returned token must match!');
+    }
+
+    /**
+     * @dataProvider getErrorCodesExceptions
+     *
+     * @param string $exception
+     * @param int    $code
+     */
+    public function testLoginSuccessException($exception, $code)
+    {
+        $this->expectException($exception);
+        $loginId = 'user@example.com';
+        $password = 'password';
+        $data = [
+            'login_id' => $loginId,
+            'password' => $password,
+        ];
+
+        $this->configureMessage('POST', '/users/login', [], json_encode($data));
+        $this->configureRequestAndResponse($code);
+
+        $this->client->login($loginId, $password, $token);
+    }
+
+    public function testLoginEmptyLoginId()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->client->login('', 'password');
+    }
+
+    public function testLoginEmptyPassword()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->client->login('login-id', '');
+    }
+
     public function testGetUserByEmailSuccess()
     {
         $userEmail = 'user@example.com';

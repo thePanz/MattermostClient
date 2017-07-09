@@ -26,8 +26,8 @@ final class Users extends HttpApi
         }
 
         $response = $this->httpPost('/users/login', [
-            'password' => $password,
             'login_id' => $loginId,
+            'password' => $password,
         ]);
 
         // Use any valid status code here

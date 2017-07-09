@@ -52,7 +52,7 @@ abstract class BaseHttpApiTest extends TestCase
             ->willReturn($this->request);
     }
 
-    public function configureRequestAndResponse(int $responseCode, string $body = '', $contentType = 'application/json')
+    public function configureRequestAndResponse(int $responseCode, string $body = '', array $headers = [], $contentType = 'application/json')
     {
         $this->response->method('getStatusCode')
             ->willReturn($responseCode);
@@ -60,6 +60,14 @@ abstract class BaseHttpApiTest extends TestCase
         $bodyStream = (new GuzzleStreamFactory())->createStream($body);
         $this->response->method('getBody')
             ->willReturn($bodyStream);
+
+        $headersMap = [];
+        foreach ($headers as $key => $value) {
+            $headersMap[] = [$key, $value];
+        }
+        $this->response->method('getHeader')
+            ->willReturnMap($headersMap);
+
         $this->response->method('getHeaderLine')
             ->with('Content-Type')
             ->willReturn($contentType);
