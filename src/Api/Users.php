@@ -132,9 +132,30 @@ final class Users extends HttpApi
     }
 
     /**
-     * Deactivate a user.
+     * Update user active or inactive status.
      *
-     * @param string $userId The user ID
+     * @param string $userId       The user ID
+     * @param bool   $activeStatus Use `true` to set the user active, `false` for inactive
+     *
+     * @return Status|ResponseInterface
+     */
+    public function setUserActive(string $userId, bool $activeStatus)
+    {
+        if (empty($userId)) {
+            throw new InvalidArgumentException('User ID can not be empty');
+        }
+
+        $response = $this->httpPut(sprintf('/users/%s/active', $userId), [
+            'active' => $activeStatus,
+        ]);
+
+        return $this->handleResponse($response, Status::class);
+    }
+
+    /**
+     * Deactivates the user by archiving its user object.
+     *
+     * @param string $userId The user GUID
      *
      * @see https://api.mattermost.com/v4/#tag/users%2Fpaths%2F~1users~1%7Buser_id%7D%2Fdelete
      *
