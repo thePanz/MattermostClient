@@ -11,7 +11,7 @@ abstract class Model implements CreatableFromArray
      */
     protected $data;
 
-    private function __construct(array $data)
+    protected function __construct(array $data)
     {
         $this->data = $data;
     }

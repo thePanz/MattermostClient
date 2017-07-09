@@ -26,7 +26,8 @@ final class Posts extends HttpApi
     }
 
     /**
-     * Patch a post.
+     * Partially update a post by providing only the fields you want to update.
+     * Omitted fields will not be updated.
      *
      * @see https://api.mattermost.com/v4/#tag/posts%2Fpaths%2F~1posts~1%7Bpost_id%7D~1patch%2Fput
      *
@@ -51,7 +52,7 @@ final class Posts extends HttpApi
      *
      * @see https://api.mattermost.com/v4/#tag/posts%2Fpaths%2F~1posts~1%7Bpost_id%7D%2Fput
      *
-     * @param string $postId
+     * @param string $postId ID of the post to update
      * @param array  $params
      *
      * @return Post|ResponseInterface
@@ -68,13 +69,13 @@ final class Posts extends HttpApi
     }
 
     /**
-     * Returns a post by its ID.
+     * Get a single post.
      *
-     * @param string $postId
+     * @param string $postId ID of the post to get
      *
      * @return Post|ResponseInterface
      */
-    public function getPost($postId)
+    public function getPost(string $postId)
     {
         if (empty($postId)) {
             throw new InvalidArgumentException('PostId can not be empty');
@@ -90,7 +91,7 @@ final class Posts extends HttpApi
      *
      * @see https://api.mattermost.com/v4/#tag/posts%2Fpaths%2F~1posts~1%7Bpost_id%7D~1pin%2Fpost
      *
-     * @param string $postId
+     * @param string $postId Post GUID
      *
      * @return Status|ResponseInterface
      */
@@ -110,7 +111,7 @@ final class Posts extends HttpApi
      *
      * @see https://api.mattermost.com/v4/#tag/posts%2Fpaths%2F~1posts~1%7Bpost_id%7D~1unpin%2Fpost
      *
-     * @param string $postId
+     * @param string $postId Post GUID
      *
      * @return Status|ResponseInterface
      */
@@ -130,11 +131,11 @@ final class Posts extends HttpApi
      *
      * @see https://api.mattermost.com/v4/#tag/posts%2Fpaths%2F~1posts~1%7Bpost_id%7D%2Fdelete
      *
-     * @param $postId
+     * @param string $postId ID of the post to delete
      *
      * @return Status|ResponseInterface
      */
-    public function deletePost($postId)
+    public function deletePost(string $postId)
     {
         if (empty($postId)) {
             throw new InvalidArgumentException('PostId can not be empty');
