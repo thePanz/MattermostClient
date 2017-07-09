@@ -202,6 +202,38 @@ class UsersTest extends BaseHttpApiTest
         $this->client->deactivateUser('');
     }
 
+    public function testUpdateUserRolesSuccess()
+    {
+        $userId = '12345';
+        $data = ['roles' => 'system_admin'];
+        $this->configureMessage('PUT', '/users/'.$userId.'/roles', [], json_encode($data));
+        $this->configureRequestAndResponse(200);
+        $this->configureHydrator(Status::class);
+        $this->client->updateUserRoles($userId, 'system_admin');
+    }
+
+    /**
+     * @dataProvider getErrorCodesExceptions
+     *
+     * @param string $exception
+     * @param int    $code
+     */
+    public function testUpdateUserRolesException($exception, $code)
+    {
+        $this->expectException($exception);
+        $userId = '12345';
+        $data = ['roles' => 'system_admin'];
+        $this->configureMessage('PUT', '/users/'.$userId.'/roles', [], json_encode($data));
+        $this->configureRequestAndResponse($code);
+        $this->client->updateUserRoles($userId, 'system_admin');
+    }
+
+    public function testUpdateUserRolesEmptyId()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->client->updateUserRoles('', '');
+    }
+
     public function testGetUsersByIdsSuccess()
     {
         $userIds = ['111', '222'];

@@ -152,6 +152,29 @@ final class Users extends HttpApi
     }
 
     /**
+     * Update a user's system-level roles.
+     * Valid user roles are "system_user", "system_admin" or both of them.
+     * Overwrites any previously assigned system-level roles.
+     *
+     * @param string $userId The user GUID
+     * @param string $roles  Space-delimited system roles to assign to the user
+     *
+     * @return Status|ResponseInterface
+     */
+    public function updateUserRoles(string $userId, string $roles)
+    {
+        if (empty($userId)) {
+            throw new InvalidArgumentException('User ID can not be empty');
+        }
+
+        $response = $this->httpPut(sprintf('/users/%s/roles', $userId), [
+            'roles' => $roles,
+        ]);
+
+        return $this->handleResponse($response, Status::class);
+    }
+
+    /**
      * Create a user. Required parameters: 'username', 'email' and 'password'.
      *
      * @see https://api.mattermost.com/v4/#tag/users%2Fpaths%2F~1users%2Fpost
