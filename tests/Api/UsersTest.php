@@ -236,6 +236,55 @@ class UsersTest extends BaseHttpApiTest
         $this->client->setUserActive('', false);
     }
 
+    public function testUpdateUserPasswordSuccess()
+    {
+        $userId = '12345';
+        $this->configureMessage('PUT', '/users/'.$userId.'/password', [], json_encode([
+            'current_password' => 'current-pw',
+            'new_password' => 'new-pw',
+        ]));
+        $this->configureRequestAndResponse(200);
+        $this->configureHydrator(Status::class);
+        $this->client->updateUserPassword($userId, 'current-pw', 'new-pw');
+    }
+
+    /**
+     * @dataProvider getErrorCodesExceptions
+     *
+     * @param string $exception
+     * @param int    $code
+     */
+    public function testUpdateUserPasswordException($exception, $code)
+    {
+        $this->expectException($exception);
+
+        $userId = '12345';
+        $this->configureMessage('PUT', '/users/'.$userId.'/password', [], json_encode([
+            'current_password' => 'current-pw',
+            'new_password' => 'new-pw',
+        ]));
+        $this->configureRequestAndResponse($code);
+        $this->client->updateUserPassword($userId, 'current-pw', 'new-pw');
+    }
+
+    public function testUpdateUserPasswordEmptyIdException()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->client->updateUserPassword('', 'current-pw', 'new-pw');
+    }
+
+    public function testUpdateUserPasswordEmptyCurrentPasswordException()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->client->updateUserPassword('user-12345', '', 'new-pw');
+    }
+
+    public function testUpdateUserPasswordEmptyNewPasswordException()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->client->updateUserPassword('user-12345', 'current-pw', '');
+    }
+
     public function testUpdateUserRolesSuccess()
     {
         $userId = '12345';

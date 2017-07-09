@@ -254,6 +254,32 @@ final class Users extends HttpApi
     }
 
     /**
+     * Update a user's password. New password must meet password policy set by server configuration.
+     *
+     * @param string $userId          User GUID
+     * @param string $currentPassword The current password for the user
+     * @param string $newPassword     The new password for the user
+     *
+     * @return Status|ResponseInterface
+     */
+    public function updateUserPassword(string $userId, string $currentPassword, string $newPassword)
+    {
+        if (empty($userId)) {
+            throw new InvalidArgumentException('UserId can not be empty');
+        }
+        if (empty($currentPassword) || empty($newPassword)) {
+            throw new InvalidArgumentException('The current password and the new password can not be empty');
+        }
+
+        $response = $this->httpPut(sprintf('/users/%s/password', $userId), [
+            'current_password' => $currentPassword,
+            'new_password' => $newPassword,
+        ]);
+
+        return $this->handleResponse($response, Status::class);
+    }
+
+    /**
      * Returns an user by its username, use "me" to get the current logged in user.
      *
      * @param string $username
