@@ -100,8 +100,8 @@ class MattermostLoginPlugin implements Plugin
         switch ($response->getStatusCode()) {
             case 200:
                 $tokens = $response->getHeader('Token');
-                if (count($tokens)) {
-                    $this->bearerAuthentication = new Bearer(reset($tokens));
+                if (count($tokens) && $token = reset($tokens)) {
+                    $this->bearerAuthentication = new Bearer($token);
                 }
                 break;
             case 401:
