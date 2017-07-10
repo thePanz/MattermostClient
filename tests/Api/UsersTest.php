@@ -2,7 +2,7 @@
 
 namespace Pnz\MattermostClient\Tests\Api;
 
-use Pnz\MattermostClient\Api\Users;
+use Pnz\MattermostClient\Api\UsersApi;
 use Pnz\MattermostClient\Exception\InvalidArgumentException;
 use Pnz\MattermostClient\Model\Status;
 use Pnz\MattermostClient\Model\User\User;
@@ -14,7 +14,7 @@ use Pnz\MattermostClient\Model\User\Users as UsersCollection;
 class UsersTest extends BaseHttpApiTest
 {
     /**
-     * @var Users
+     * @var UsersApi
      */
     private $client;
 
@@ -22,7 +22,7 @@ class UsersTest extends BaseHttpApiTest
     {
         parent::setUp();
 
-        $this->client = new Users($this->httpClient, $this->messageFactory, $this->hydrator);
+        $this->client = new UsersApi($this->httpClient, $this->messageFactory, $this->hydrator);
     }
 
     public function testLoginSuccess()

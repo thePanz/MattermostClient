@@ -11,7 +11,7 @@ use Pnz\MattermostClient\Model\File\FileUploadInfo;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
-final class Files extends HttpApi
+final class FilesApi extends HttpApi
 {
     /**
      * Uploads a file that can later be attached to a post.

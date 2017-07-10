@@ -13,7 +13,7 @@ use Pnz\MattermostClient\Model\Post\Posts;
 use Pnz\MattermostClient\Model\Status;
 use Psr\Http\Message\ResponseInterface;
 
-final class Channels extends HttpApi
+final class ChannelsApi extends HttpApi
 {
     /**
      * Returns an channel by its ID.

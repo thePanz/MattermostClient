@@ -2,7 +2,7 @@
 
 namespace Pnz\MattermostClient\Tests\Api;
 
-use Pnz\MattermostClient\Api\Posts;
+use Pnz\MattermostClient\Api\PostsApi;
 use Pnz\MattermostClient\Exception\InvalidArgumentException;
 use Pnz\MattermostClient\Model\Post\Post;
 use Pnz\MattermostClient\Model\Status;
@@ -13,7 +13,7 @@ use Pnz\MattermostClient\Model\Status;
 class PostsTest extends BaseHttpApiTest
 {
     /**
-     * @var Posts
+     * @var PostsApi
      */
     private $client;
 
@@ -21,7 +21,7 @@ class PostsTest extends BaseHttpApiTest
     {
         parent::setUp();
 
-        $this->client = new Posts($this->httpClient, $this->messageFactory, $this->hydrator);
+        $this->client = new PostsApi($this->httpClient, $this->messageFactory, $this->hydrator);
     }
 
     public function testCreatePostSuccess()

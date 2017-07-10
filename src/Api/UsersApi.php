@@ -7,10 +7,10 @@ namespace Pnz\MattermostClient\Api;
 use Pnz\MattermostClient\Exception\InvalidArgumentException;
 use Pnz\MattermostClient\Model\Status;
 use Pnz\MattermostClient\Model\User\User;
-use Pnz\MattermostClient\Model\User\Users as UsersCollection;
+use Pnz\MattermostClient\Model\User\Users;
 use Psr\Http\Message\ResponseInterface;
 
-final class Users extends HttpApi
+final class UsersApi extends HttpApi
 {
     /**
      * @param string $loginId  The login Id
@@ -66,7 +66,7 @@ final class Users extends HttpApi
      *
      * @param array $userIds
      *
-     * @return UsersCollection|ResponseInterface
+     * @return Users|ResponseInterface
      */
     public function getUsersByIds(array $userIds)
     {
@@ -76,7 +76,7 @@ final class Users extends HttpApi
 
         $response = $this->httpPost('/users/ids', $userIds);
 
-        return $this->handleResponse($response, UsersCollection::class);
+        return $this->handleResponse($response, Users::class);
     }
 
     /**
@@ -84,13 +84,13 @@ final class Users extends HttpApi
      *
      * @param array $params The listing params, 'page', 'per_page', 'in_channel', 'in_team', 'not_in_channel'
      *
-     * @return UsersCollection|ResponseInterface
+     * @return Users|ResponseInterface
      */
     public function getUsers(array $params = [])
     {
         $response = $this->httpGet('/users', $params);
 
-        return $this->handleResponse($response, UsersCollection::class);
+        return $this->handleResponse($response, Users::class);
     }
 
     /**
@@ -118,7 +118,7 @@ final class Users extends HttpApi
      *
      * @see https://api.mattermost.com/v4/#tag/users%2Fpaths%2F~1users~1usernames%2Fpost
      *
-     * @return UsersCollection|ResponseInterface
+     * @return Users|ResponseInterface
      */
     public function getUsersByUsernames(array $userNames)
     {
@@ -128,7 +128,7 @@ final class Users extends HttpApi
 
         $response = $this->httpPost('/users/usernames', $userNames);
 
-        return $this->handleResponse($response, UsersCollection::class);
+        return $this->handleResponse($response, Users::class);
     }
 
     /**

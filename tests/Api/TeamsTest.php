@@ -2,7 +2,7 @@
 
 namespace Pnz\MattermostClient\Tests\Api;
 
-use Pnz\MattermostClient\Api\Teams;
+use Pnz\MattermostClient\Api\TeamsApi;
 use Pnz\MattermostClient\Exception\InvalidArgumentException;
 use Pnz\MattermostClient\Model\Channel\Channels;
 use Pnz\MattermostClient\Model\Status;
@@ -17,7 +17,7 @@ use Pnz\MattermostClient\Model\Team\TeamStats;
 class TeamsTest extends BaseHttpApiTest
 {
     /**
-     * @var Teams
+     * @var TeamsApi
      */
     private $client;
 
@@ -25,7 +25,7 @@ class TeamsTest extends BaseHttpApiTest
     {
         parent::setUp();
 
-        $this->client = new Teams($this->httpClient, $this->messageFactory, $this->hydrator);
+        $this->client = new TeamsApi($this->httpClient, $this->messageFactory, $this->hydrator);
     }
 
     public function testGetTeamByNameSuccess()

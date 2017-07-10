@@ -2,7 +2,7 @@
 
 namespace Pnz\MattermostClient\Tests\Api;
 
-use Pnz\MattermostClient\Api\Files;
+use Pnz\MattermostClient\Api\FilesApi;
 use Pnz\MattermostClient\Exception\InvalidArgumentException;
 use Pnz\MattermostClient\Model\File\FileInfo;
 use Psr\Http\Message\StreamInterface;
@@ -13,7 +13,7 @@ use Psr\Http\Message\StreamInterface;
 class FilesTest extends BaseHttpApiTest
 {
     /**
-     * @var Files
+     * @var FilesApi
      */
     private $client;
 
@@ -21,7 +21,7 @@ class FilesTest extends BaseHttpApiTest
     {
         parent::setUp();
 
-        $this->client = new Files($this->httpClient, $this->messageFactory, $this->hydrator);
+        $this->client = new FilesApi($this->httpClient, $this->messageFactory, $this->hydrator);
     }
 
     public function testGetFileSuccess()

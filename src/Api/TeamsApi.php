@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace Pnz\MattermostClient\Api;
 
 use Pnz\MattermostClient\Exception\InvalidArgumentException;
-use Pnz\MattermostClient\Model\Channel\Channels as ChannelsCollection;
+use Pnz\MattermostClient\Model\Channel\Channels;
 use Pnz\MattermostClient\Model\Status;
 use Pnz\MattermostClient\Model\Team\Team;
 use Pnz\MattermostClient\Model\Team\TeamMember;
 use Pnz\MattermostClient\Model\Team\TeamMembers;
-use Pnz\MattermostClient\Model\Team\Teams as TeamsCollection;
+use Pnz\MattermostClient\Model\Team\Teams;
 use Pnz\MattermostClient\Model\Team\TeamStats;
 use Psr\Http\Message\ResponseInterface;
 
-final class Teams extends HttpApi
+final class TeamsApi extends HttpApi
 {
     /**
      * Returns an team by its ID.
@@ -55,13 +55,13 @@ final class Teams extends HttpApi
      *
      * @param array $params The listing params, 'page', 'per_page'
      *
-     * @return TeamsCollection|ResponseInterface
+     * @return Teams|ResponseInterface
      */
     public function getTeams(array $params = [])
     {
         $response = $this->httpGet('/teams', $params);
 
-        return $this->handleResponse($response, TeamsCollection::class);
+        return $this->handleResponse($response, Teams::class);
     }
 
     /**
@@ -182,7 +182,7 @@ final class Teams extends HttpApi
      * @param string $teamId The team ID
      * @param array  $params The listing params, 'page', 'per_page'
      *
-     * @return ChannelsCollection|ResponseInterface
+     * @return Channels|ResponseInterface
      */
     public function getTeamPublicChannels(string $teamId, array $params = [])
     {
@@ -192,7 +192,7 @@ final class Teams extends HttpApi
 
         $response = $this->httpGet(sprintf('/teams/%s/channels', $teamId), $params);
 
-        return $this->handleResponse($response, ChannelsCollection::class);
+        return $this->handleResponse($response, Channels::class);
     }
 
     /**

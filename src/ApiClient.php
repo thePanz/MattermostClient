@@ -9,11 +9,11 @@ use Http\Discovery\HttpClientDiscovery;
 use Http\Discovery\MessageFactoryDiscovery;
 use Http\Message\MessageFactory;
 use Http\Message\RequestFactory;
-use Pnz\MattermostClient\Api\Channels;
-use Pnz\MattermostClient\Api\Files;
-use Pnz\MattermostClient\Api\Posts;
-use Pnz\MattermostClient\Api\Teams;
-use Pnz\MattermostClient\Api\Users;
+use Pnz\MattermostClient\Api\ChannelsApi;
+use Pnz\MattermostClient\Api\FilesApi;
+use Pnz\MattermostClient\Api\PostsApi;
+use Pnz\MattermostClient\Api\TeamsApi;
+use Pnz\MattermostClient\Api\UsersApi;
 use Pnz\MattermostClient\Hydrator\Hydrator;
 use Pnz\MattermostClient\Hydrator\ModelHydrator;
 
@@ -73,50 +73,50 @@ final class ApiClient
     /**
      * Return a client handling the Users resources.
      *
-     * @return Api\Users
+     * @return Api\UsersApi
      */
-    public function users(): Users
+    public function users(): UsersApi
     {
-        return new Api\Users($this->httpClient, $this->messageFactory, $this->hydrator);
+        return new Api\UsersApi($this->httpClient, $this->messageFactory, $this->hydrator);
     }
 
     /**
      * Return a client handling the Teams resources.
      *
-     * @return Api\Teams
+     * @return Api\TeamsApi
      */
-    public function teams(): Teams
+    public function teams(): TeamsApi
     {
-        return new Api\Teams($this->httpClient, $this->messageFactory, $this->hydrator);
+        return new Api\TeamsApi($this->httpClient, $this->messageFactory, $this->hydrator);
     }
 
     /**
      * Return a client handling the Channels resources.
      *
-     * @return Api\Channels
+     * @return Api\ChannelsApi
      */
-    public function channels(): Channels
+    public function channels(): ChannelsApi
     {
-        return new Api\Channels($this->httpClient, $this->messageFactory, $this->hydrator);
+        return new Api\ChannelsApi($this->httpClient, $this->messageFactory, $this->hydrator);
     }
 
     /**
      * Return a client handling the Posts resources.
      *
-     * @return Api\Posts
+     * @return Api\PostsApi
      */
-    public function posts(): Posts
+    public function posts(): PostsApi
     {
-        return new Api\Posts($this->httpClient, $this->messageFactory, $this->hydrator);
+        return new Api\PostsApi($this->httpClient, $this->messageFactory, $this->hydrator);
     }
 
     /**
      * Return a client handling the Files resources.
      *
-     * @return Api\Files
+     * @return Api\FilesApi
      */
-    public function files(): Files
+    public function files(): FilesApi
     {
-        return new Api\Files($this->httpClient, $this->messageFactory, $this->hydrator);
+        return new Api\FilesApi($this->httpClient, $this->messageFactory, $this->hydrator);
     }
 }

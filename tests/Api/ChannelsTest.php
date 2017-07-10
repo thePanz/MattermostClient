@@ -2,7 +2,7 @@
 
 namespace Pnz\MattermostClient\Tests\Api;
 
-use Pnz\MattermostClient\Api\Channels;
+use Pnz\MattermostClient\Api\ChannelsApi;
 use Pnz\MattermostClient\Exception\InvalidArgumentException;
 use Pnz\MattermostClient\Model\Channel\Channel;
 use Pnz\MattermostClient\Model\Channel\ChannelMembers;
@@ -16,7 +16,7 @@ use Pnz\MattermostClient\Model\Status;
 class ChannelsTest extends BaseHttpApiTest
 {
     /**
-     * @var Channels
+     * @var ChannelsApi
      */
     private $client;
 
@@ -24,7 +24,7 @@ class ChannelsTest extends BaseHttpApiTest
     {
         parent::setUp();
 
-        $this->client = new Channels($this->httpClient, $this->messageFactory, $this->hydrator);
+        $this->client = new ChannelsApi($this->httpClient, $this->messageFactory, $this->hydrator);
     }
 
     public function testCreateChannelSuccess()
