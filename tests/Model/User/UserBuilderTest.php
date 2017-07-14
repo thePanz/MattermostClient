@@ -4,6 +4,7 @@ namespace Pnz\MattermostClient\Tests\Model\User;
 
 use PHPUnit\Framework\TestCase;
 use Pnz\MattermostClient\Exception\InvalidArgumentException;
+use Pnz\MattermostClient\Model\ModelBuilder;
 use Pnz\MattermostClient\Model\User\UserBuilder;
 
 /**
@@ -55,5 +56,32 @@ class UserBuilderTest extends TestCase
         ];
 
         $this->assertSame($expected, $this->builder->build());
+    }
+
+    public function testUserBuilderFull()
+    {
+        $this->builder->setUsername('username');
+        $this->builder->setPassword('password');
+        $this->builder->setEmail('email');
+        $this->builder->setLastName('last-name');
+        $this->builder->setFirstName('first-name');
+        $this->builder->setNickname('nickname');
+
+        $expected = [
+            'username' => 'username',
+            'password' => 'password',
+            'email' => 'email',
+            'last_name' => 'last-name',
+            'first_name' => 'first-name',
+            'nickname' => 'nickname',
+        ];
+
+        $this->assertSame($expected, $this->builder->build());
+    }
+
+    public function testChannelBuilderPatch()
+    {
+        $expected = [];
+        $this->assertSame($expected, $this->builder->build(ModelBuilder::BUILD_FOR_PATCH));
     }
 }
