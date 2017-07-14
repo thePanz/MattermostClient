@@ -19,7 +19,7 @@ final class Posts extends ModelCollectionOrdered
     /**
      * {@inheritdoc}
      */
-    protected function getItemsDataName()
+    protected static function getItemsDataName()
     {
         return 'posts';
     }

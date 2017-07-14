@@ -63,5 +63,5 @@ abstract class ModelCollectionOrdered extends ModelCollection
      *
      * @return string
      */
-    abstract protected function getItemsDataName();
+    abstract protected static function getItemsDataName();
 }
