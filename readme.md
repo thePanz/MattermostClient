@@ -8,15 +8,29 @@
 
 A PHP library providing a client for the REST API v4 of [Mattermost](https://www.mattermost.org).
 
-*NOTE*: The implementation is still in progress (as today: 2017-06-23), feel free to add or
-    extend the current implementation.
-    To track the available API endpoints, visit this [Google Spreadsheet](https://docs.google.com/spreadsheets/d/1mLH2aYC8mMv8sLf_mZWxW8H-67juDYJ9M8dCxwWXdf4/edit?usp=sharing) document.
+This library allows developers to use Mattermost data as objects via a set of specific Models.
+Data related to Team, Channel, User, Posts and so on are converted to model objects to be easily used
+and manipulated. Error responses from the Mattermost API are also handled as specific domain exceptions.
+
+Your IDE will be able to auto-complete and suggest model properties, thus lowering the
+barrier to start using the Mattermost APIs without reading the extensive API documentation.
+
+Following the example of [Friends of Api](https://github.com/FriendsOfApi/boilerplate) this library allows
+developers to use and extend the `Hydrators` used to parse the API responses.
+Those are responsible to transform the JSON returned by the API into Models (by default) or into other
+response types.
+
+Model `builders` are included to facilitate the creation/update of models via the API. 
+
+Refer to the [Changelog](https://github.com/thePanz/MattermostClient/blob/master/changelog.md) for the list of
+changes.
+The list of supported APIs endpoints are available in this [Google Spreadsheet](https://docs.google.com/spreadsheets/d/1mLH2aYC8mMv8sLf_mZWxW8H-67juDYJ9M8dCxwWXdf4/edit?usp=sharing) document.
 
 ## Installation
 
 **TL;DR**
 ```bash
-composer require php-http/curl-client guzzlehttp/psr7 php-http/message pnz/mattermost-client
+composer require php-http/guzzle6-adapter guzzlehttp/psr7 php-http/message pnz/mattermost-client
 ```
 
 This library does not have a dependency on Guzzle or any other library that sends HTTP requests. We use the awesome 
@@ -42,7 +56,7 @@ Now you may install the library by running the following:
 composer require pnz/mattermost-client
 ```
 
-## Using
+## Usage example
 
 ``` php
 <?php
@@ -65,36 +79,38 @@ try {
 
 ```
 
-### Creating a Team
+### Handling Mattermost entities
 
-Specific Model Builders are available to help the entity creation, as an example,
-to create a Team use a `TeamBuilder()` instance, add the desired fields and call `build()`
-to obtain the data needed to invoke the `createTeam()` API. 
+Specific Model Builders are available to help the creation of Mattermost entities.
 
+As an example, to create a Team use a `TeamBuilder()` instance, add the desired fields and call `build()`
+to obtain the data needed to invoke the `createTeam()` API.
 
+Create a Team:
 ``` php
-<?php
-
-require_once 'vendor/autoload.php';
-
 use Pnz\MattermostClient\Model\Team;
 
-$endpoint = 'http://mattermostserver.ext/api/v4';
-$username = 'username';
-$password = 'password';
+$teamData = (new Team\TeamBuilder())
+    ->setDisplayName('Team 01')
+    ->setName('team-01')
+    ->setType(Team\Team::TEAM_INVITE_ONLY)
+    ->build();
 
-$configurator = (new HttpClientConfigurator())
-    ->setEndpoint($endpoint)
-    ->setCredentials($username, $password);
-$apiClient =  ApiClient::configure($configurator);
+$team = $apiClient->teams()->createTeam($teamData);
+```
 
-try {
-    $teamData = (new Team\TeamBuilder())
-        ->setDisplayName('Team 01')
-        ->setName('team-01')
-        ->setType(Team\Team::TEAM_INVITE_ONLY)
-        ->build();
+The model builders can also be used to generate the data required to update or to patch a Mattermost entity.
 
-    $team = $apiClient->teams()->createTeam($teamData);
+Patch a Post:
+``` php
+<?php
+use Pnz\MattermostClient\Model\Post;
 
+$post = $apiClient->posts()->getPost('zhcapisftibyjnf54gixg3hdew');
+$postData = (new Post\PostBuilder())
+    ->setMessage("I can `format` the _text_ of a *message*, incliuding [links](www.mattermost.com)')
+    ->setIsPinned(true)
+    ->build(Post\PostBuilder::BUILD_FOR_PATCH);
+
+$post = $apiClient->posts()->patchPost($post->getId(), $postData);
 ```
