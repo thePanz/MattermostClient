@@ -6,6 +6,7 @@ namespace Pnz\MattermostClient\Api;
 
 use Pnz\MattermostClient\Exception\InvalidArgumentException;
 use Pnz\MattermostClient\Model\Status;
+use Pnz\MattermostClient\Model\Team\Teams;
 use Pnz\MattermostClient\Model\User\User;
 use Pnz\MattermostClient\Model\User\Users;
 use Psr\Http\Message\ResponseInterface;
@@ -46,7 +47,7 @@ final class UsersApi extends HttpApi
     /**
      * Returns an user by its ID, use "me" to get the current logged in user.
      *
-     * @param string $userId
+     * @param string $userId User GUID
      *
      * @return User|ResponseInterface
      */
@@ -59,6 +60,24 @@ final class UsersApi extends HttpApi
         $response = $this->httpGet(sprintf('/users/%s', $userId));
 
         return $this->handleResponse($response, User::class);
+    }
+
+    /**
+     * Get a list of teams that a user is on.
+     *
+     * @param string $userId User GUID
+     *
+     * @return User|ResponseInterface
+     */
+    public function getUserTeams(string $userId)
+    {
+        if (empty($userId)) {
+            throw new InvalidArgumentException('UserId can not be empty');
+        }
+
+        $response = $this->httpGet(sprintf('/users/%s/teams', $userId));
+
+        return $this->handleResponse($response, Teams::class);
     }
 
     /**

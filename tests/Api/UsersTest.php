@@ -5,8 +5,9 @@ namespace Pnz\MattermostClient\Tests\Api;
 use Pnz\MattermostClient\Api\UsersApi;
 use Pnz\MattermostClient\Exception\InvalidArgumentException;
 use Pnz\MattermostClient\Model\Status;
+use Pnz\MattermostClient\Model\Team\Teams;
 use Pnz\MattermostClient\Model\User\User;
-use Pnz\MattermostClient\Model\User\Users as UsersCollection;
+use Pnz\MattermostClient\Model\User\Users;
 
 /**
  * @coversDefaultClass \Pnz\MattermostClient\Api\Users
@@ -141,7 +142,36 @@ class UsersTest extends BaseHttpApiTest
         $this->client->getUserById('');
     }
 
-    //  **
+    public function testGetUserTeamsSuccess()
+    {
+        $userId = '12345';
+        $this->configureMessage('GET', '/users/'.$userId.'/teams');
+        $this->configureRequestAndResponse(200);
+        $this->configureHydrator(Teams::class);
+        $this->client->getUserTeams($userId);
+    }
+
+    /**
+     * @dataProvider getErrorCodesExceptions
+     *
+     * @param string $exception
+     * @param int    $code
+     */
+    public function testGetUserTeamsException($exception, $code)
+    {
+        $this->expectException($exception);
+        $userId = '12345';
+        $this->configureMessage('GET', '/users/'.$userId.'/teams');
+        $this->configureRequestAndResponse($code);
+        $this->client->getUserTeams($userId);
+    }
+
+    public function testGetUserTeamsEmptyId()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->client->getUserTeams('');
+    }
+
     public function testGetUserByUsernameSuccess()
     {
         $username = 'user-name';
@@ -322,7 +352,7 @@ class UsersTest extends BaseHttpApiTest
         $userIds = ['111', '222'];
         $this->configureMessage('POST', '/users/ids', [], json_encode($userIds));
         $this->configureRequestAndResponse(200);
-        $this->configureHydrator(UsersCollection::class);
+        $this->configureHydrator(Users::class);
         $this->client->getUsersByIds($userIds);
     }
 
@@ -353,7 +383,7 @@ class UsersTest extends BaseHttpApiTest
 
         $this->configureMessage('POST', '/users/usernames', [], json_encode($userIds));
         $this->configureRequestAndResponse(200);
-        $this->configureHydrator(UsersCollection::class);
+        $this->configureHydrator(Users::class);
 
         $this->client->getUsersByUsernames($userIds);
     }
@@ -497,7 +527,7 @@ class UsersTest extends BaseHttpApiTest
     {
         $this->configureMessage('GET', '/users');
         $this->configureRequestAndResponse(200);
-        $this->configureHydrator(UsersCollection::class);
+        $this->configureHydrator(Users::class);
         $this->client->getUsers();
     }
 
@@ -506,7 +536,7 @@ class UsersTest extends BaseHttpApiTest
         $this->configureMessage('GET', '/users'.
             '?per_page=1&page=2&in_channel=channel&in_team=team&not_in_channel=channel-not-in');
         $this->configureRequestAndResponse(200);
-        $this->configureHydrator(UsersCollection::class);
+        $this->configureHydrator(Users::class);
         $this->client->getUsers([
             'per_page' => 1,
             'page' => 2,
