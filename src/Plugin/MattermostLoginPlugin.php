@@ -7,8 +7,8 @@ namespace Pnz\MattermostClient\Plugin;
 use Http\Client\Common\Plugin;
 use Http\Message\Authentication\Bearer;
 use Http\Message\RequestFactory;
+use Pnz\MattermostClient\Exception\ApiException;
 use Pnz\MattermostClient\Exception\Domain\LoginFailedException;
-use Pnz\MattermostClient\Exception\GenericApiException;
 use Pnz\MattermostClient\Model\Error;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -78,7 +78,7 @@ class MattermostLoginPlugin implements Plugin
      * @param callable $first
      *
      * @throws LoginFailedException when loginId/password are not valid
-     * @throws GenericApiException  When an unknown response is returned by the API while logging in
+     * @throws ApiException         When an unknown response is returned by the API while logging in
      */
     private function authenticate(callable $first)
     {
@@ -112,7 +112,7 @@ class MattermostLoginPlugin implements Plugin
                 }
                 // Otherwise fallback to the default exception
             default:
-                throw new GenericApiException($response);
+                throw new ApiException($response);
         }
     }
 }

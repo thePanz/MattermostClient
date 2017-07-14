@@ -7,12 +7,12 @@ use Http\Message\Decorator\ResponseDecorator;
 use Http\Message\MessageFactory;
 use Http\Message\StreamFactory\GuzzleStreamFactory;
 use PHPUnit\Framework\TestCase;
+use Pnz\MattermostClient\Exception\ApiException;
 use Pnz\MattermostClient\Exception\Domain\DisabledFeatureException;
 use Pnz\MattermostClient\Exception\Domain\MissingAccessTokenException;
 use Pnz\MattermostClient\Exception\Domain\NotFoundException;
 use Pnz\MattermostClient\Exception\Domain\PermissionDeniedException;
 use Pnz\MattermostClient\Exception\Domain\ValidationException;
-use Pnz\MattermostClient\Exception\GenericApiException;
 use Pnz\MattermostClient\Hydrator\Hydrator;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -92,9 +92,9 @@ abstract class BaseHttpApiTest extends TestCase
             '403' => [PermissionDeniedException::class, 403],
             '404' => [NotFoundException::class, 404],
             '501' => [DisabledFeatureException::class, 501],
-            '500' => [GenericApiException::class, 500],
+            '500' => [ApiException::class, 500],
             // Weird response
-            '000' => [GenericApiException::class, 000],
+            '000' => [ApiException::class, 000],
         ];
     }
 }

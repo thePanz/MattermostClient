@@ -1,7 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pnz\MattermostClient\Exception;
 
-interface DomainException extends ApiException
+use Pnz\MattermostClient\Model\Error;
+use Psr\Http\Message\ResponseInterface;
+
+interface DomainException extends Exception
 {
+    /**
+     * @return
+     * @return ResponseInterface
+     */
+    public function getResponse();
+
+    /**
+     * Returns the underlying Error, if available.
+     *
+     * @return Error|null
+     */
+    public function getError();
 }

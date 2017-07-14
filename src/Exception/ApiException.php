@@ -7,18 +7,39 @@ namespace Pnz\MattermostClient\Exception;
 use Pnz\MattermostClient\Model\Error;
 use Psr\Http\Message\ResponseInterface;
 
-interface ApiException
+class ApiException extends \Exception implements DomainException
 {
     /**
-     * @return
-     * @return ResponseInterface
+     * @var Error
      */
-    public function getResponse();
+    protected $error;
 
     /**
-     * Returns the underlying Error, if available.
-     *
+     * @var ResponseInterface
+     */
+    protected $response;
+
+    public function __construct(ResponseInterface $response, Error $error = null)
+    {
+        $this->error = $error;
+        $this->response = $response;
+
+        parent::__construct($error ? $error->getMessage() : '', $response->getStatusCode());
+    }
+
+    /**
      * @return Error|null
      */
-    public function getError();
+    public function getError()
+    {
+        return $this->error;
+    }
+
+    /**
+     * @return ResponseInterface
+     */
+    public function getResponse()
+    {
+        return $this->response;
+    }
 }

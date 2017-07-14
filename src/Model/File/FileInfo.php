@@ -30,17 +30,17 @@ class FileInfo extends Model
         return $this->data['post_id'];
     }
 
-    public function getCreateAt(): integer
+    public function getCreateAt(): int
     {
         return $this->data['create_at'];
     }
 
-    public function getUpdateAt(): integer
+    public function getUpdateAt(): int
     {
         return $this->data['update_at'];
     }
 
-    public function getDeleteAt(): integer
+    public function getDeleteAt(): int
     {
         return $this->data['delete_at'];
     }
@@ -64,7 +64,7 @@ class FileInfo extends Model
     /**
      * The size of the file in bytes.
      */
-    public function getSize(): integer
+    public function getSize(): int
     {
         return $this->data['size'];
     }
@@ -80,7 +80,7 @@ class FileInfo extends Model
     /**
      * If this file is an image, the width of the file.
      */
-    public function getWidth(): integer
+    public function getWidth(): int
     {
         return $this->data['width'];
     }
@@ -88,7 +88,7 @@ class FileInfo extends Model
     /**
      * If this file is an image, the height of the file.
      */
-    public function getHeight(): integer
+    public function getHeight(): int
     {
         return $this->data['height'];
     }
@@ -96,7 +96,7 @@ class FileInfo extends Model
     /**
      * If this file is an image, whether or not it has a preview-sized version.
      */
-    public function getHasPreviewImage(): boolean
+    public function getHasPreviewImage(): bool
     {
         return $this->data['has_preview_image'];
     }

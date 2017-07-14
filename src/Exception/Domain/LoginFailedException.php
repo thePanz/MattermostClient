@@ -2,9 +2,8 @@
 
 namespace Pnz\MattermostClient\Exception\Domain;
 
-use Pnz\MattermostClient\Exception\DomainException;
-use Pnz\MattermostClient\Exception\GenericApiException;
+use Pnz\MattermostClient\Exception\ApiException;
 
-final class LoginFailedException extends GenericApiException implements DomainException
+final class LoginFailedException extends ApiException
 {
 }

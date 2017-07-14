@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased](#unreleased)
 ### Added
 ### Changed
+- Refactored Exceptions structure and inheritances
+
 ### Deprecated
 ### Removed
 ### Fixed
