@@ -86,9 +86,9 @@ abstract class HttpApi
     /**
      * Send a POST request with raw data.
      *
-     * @param string       $path           Request path
-     * @param array|string $body           Request body
-     * @param array        $requestHeaders Request headers
+     * @param string               $path           Request path
+     * @param resource|string|null $body           Request body
+     * @param array                $requestHeaders Request headers
      *
      * @return ResponseInterface
      */
@@ -120,6 +120,7 @@ abstract class HttpApi
      *
      * @param string $path           Request path
      * @param array  $params         POST parameters to be JSON encoded
+     * @param array  $pathParams     URL parameters, used as query string
      * @param array  $requestHeaders Request headers
      *
      * @return ResponseInterface
