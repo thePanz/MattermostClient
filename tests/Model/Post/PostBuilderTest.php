@@ -4,6 +4,7 @@ namespace Pnz\MattermostClient\Tests\Model\Post;
 
 use PHPUnit\Framework\TestCase;
 use Pnz\MattermostClient\Exception\InvalidArgumentException;
+use Pnz\MattermostClient\Model\ModelBuilder;
 use Pnz\MattermostClient\Model\Post\PostBuilder;
 
 /**
@@ -71,5 +72,17 @@ class PostBuilderTest extends TestCase
         ];
 
         $this->assertSame($expected, $this->builder->build());
+    }
+
+    public function testPostBuilderUpdate()
+    {
+        $expected = [];
+        $this->assertSame($expected, $this->builder->build(ModelBuilder::BUILD_FOR_UPDATE));
+    }
+
+    public function testPostBuilderPatch()
+    {
+        $expected = [];
+        $this->assertSame($expected, $this->builder->build(ModelBuilder::BUILD_FOR_PATCH));
     }
 }
