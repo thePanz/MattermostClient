@@ -156,6 +156,25 @@ final class TeamsApi extends HttpApi
     }
 
     /**
+     * Get a team member from the system given a Team and User IDs.
+     *
+     * @param string $teamId The Team GUID
+     * @param string $userId The User GUID
+     *
+     * @return TeamMember
+     */
+    public function getTeamMember(string $teamId, string $userId)
+    {
+        if (empty($teamId) || empty($userId)) {
+            throw new InvalidArgumentException('TeamID and UserId can not be empty');
+        }
+
+        $response = $this->httpGet(sprintf('/teams/%s/members/%s', $teamId, $userId));
+
+        return $this->handleResponse($response, TeamMember::class);
+    }
+
+    /**
      * Remove a team member.
      *
      * @param string $teamId The team ID

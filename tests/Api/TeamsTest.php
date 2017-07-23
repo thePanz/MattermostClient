@@ -7,8 +7,9 @@ use Pnz\MattermostClient\Exception\InvalidArgumentException;
 use Pnz\MattermostClient\Model\Channel\Channels;
 use Pnz\MattermostClient\Model\Status;
 use Pnz\MattermostClient\Model\Team\Team;
+use Pnz\MattermostClient\Model\Team\TeamMember;
 use Pnz\MattermostClient\Model\Team\TeamMembers;
-use Pnz\MattermostClient\Model\Team\Teams as TeamsCollection;
+use Pnz\MattermostClient\Model\Team\Teams;
 use Pnz\MattermostClient\Model\Team\TeamStats;
 
 /**
@@ -315,6 +316,50 @@ class TeamsTest extends BaseHttpApiTest
         $this->client->removeTeamMember('team-id', '');
     }
 
+    public function testGetTeamMemberSuccess()
+    {
+        $teamId = '12345';
+        $userId = '98765';
+        $this->configureMessage('GET', '/teams/'.$teamId.'/members/'.$userId);
+        $this->configureRequestAndResponse(200);
+        $this->configureHydrator(TeamMember::class);
+        $this->client->getTeamMember($teamId, $userId);
+    }
+
+    /**
+     * @dataProvider getErrorCodesExceptions
+     *
+     * @param string $exception
+     * @param int    $code
+     */
+    public function testGetTeamMemberException($exception, $code)
+    {
+        $this->expectException($exception);
+        $teamId = '12345';
+        $userId = '98765';
+        $this->configureMessage('GET', '/teams/'.$teamId.'/members/'.$userId);
+        $this->configureRequestAndResponse($code);
+        $this->client->getTeamMember($teamId, $userId);
+    }
+
+    public function testGetTeamMemberEmpty()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->client->getTeamMember('', '');
+    }
+
+    public function testGetTeamMemberEmptyTeamId()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->client->getTeamMember('', 'user-id');
+    }
+
+    public function testGetTeamMemberEmptyUserId()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->client->getTeamMember('team-id', '');
+    }
+
     public function testAddTeamMemberSuccess()
     {
         $teamId = '12345';
@@ -448,7 +493,7 @@ class TeamsTest extends BaseHttpApiTest
             '?per_page=1&page=2'
         );
         $this->configureRequestAndResponse(200);
-        $this->configureHydrator(TeamsCollection::class);
+        $this->configureHydrator(Teams::class);
         $this->client->getTeams([
             'per_page' => 1,
             'page' => 2,

@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](#unreleased)
 ### Added
+- Added /teams/{team_id}/members/{user_id} API endpoint (TeamsApi::getTeamMember())
 - Added /users/{user_id}/teams API endpoint (UsersApi::getUserTeams())
 
 ### Changed
