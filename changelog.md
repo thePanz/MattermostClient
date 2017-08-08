@@ -6,16 +6,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](#unreleased)
 ### Added
+### Changed
+### Deprecated
+### Removed
+### Fixed
+### Security
+
+## v[0.1.0](https://github.com/thePanz/MattermostClient/releases/tag/0.1.0)
+### Added
 - Added /teams/{team_id}/members/{user_id} API endpoint (TeamsApi::getTeamMember())
 - Added /users/{user_id}/teams API endpoint (UsersApi::getUserTeams())
 
 ### Changed
 - Refactored Exceptions structure and inheritances
-
-### Deprecated
-### Removed
-### Fixed
-### Security
 
 ## v[0.0.1](https://github.com/thePanz/MattermostClient/releases/tag/0.0.1)
 
