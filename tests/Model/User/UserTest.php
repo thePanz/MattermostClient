@@ -29,6 +29,7 @@ class UserTest extends TestCase
         $this->assertNull($user->getEmailVerified());
         $this->assertNull($user->getNickname());
         $this->assertNull($user->getUpdateAt());
+        $this->assertNull($user->getDeleteAt());
     }
 
     public function testUserCreation()
@@ -47,6 +48,7 @@ class UserTest extends TestCase
             'email_verified' => 'Data for: email_verified',
             'nickname' => 'Data for: nickname',
             'update_at' => 'Data for: update_at',
+            'delete_at' => 'Data for: delete_at',
         ];
 
         $user = User::createFromArray($data);
@@ -65,5 +67,6 @@ class UserTest extends TestCase
         $this->assertSame($data['email_verified'], $user->getEmailVerified());
         $this->assertSame($data['nickname'], $user->getNickname());
         $this->assertSame($data['update_at'], $user->getUpdateAt());
+        $this->assertSame($data['delete_at'], $user->getDeleteAt());
     }
 }

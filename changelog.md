@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](#unreleased)
 ### Added
+- Expose User's delete_at property
 ### Changed
 ### Deprecated
 ### Removed

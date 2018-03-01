@@ -27,6 +27,14 @@ final class User extends Model
     /**
      * @return string
      */
+    public function getDeleteAt()
+    {
+        return $this->data['delete_at'];
+    }
+
+    /**
+     * @return string
+     */
     public function getUpdateAt()
     {
         return $this->data['update_at'];
@@ -121,6 +129,7 @@ final class User extends Model
            'id',
            'create_at',
            'update_at',
+           'delete_at',
            'roles',
            'allow_marketing',
            'locale',
