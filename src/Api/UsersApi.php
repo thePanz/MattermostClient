@@ -16,11 +16,11 @@ final class UsersApi extends HttpApi
     /**
      * @param string $loginId  The login Id
      * @param string $password The password
-     * @param null   $token    The login token, as output variable
+     * @param string $token    The login token, as output variable
      *
      * @return User|ResponseInterface
      */
-    public function login($loginId, $password, &$token = null)
+    public function login(string $loginId, string $password, string &$token = null)
     {
         if (empty($loginId) || empty($password)) {
             throw new InvalidArgumentException('LoginId and Password cannot be empty');
@@ -32,12 +32,12 @@ final class UsersApi extends HttpApi
         ]);
 
         // Use any valid status code here
-        if ($response->getStatusCode() !== 200) {
+        if (200 !== $response->getStatusCode()) {
             $this->handleErrors($response);
         }
 
         $tokens = $response->getHeader('Token');
-        if (count($tokens)) {
+        if (\count($tokens)) {
             $token = reset($tokens);
         }
 
@@ -115,7 +115,6 @@ final class UsersApi extends HttpApi
     /**
      * Returns a user given its email.
      *
-     * @param string $email
      *
      * @return User|ResponseInterface
      */
@@ -133,7 +132,7 @@ final class UsersApi extends HttpApi
     /**
      * Returns a collection of users matching the given usernames.
      *
-     * @param array $userNames
+     * @param string[] $userNames
      *
      * @see https://api.mattermost.com/v4/#tag/users%2Fpaths%2F~1users~1usernames%2Fpost
      *
@@ -235,8 +234,7 @@ final class UsersApi extends HttpApi
      *
      * @see https://api.mattermost.com/v4/#tag/users%2Fpaths%2F~1users~1%7Buser_id%7D~1patch%2Fput
      *
-     * @param string $userId
-     * @param array  $params
+     * @param array $params
      *
      * @return User|ResponseInterface
      */
@@ -252,12 +250,11 @@ final class UsersApi extends HttpApi
     }
 
     /**
-     * Update a user, required parameter: 'id'.
+     * Update a user.
      *
      * @see https://api.mattermost.com/v4/#tag/users%2Fpaths%2F~1users~1%7Buser_id%7D%2Fput
      *
-     * @param string $userId
-     * @param array  $params
+     * @param array $params
      *
      * @return User|ResponseInterface
      */
@@ -275,7 +272,6 @@ final class UsersApi extends HttpApi
     /**
      * Update a user's password. New password must meet password policy set by server configuration.
      *
-     * @param string $userId          User GUID
      * @param string $currentPassword The current password for the user
      * @param string $newPassword     The new password for the user
      *
@@ -300,8 +296,6 @@ final class UsersApi extends HttpApi
 
     /**
      * Returns an user by its username, use "me" to get the current logged in user.
-     *
-     * @param string $username
      *
      * @return User|ResponseInterface
      */

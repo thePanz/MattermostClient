@@ -44,11 +44,6 @@ class MattermostLoginPlugin implements Plugin
      */
     private $factory;
 
-    /**
-     * @param string         $loginId
-     * @param string         $password
-     * @param RequestFactory $factory
-     */
     public function __construct(string $loginId, string $password, RequestFactory $factory)
     {
         $this->loginId = $loginId;
@@ -83,8 +78,8 @@ class MattermostLoginPlugin implements Plugin
     private function authenticate(callable $first)
     {
         $credentials = [
-            'password' => $this->password,
             'login_id' => $this->loginId,
+            'password' => $this->password,
         ];
 
         $request = $this->factory->createRequest(
@@ -105,12 +100,13 @@ class MattermostLoginPlugin implements Plugin
                 }
                 break;
             case 401:
-                if (strpos($response->getHeaderLine('Content-Type'), 'application/json') === 0) {
+                if (0 === strpos($response->getHeaderLine('Content-Type'), 'application/json')) {
                     $contents = json_decode((string) $response->getBody(), true);
                     $error = Error::createFromArray($contents);
                     throw new LoginFailedException($response, $error);
                 }
                 // Otherwise fallback to the default exception
+                // no break
             default:
                 throw new ApiException($response);
         }

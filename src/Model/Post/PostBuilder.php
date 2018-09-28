@@ -63,7 +63,6 @@ class PostBuilder extends ModelBuilder
     /**
      * Set if the post is pinned.
      *
-     * @param bool $isPinned
      *
      * @return $this
      */

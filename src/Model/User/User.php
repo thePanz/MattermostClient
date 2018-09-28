@@ -40,9 +40,6 @@ final class User extends Model
         return $this->data['update_at'];
     }
 
-    /**
-     * @return mixed
-     */
     public function getRoles()
     {
         return $this->data['roles'];

@@ -32,9 +32,6 @@ final class TeamMember extends Model
         return $this->data['create_at'];
     }
 
-    /**
-     * @return mixed
-     */
     public function getRoles()
     {
         return $this->data['roles'];

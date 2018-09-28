@@ -18,8 +18,6 @@ final class ChannelsApi extends HttpApi
     /**
      * Returns an channel by its ID.
      *
-     * @param string $channelId
-     *
      * @return Channel|ResponseInterface
      */
     public function getChannelById(string $channelId)
@@ -56,14 +54,11 @@ final class ChannelsApi extends HttpApi
     }
 
     /**
-     * Returns an channel by its name.
-     *
-     * @param string $teamName
-     * @param string $channelName
+     * Returns an channel by the team name and the chanel name.
      *
      * @return Channel|ResponseInterface
      */
-    public function getChannelByNameAndTeamName($teamName, $channelName)
+    public function getChannelByNameAndTeamName(string $teamName, string $channelName)
     {
         if (empty($teamName) || empty($channelName)) {
             throw new InvalidArgumentException('Team ID and channel name can not be empty');
@@ -75,13 +70,11 @@ final class ChannelsApi extends HttpApi
     }
 
     /**
-     * Retrieve the channel statistics.
-     *
-     * @param string $channelId The Team ID
+     * Retrieve the channel statistics of the given channelId.
      *
      * @return ChannelStats|ResponseInterface
      */
-    public function getChannelStats($channelId)
+    public function getChannelStats(string $channelId)
     {
         if (empty($channelId)) {
             throw new InvalidArgumentException('Channel ID can not be empty');
@@ -111,11 +104,9 @@ final class ChannelsApi extends HttpApi
      *
      * @see https://api.mattermost.com/v4/#tag/channels%2Fpaths%2F~1channels~1%7Bchannel_id%7D%2Fdelete
      *
-     * @param string $channelId
-     *
-     * @return Status
+     * @return Status|ResponseInterface
      */
-    public function deleteChannel($channelId)
+    public function deleteChannel(string $channelId)
     {
         if (empty($channelId)) {
             throw new InvalidArgumentException('Channel ID can not be empty');
@@ -131,11 +122,9 @@ final class ChannelsApi extends HttpApi
      *
      * @see https://api.mattermost.com/v4/#tag/channels%2Fpaths%2F~1channels~1%7Bchannel_id%7D~1restore%2Fpost
      *
-     * @param string $channelId
-     *
      * @return Channel|ResponseInterface
      */
-    public function restoreChannel($channelId)
+    public function restoreChannel(string $channelId)
     {
         if (empty($channelId)) {
             throw new InvalidArgumentException('ChannelId can not be empty');
@@ -151,8 +140,7 @@ final class ChannelsApi extends HttpApi
      *
      * @see https://api.mattermost.com/v4/#tag/channels%2Fpaths%2F~1channels~1%7Bchannel_id%7D~1patch%2Fput
      *
-     * @param string $channelId
-     * @param array  $params
+     * @param array $params
      *
      * @return Channel|ResponseInterface
      */
@@ -172,8 +160,7 @@ final class ChannelsApi extends HttpApi
      *
      * @see https://api.mattermost.com/v4/#tag/channels%2Fpaths%2F~1channels~1%7Bchannel_id%7D%2Fput
      *
-     * @param string $channelId
-     * @param array  $params
+     * @param array $params
      *
      * @return Channel|ResponseInterface
      */
@@ -191,9 +178,6 @@ final class ChannelsApi extends HttpApi
     /**
      * Add a user to a channel, with specific roles.
      *
-     * @param string $channelId
-     * @param string $userId
-     * @param string $roles
      *
      * @return ChannelMember|ResponseInterface
      */
@@ -217,8 +201,6 @@ final class ChannelsApi extends HttpApi
     /**
      * Remove a user from a channel.
      *
-     * @param string $channelId
-     * @param string $userId
      *
      * @return Status|ResponseInterface
      */
@@ -236,8 +218,7 @@ final class ChannelsApi extends HttpApi
     /**
      * Get members of a channel.
      *
-     * @param string $channelId
-     * @param array  $params    The listing params, 'page', 'per_page'
+     * @param array $params The listing params, 'page', 'per_page'
      *
      * @return ChannelMembers|ResponseInterface
      */
@@ -255,8 +236,7 @@ final class ChannelsApi extends HttpApi
     /**
      * Get the posts for a channel.
      *
-     * @param string $channelId
-     * @param array  $params    The listing params: 'page', 'per_page', 'before', 'after', 'since'
+     * @param array $params The listing params: 'page', 'per_page', 'before', 'after', 'since'
      *
      * @see: https://api.mattermost.com/v4/#tag/posts%2Fpaths%2F~1channels~1%7Bchannel_id%7D~1posts%2Fget
      *

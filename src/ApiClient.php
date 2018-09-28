@@ -54,9 +54,6 @@ final class ApiClient
     /**
      * Returns configured ApiClient from the given Configurator, Hydrator and RequestFactory.
      *
-     * @param HttpClientConfigurator $httpClientConfigurator
-     * @param Hydrator|null          $hydrator
-     * @param RequestFactory|null    $requestFactory
      *
      * @return ApiClient
      */

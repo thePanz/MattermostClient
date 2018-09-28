@@ -6,9 +6,6 @@ namespace Pnz\MattermostClient\Model;
 
 final class Status extends Model
 {
-    /**
-     * @return string
-     */
     public function getStatus(): string
     {
         return $this->data['status'] ?? '';

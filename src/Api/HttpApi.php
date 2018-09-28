@@ -31,9 +31,7 @@ abstract class HttpApi
     protected $messageFactory;
 
     /**
-     * @param HttpClient     $httpClient
-     * @param MessageFactory $messageFactory
-     * @param Hydrator       $hydrator
+     * @param Hydrator $hydrator
      */
     public function __construct(
         HttpClient $httpClient,
@@ -51,8 +49,6 @@ abstract class HttpApi
      * @param string $path           Request path
      * @param array  $params         GET parameters
      * @param array  $requestHeaders Request Headers
-     *
-     * @return ResponseInterface
      */
     protected function httpGet(string $path, array $params = [], array $requestHeaders = []): ResponseInterface
     {
@@ -72,8 +68,6 @@ abstract class HttpApi
      * @param array  $params         POST parameters to be JSON encoded
      * @param array  $pathParams     Params added to the path, as query parameters
      * @param array  $requestHeaders Request headers
-     *
-     * @return ResponseInterface
      */
     protected function httpPost(string $path, array $params = [], array $pathParams = [], array $requestHeaders = []): ResponseInterface
     {
@@ -89,8 +83,6 @@ abstract class HttpApi
      * @param string               $path           Request path
      * @param resource|string|null $body           Request body
      * @param array                $requestHeaders Request headers
-     *
-     * @return ResponseInterface
      */
     protected function httpPostRaw(string $path, $body, array $requestHeaders = []): ResponseInterface
     {
@@ -105,8 +97,6 @@ abstract class HttpApi
      * @param string $path           Request path
      * @param array  $params         POST parameters to be JSON encoded
      * @param array  $requestHeaders Request headers
-     *
-     * @return ResponseInterface
      */
     protected function httpPut(string $path, array $params = [], array $requestHeaders = []): ResponseInterface
     {
@@ -122,8 +112,6 @@ abstract class HttpApi
      * @param array  $params         POST parameters to be JSON encoded
      * @param array  $pathParams     URL parameters, used as query string
      * @param array  $requestHeaders Request headers
-     *
-     * @return ResponseInterface
      */
     protected function httpDelete(string $path, array $params = [], array $pathParams = [], array $requestHeaders = []): ResponseInterface
     {
@@ -144,7 +132,7 @@ abstract class HttpApi
      */
     protected function handleResponse(ResponseInterface $response, $class)
     {
-        if ($response->getStatusCode() !== 200 && $response->getStatusCode() !== 201) {
+        if (200 !== $response->getStatusCode() && 201 !== $response->getStatusCode()) {
             $this->handleErrors($response);
         }
 
@@ -156,7 +144,6 @@ abstract class HttpApi
      *
      * Call is controlled by the specific API methods.
      *
-     * @param ResponseInterface $response
      *
      * @throws ApiException
      */
@@ -193,7 +180,7 @@ abstract class HttpApi
      */
     private function createJsonBody(array $params)
     {
-        return (count($params) === 0) ? null : json_encode($params, empty($params) ? JSON_FORCE_OBJECT : 0);
+        return (0 === count($params)) ? null : json_encode($params, empty($params) ? JSON_FORCE_OBJECT : 0);
     }
 
     /**

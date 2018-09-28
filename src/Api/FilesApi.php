@@ -91,7 +91,7 @@ final class FilesApi extends HttpApi
 
         $response = $this->httpGet(sprintf('/files/%s', $fileId));
 
-        if ($response->getStatusCode() !== 200 && $response->getStatusCode() !== 201) {
+        if (200 !== $response->getStatusCode() && 201 !== $response->getStatusCode()) {
             $this->handleErrors($response);
         }
 
@@ -113,7 +113,7 @@ final class FilesApi extends HttpApi
 
         $response = $this->httpGet(sprintf('/files/%s/link', $fileId));
 
-        if ($response->getStatusCode() !== 200 && $response->getStatusCode() !== 201) {
+        if (200 !== $response->getStatusCode() && 201 !== $response->getStatusCode()) {
             $this->handleErrors($response);
         }
 

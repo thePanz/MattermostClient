@@ -237,8 +237,7 @@ final class TeamsApi extends HttpApi
      *
      * @see https://api.mattermost.com/v4/#tag/teams%2Fpaths%2F~1teams~1%7Bteam_id%7D~1patch%2Fput
      *
-     * @param string $teamId
-     * @param array  $params
+     * @param array $params
      *
      * @return Team|ResponseInterface
      */
@@ -258,8 +257,7 @@ final class TeamsApi extends HttpApi
      *
      * @see https://api.mattermost.com/v4/#tag/teams%2Fpaths%2F~1teams~1%7Bteam_id%7D%2Fput
      *
-     * @param string $teamId
-     * @param array  $params, required paramaters: display_name, description, company_name, allowed_domains, invite_id, allow_open_invite
+     * @param array $params Required parameters are: display_name, description, company_name, allowed_domains, invite_id, allow_open_invite
      *
      * @return Team|ResponseInterface
      */

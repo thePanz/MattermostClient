@@ -10,7 +10,6 @@ use Psr\Http\Message\ResponseInterface;
 interface DomainException extends Exception
 {
     /**
-     * @return
      * @return ResponseInterface
      */
     public function getResponse();

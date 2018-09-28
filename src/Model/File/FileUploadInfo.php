@@ -14,9 +14,6 @@ class FileUploadInfo extends Model
         ]);
     }
 
-    /**
-     * @return FileInfos
-     */
     public function getFileInfos(): FileInfos
     {
         return $this->data['file_infos'];

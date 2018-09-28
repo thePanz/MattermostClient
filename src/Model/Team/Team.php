@@ -35,25 +35,16 @@ final class Team extends Model
         return $this->data['update_at'];
     }
 
-    /**
-     * @return mixed
-     */
     public function getName()
     {
         return $this->data['name'];
     }
 
-    /**
-     * @return mixed
-     */
     public function getDisplayName()
     {
         return $this->data['display_name'];
     }
 
-    /**
-     * @return mixed
-     */
     public function getType()
     {
         return $this->data['type'];

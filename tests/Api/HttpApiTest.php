@@ -13,9 +13,6 @@ class HttpApiTest extends BaseHttpApiTest
 {
     /**
      * @dataProvider getErrorCodesExceptions
-     *
-     * @param string $expectedException
-     * @param int    $responseCode
      */
     public function testHandleErrors(string $expectedException, int $responseCode)
     {
@@ -31,9 +28,6 @@ class HttpApiTest extends BaseHttpApiTest
 
     /**
      * @dataProvider getErrorCodesExceptions
-     *
-     * @param string $expectedException
-     * @param int    $responseCode
      */
     public function testHandleErrorsWithModel(string $expectedException, int $responseCode)
     {

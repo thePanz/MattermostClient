@@ -27,7 +27,7 @@ class PostTest extends TestCase
         $this->assertSame([], $post->getFileIds());
         $this->assertSame([], $post->getFilenames());
         $this->assertSame('', $post->getHashtag());
-        $this->assertSame(false, $post->getIsPinned());
+        $this->assertFalse($post->getIsPinned());
         $this->assertSame('', $post->getOriginalId());
         $this->assertSame('', $post->getParentId());
         $this->assertSame('', $post->getPendingPostId());

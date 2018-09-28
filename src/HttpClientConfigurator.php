@@ -67,11 +67,6 @@ final class HttpClientConfigurator
      */
     private $appendPlugins = [];
 
-    /**
-     * @param HttpClient|null     $httpClient
-     * @param UriFactory|null     $uriFactory
-     * @param RequestFactory|null $requestFactory
-     */
     public function __construct(HttpClient $httpClient = null, UriFactory $uriFactory = null, RequestFactory $requestFactory = null)
     {
         $this->httpClient = $httpClient ?? HttpClientDiscovery::find();
@@ -79,9 +74,6 @@ final class HttpClientConfigurator
         $this->requestFactory = $requestFactory ?? MessageFactoryDiscovery::find();
     }
 
-    /**
-     * @return HttpClient
-     */
     public function createConfiguredClient(): HttpClient
     {
         if (empty($this->endpoint)) {
@@ -106,11 +98,9 @@ final class HttpClientConfigurator
     }
 
     /**
-     * @param string $endpoint
-     *
      * @return HttpClientConfigurator
      */
-    public function setEndpoint(string $endpoint): HttpClientConfigurator
+    public function setEndpoint(string $endpoint): self
     {
         $this->endpoint = $endpoint;
 
@@ -120,11 +110,10 @@ final class HttpClientConfigurator
     /**
      * Configure the authentication token, it will skip the login_id/password auto-authentication.
      *
-     * @param string $token
      *
      * @return HttpClientConfigurator
      */
-    public function setToken(string $token): HttpClientConfigurator
+    public function setToken(string $token): self
     {
         $this->token = $token;
 
@@ -134,12 +123,10 @@ final class HttpClientConfigurator
     /**
      * Set the LoginId/password to be used during the authentication.
      *
-     * @param string $loginId
-     * @param string $password
      *
      * @return HttpClientConfigurator
      */
-    public function setCredentials(string $loginId, string $password): HttpClientConfigurator
+    public function setCredentials(string $loginId, string $password): self
     {
         if (empty($loginId) || empty($password)) {
             throw new \InvalidArgumentException('LoginId and Password cannot be empty');
@@ -156,7 +143,7 @@ final class HttpClientConfigurator
      *
      * @return HttpClientConfigurator
      */
-    public function appendPlugin(Plugin ...$plugin): HttpClientConfigurator
+    public function appendPlugin(Plugin ...$plugin): self
     {
         foreach ($plugin as $p) {
             $this->appendPlugins[] = $p;
@@ -170,7 +157,7 @@ final class HttpClientConfigurator
      *
      * @return HttpClientConfigurator
      */
-    public function prependPlugin(Plugin ...$plugin): HttpClientConfigurator
+    public function prependPlugin(Plugin ...$plugin): self
     {
         $plugin = array_reverse($plugin);
         foreach ($plugin as $p) {

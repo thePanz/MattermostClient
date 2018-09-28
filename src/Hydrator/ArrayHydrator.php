@@ -22,7 +22,7 @@ final class ArrayHydrator implements Hydrator
     public function hydrate(ResponseInterface $response, string $class): array
     {
         $body = $response->getBody()->__toString();
-        if (strpos($response->getHeaderLine('Content-Type'), 'application/json') !== 0) {
+        if (0 !== strpos($response->getHeaderLine('Content-Type'), 'application/json')) {
             throw new HydrationException('The ArrayHydrator cannot hydrate response with Content-Type:'.$response->getHeaderLine('Content-Type'));
         }
 
