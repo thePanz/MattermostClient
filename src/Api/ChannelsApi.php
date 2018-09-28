@@ -34,20 +34,23 @@ final class ChannelsApi extends HttpApi
     }
 
     /**
-     * Returns an channel by its ID.
+     * Returns a channel given the team ID and the channel name.
      *
-     * @param string $teamId
-     * @param string $channelName
+     * @param array $parameters Associative array of additional parameters for the request:
+     *                          - 'include_deleted'=>'true': allow to fetch deleted channels too
      *
      * @return Channel|ResponseInterface
      */
-    public function getChannelByName(string $teamId, string $channelName)
+    public function getChannelByName(string $teamId, string $channelName, array $parameters = [])
     {
         if (empty($teamId) || empty($channelName)) {
             throw new InvalidArgumentException('Team ID and channel name can not be empty');
         }
 
-        $response = $this->httpGet(sprintf('/teams/%s/channels/name/%s', $teamId, $channelName));
+        $response = $this->httpGet(
+            sprintf('/teams/%s/channels/name/%s', $teamId, $channelName),
+            $parameters
+        );
 
         return $this->handleResponse($response, Channel::class);
     }
