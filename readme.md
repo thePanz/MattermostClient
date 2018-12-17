@@ -108,7 +108,7 @@ use Pnz\MattermostClient\Model\Post;
 
 $post = $apiClient->posts()->getPost('zhcapisftibyjnf54gixg3hdew');
 $postData = (new Post\PostBuilder())
-    ->setMessage("I can `format` the _text_ of a *message*, incliuding [links](www.mattermost.com)')
+    ->setMessage('I can `format` the _text_ of a *message*, including [links](www.mattermost.com)')
     ->setIsPinned(true)
     ->build(Post\PostBuilder::BUILD_FOR_PATCH);
 
