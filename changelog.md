@@ -7,10 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased](#unreleased)
 ### Added
 - Expose User's delete_at property
+- Enable new scrutinizer analysis
 ### Changed
 ### Deprecated
 ### Removed
 ### Fixed
+- Fix typo in readme
+- Fix issue with php-http/common v1.8
 ### Security
 
 ## v[0.1.0](https://github.com/thePanz/MattermostClient/releases/tag/0.1.0)
