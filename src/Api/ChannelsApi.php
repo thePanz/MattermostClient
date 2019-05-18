@@ -100,6 +100,22 @@ final class ChannelsApi extends HttpApi
     }
 
     /**
+     * Creates and returns a direct channel between two users.
+     *
+     * @return Channel|ResponseInterface
+     */
+    public function createDirectChannel(string $userId1, string $userId2)
+    {
+        if (empty($userId1) || empty($userId2)) {
+            throw new InvalidArgumentException('Two user IDs must be provided');
+        }
+
+        $response = $this->httpPost('/channels/direct', [$userId1, $userId2]);
+
+        return $this->handleResponse($response, Channel::class);
+    }
+
+    /**
      * Delete a Channel.
      *
      * @see https://api.mattermost.com/v4/#tag/channels%2Fpaths%2F~1channels~1%7Bchannel_id%7D%2Fdelete

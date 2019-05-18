@@ -59,7 +59,37 @@ class ChannelsTest extends BaseHttpApiTest
         $this->client->createChannel($data);
     }
 
-    public function testUpdateChannelSuccess()
+    public function testCreateDirectChannelSuccess(): void
+    {
+        $data = ['uid1', 'uid2'];
+        $this->configureMessage('POST', '/channels/direct', [], Json::encode($data));
+        $this->configureRequestAndResponse(201);
+        $this->configureHydrator(Channel::class);
+
+        $this->client->createDirectChannel('uid1', 'uid2');
+    }
+
+    /**
+     * @dataProvider getErrorCodesExceptions
+     */
+    public function testCreateDirectChannelException(string $exception, int $code): void
+    {
+        $this->expectException($exception);
+
+        $data = ['uid1', 'uid2'];
+        $this->configureMessage('POST', '/channels/direct', [], Json::encode($data));
+        $this->configureRequestAndResponse($code);
+
+        $this->client->createDirectChannel('uid1', 'uid2');
+    }
+
+    public function testCreateDirectChannelEmptyUserId(): void
+    {
+        $this->expectException(InvalidArgumentException ::class);
+        $this->client->createDirectChannel('uid1', '');
+    }
+
+    public function testUpdateChannelSuccess(): void
     {
         $channelId = '111';
         $data = [
