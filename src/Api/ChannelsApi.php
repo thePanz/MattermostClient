@@ -88,7 +88,6 @@ final class ChannelsApi extends HttpApi
     /**
      * Create a Channel. Required parameters: 'team_id', 'name', 'display_name' and 'type'.
      *
-     * @param array $params
      *
      * @return Channel|ResponseInterface
      */
@@ -156,8 +155,6 @@ final class ChannelsApi extends HttpApi
      *
      * @see https://api.mattermost.com/v4/#tag/channels%2Fpaths%2F~1channels~1%7Bchannel_id%7D~1patch%2Fput
      *
-     * @param array $params
-     *
      * @return Channel|ResponseInterface
      */
     public function patchChannel(string $channelId, array $params)
@@ -175,8 +172,6 @@ final class ChannelsApi extends HttpApi
      * Update a channel.
      *
      * @see https://api.mattermost.com/v4/#tag/channels%2Fpaths%2F~1channels~1%7Bchannel_id%7D%2Fput
-     *
-     * @param array $params
      *
      * @return Channel|ResponseInterface
      */

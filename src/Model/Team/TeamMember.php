@@ -37,10 +37,7 @@ final class TeamMember extends Model
         return $this->data['roles'];
     }
 
-    /**
-     * @return array
-     */
-    protected static function getFields()
+    protected static function getFields(): array
     {
         return [
            'team_id',

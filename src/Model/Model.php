@@ -16,9 +16,6 @@ abstract class Model implements CreatableFromArray
         $this->data = $data;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function createFromArray(array $data)
     {
         // Clearing the data
@@ -30,7 +27,7 @@ abstract class Model implements CreatableFromArray
     }
 
     /**
-     * @return array
+     * @return string[]
      */
-    abstract protected static function getFields();
+    abstract protected static function getFields(): array;
 }

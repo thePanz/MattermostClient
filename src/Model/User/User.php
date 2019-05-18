@@ -117,10 +117,7 @@ final class User extends Model
         return $this->data['email_verified'];
     }
 
-    /**
-     * @return array
-     */
-    protected static function getFields()
+    protected static function getFields(): array
     {
         return [
            'id',

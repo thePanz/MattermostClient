@@ -32,10 +32,7 @@ final class TeamStats extends Model
         return $this->data['active_member_count'];
     }
 
-    /**
-     * @return array
-     */
-    protected static function getFields()
+    protected static function getFields(): array
     {
         return [
            'team_id',

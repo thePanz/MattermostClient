@@ -8,23 +8,21 @@ use Pnz\MattermostClient\Model\File\FileInfo;
 use Psr\Http\Message\StreamInterface;
 
 /**
- * @coversDefaultClass \Pnz\MattermostClient\Api\Files
+ * @coversDefaultClass \Pnz\MattermostClient\Api\FilesApi
  */
 class FilesTest extends BaseHttpApiTest
 {
-    /**
-     * @var FilesApi
-     */
+    /** @var FilesApi */
     private $client;
 
     public function setUp()
     {
         parent::setUp();
 
-        $this->client = new FilesApi($this->httpClient, $this->messageFactory, $this->hydrator);
+        $this->client = new FilesApi($this->httpClient, $this->requestFactory, $this->hydrator);
     }
 
-    public function testGetFileSuccess()
+    public function testGetFileSuccess(): void
     {
         $fileId = '12345';
         $contents = 'Lorem Lipsum';
@@ -38,11 +36,8 @@ class FilesTest extends BaseHttpApiTest
 
     /**
      * @dataProvider getErrorCodesExceptions
-     *
-     * @param string $exception
-     * @param int    $code
      */
-    public function testGetFileException($exception, $code)
+    public function testGetFileException(string $exception, int $code): void
     {
         $this->expectException($exception);
         $fileId = '12345';
@@ -51,13 +46,13 @@ class FilesTest extends BaseHttpApiTest
         $this->client->getFile($fileId);
     }
 
-    public function testGetFileEmptyId()
+    public function testGetFileEmptyId(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->client->getFile('');
     }
 
-    public function testGetFileLinkSuccess()
+    public function testGetFileLinkSuccess(): void
     {
         $fileId = '12345';
         $contents = 'http://somelinks.com/file';
@@ -65,17 +60,14 @@ class FilesTest extends BaseHttpApiTest
         $this->configureRequestAndResponse(200, $contents);
         $link = $this->client->getFileLink($fileId);
 
-        $this->assertInternalType('string', $link);
+        $this->assertIsString($link);
         $this->assertSame($contents, $link);
     }
 
     /**
      * @dataProvider getErrorCodesExceptions
-     *
-     * @param string $exception
-     * @param int    $code
      */
-    public function testGetFileLinkException($exception, $code)
+    public function testGetFileLinkException(string $exception, int $code): void
     {
         $this->expectException($exception);
         $fileId = '12345';
@@ -84,13 +76,13 @@ class FilesTest extends BaseHttpApiTest
         $this->client->getFileLink($fileId);
     }
 
-    public function testGetFileLinkEmptyId()
+    public function testGetFileLinkEmptyId(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->client->getFileLink('');
     }
 
-    public function testGetFileInfoSuccess()
+    public function testGetFileInfoSuccess(): void
     {
         $fileId = '12345';
         $this->configureMessage('GET', '/files/'.$fileId.'/info');
@@ -101,11 +93,8 @@ class FilesTest extends BaseHttpApiTest
 
     /**
      * @dataProvider getErrorCodesExceptions
-     *
-     * @param string $exception
-     * @param int    $code
      */
-    public function testGetFileInfoException($exception, $code)
+    public function testGetFileInfoException(string $exception, int $code): void
     {
         $this->expectException($exception);
         $fileId = '12345';
@@ -114,7 +103,7 @@ class FilesTest extends BaseHttpApiTest
         $this->client->getFileInfo($fileId);
     }
 
-    public function testGetFileInfoEmptyId()
+    public function testGetFileInfoEmptyId(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->client->getFileInfo('');

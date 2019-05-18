@@ -9,6 +9,7 @@ use Pnz\MattermostClient\Model\Status;
 use Pnz\MattermostClient\Model\Team\Teams;
 use Pnz\MattermostClient\Model\User\User;
 use Pnz\MattermostClient\Model\User\Users;
+use Pnz\MattermostClient\Model\User\UserStatus;
 use Psr\Http\Message\ResponseInterface;
 
 final class UsersApi extends HttpApi
@@ -41,7 +42,7 @@ final class UsersApi extends HttpApi
             $token = reset($tokens);
         }
 
-        return $this->hydrator->hydrate($response, User::class);
+        return $this->handleResponse($response, User::class);
     }
 
     /**
@@ -83,7 +84,7 @@ final class UsersApi extends HttpApi
     /**
      * Returns a collection of users matching the given IDs.
      *
-     * @param array $userIds
+     * @param string[] $userIds
      *
      * @return Users|ResponseInterface
      */
@@ -218,8 +219,6 @@ final class UsersApi extends HttpApi
      *
      * @see https://api.mattermost.com/v4/#tag/users%2Fpaths%2F~1users%2Fpost
      *
-     * @param array $params
-     *
      * @return User|ResponseInterface
      */
     public function createUser(array $params)
@@ -233,8 +232,6 @@ final class UsersApi extends HttpApi
      * Patch a user.
      *
      * @see https://api.mattermost.com/v4/#tag/users%2Fpaths%2F~1users~1%7Buser_id%7D~1patch%2Fput
-     *
-     * @param array $params
      *
      * @return User|ResponseInterface
      */
@@ -253,8 +250,6 @@ final class UsersApi extends HttpApi
      * Update a user.
      *
      * @see https://api.mattermost.com/v4/#tag/users%2Fpaths%2F~1users~1%7Buser_id%7D%2Fput
-     *
-     * @param array $params
      *
      * @return User|ResponseInterface
      */
@@ -308,5 +303,21 @@ final class UsersApi extends HttpApi
         $response = $this->httpGet(sprintf('/users/username/%s', $username));
 
         return $this->handleResponse($response, User::class);
+    }
+
+    /**
+     * Get the user status by its ID.
+     *
+     * @return UserStatus|ResponseInterface
+     */
+    public function getUserStatus(string $userId)
+    {
+        if (empty($userId)) {
+            throw new InvalidArgumentException('UserId can not be empty');
+        }
+
+        $response = $this->httpGet(sprintf('/users/%s/status', $userId));
+
+        return $this->handleResponse($response, UserStatus::class);
     }
 }

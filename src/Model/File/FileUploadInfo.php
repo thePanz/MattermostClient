@@ -30,7 +30,7 @@ class FileUploadInfo extends Model
     /**
      * {@inheritdoc}
      */
-    protected static function getFields()
+    protected static function getFields(): array
     {
         return [
             'file_infos',

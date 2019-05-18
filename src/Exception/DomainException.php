@@ -9,15 +9,10 @@ use Psr\Http\Message\ResponseInterface;
 
 interface DomainException extends Exception
 {
-    /**
-     * @return ResponseInterface
-     */
-    public function getResponse();
+    public function getResponse(): ResponseInterface;
 
     /**
      * Returns the underlying Error, if available.
-     *
-     * @return Error|null
      */
-    public function getError();
+    public function getError(): ?Error;
 }

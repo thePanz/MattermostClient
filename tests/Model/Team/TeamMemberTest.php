@@ -10,7 +10,7 @@ use Pnz\MattermostClient\Model\Team\TeamMember;
  */
 class TeamMemberTest extends TestCase
 {
-    public function testTeamCreationEmpty()
+    public function testTeamCreationEmpty(): void
     {
         $data = [];
 
@@ -22,7 +22,7 @@ class TeamMemberTest extends TestCase
         $this->assertNull($teamMember->getCreateAt());
     }
 
-    public function testTeamCreation()
+    public function testTeamCreation(): void
     {
         $data = [
             'team_id' => 'team-id',

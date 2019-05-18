@@ -7,6 +7,7 @@ namespace Pnz\MattermostClient\Plugin;
 use Http\Client\Common\Plugin;
 use Http\Message\Authentication\Bearer;
 use Http\Message\RequestFactory;
+use Pnz\JsonException\Json;
 use Pnz\MattermostClient\Exception\ApiException;
 use Pnz\MattermostClient\Exception\Domain\LoginFailedException;
 use Pnz\MattermostClient\Model\Error;
@@ -15,7 +16,7 @@ use Psr\Http\Message\ResponseInterface;
 
 class MattermostLoginPlugin implements Plugin
 {
-    const AUTHORIZATION_URL = '/users/login';
+    private const AUTHORIZATION_URL = '/users/login';
 
     /**
      * Flag to check if we are handling the first login through a request.
@@ -35,25 +36,22 @@ class MattermostLoginPlugin implements Plugin
     private $password;
 
     /**
-     * @var Bearer
+     * @var Bearer|null
      */
     private $bearerAuthentication;
 
     /**
      * @var RequestFactory
      */
-    private $factory;
+    private $requestFactory;
 
-    public function __construct(string $loginId, string $password, RequestFactory $factory)
+    public function __construct(string $loginId, string $password, RequestFactory $requestFactory)
     {
         $this->loginId = $loginId;
         $this->password = $password;
-        $this->factory = $factory;
+        $this->requestFactory = $requestFactory;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function handleRequest(RequestInterface $request, callable $next, callable $first)
     {
         if (!$this->bearerAuthentication && !$this->loginInProgress) {
@@ -70,23 +68,21 @@ class MattermostLoginPlugin implements Plugin
     }
 
     /**
-     * @param callable $first
-     *
      * @throws LoginFailedException when loginId/password are not valid
      * @throws ApiException         When an unknown response is returned by the API while logging in
      */
-    private function authenticate(callable $first)
+    private function authenticate(callable $first): void
     {
         $credentials = [
             'login_id' => $this->loginId,
             'password' => $this->password,
         ];
 
-        $request = $this->factory->createRequest(
+        $request = $this->requestFactory->createRequest(
             'POST',
             self::AUTHORIZATION_URL,
             [],
-            json_encode($credentials, JSON_FORCE_OBJECT)
+            Json::encode($credentials, JSON_FORCE_OBJECT)
         );
 
         /* @var ResponseInterface $response */
@@ -95,13 +91,13 @@ class MattermostLoginPlugin implements Plugin
         switch ($response->getStatusCode()) {
             case 200:
                 $tokens = $response->getHeader('Token');
-                if (count($tokens) && $token = reset($tokens)) {
+                if (\count($tokens) && $token = reset($tokens)) {
                     $this->bearerAuthentication = new Bearer($token);
                 }
                 break;
             case 401:
                 if (0 === strpos($response->getHeaderLine('Content-Type'), 'application/json')) {
-                    $contents = json_decode((string) $response->getBody(), true);
+                    $contents = Json::decode((string) $response->getBody(), true);
                     $error = Error::createFromArray($contents);
                     throw new LoginFailedException($response, $error);
                 }

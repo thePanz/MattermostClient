@@ -34,7 +34,7 @@ final class Error extends Model
     /**
      * {@inheritdoc}
      */
-    protected static function getFields()
+    protected static function getFields(): array
     {
         return ['id', 'message', 'status_code', 'request_id', 'detailed_error'];
     }

@@ -7,8 +7,8 @@ use Psr\Http\Message\ResponseInterface;
 
 class WrappedHttpApi extends HttpApi
 {
-    public function testHandleError(ResponseInterface $response)
+    public function testHandleError(ResponseInterface $response): void
     {
-        self::handleErrors($response);
+        $this->handleErrors($response);
     }
 }

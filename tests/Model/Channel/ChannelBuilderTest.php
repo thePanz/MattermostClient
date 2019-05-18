@@ -22,21 +22,16 @@ class ChannelBuilderTest extends TestCase
         $this->builder = new ChannelBuilder();
     }
 
-    public function provideBuildTypesForFailure()
+    public function provideBuildTypesForFailure(): iterable
     {
-        return [
-            'create' => [ChannelBuilder::BUILD_FOR_CREATE, 'Required parameters missing: team_id, name, display_name, type'],
-            'update' => [ChannelBuilder::BUILD_FOR_PATCH, 'Required parameters missing: id'],
-        ];
+        yield 'create' => [ChannelBuilder::BUILD_FOR_CREATE, 'Required parameters missing: team_id, name, display_name, type'];
+        yield 'update' => [ChannelBuilder::BUILD_FOR_PATCH, 'Required parameters missing: id'];
     }
 
     /**
      * @dataProvider provideBuildTypesForFailure
-     *
-     * @param string $buildType
-     * @param string $expectedFailureMessage
      */
-    public function testChannelBuilderNoParams($buildType, $expectedFailureMessage)
+    public function testChannelBuilderNoParams(string $buildType, string $expectedFailureMessage): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage($expectedFailureMessage);
@@ -61,7 +56,7 @@ class ChannelBuilderTest extends TestCase
         $this->assertSame($expected, $this->builder->build());
     }
 
-    public function testChannelBuilderFull()
+    public function testChannelBuilderFull(): void
     {
         $this->builder->setTeamId('team-id');
 
@@ -83,7 +78,7 @@ class ChannelBuilderTest extends TestCase
         $this->assertSame($expected, $this->builder->build());
     }
 
-    public function testChannelBuilderUpdate()
+    public function testChannelBuilderUpdate(): void
     {
         $expected = [];
         $this->assertSame($expected, $this->builder->build(ModelBuilder::BUILD_FOR_UPDATE));

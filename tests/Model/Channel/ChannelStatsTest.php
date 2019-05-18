@@ -10,7 +10,7 @@ use Pnz\MattermostClient\Model\Channel\ChannelStats;
  */
 class ChannelStatsTest extends TestCase
 {
-    public function testChannelStatsCreationEmpty()
+    public function testChannelStatsCreationEmpty(): void
     {
         $data = [];
 
@@ -20,7 +20,7 @@ class ChannelStatsTest extends TestCase
         $this->assertNull($teamStats->getMemberCount());
     }
 
-    public function testChannelStatsCreation()
+    public function testChannelStatsCreation(): void
     {
         $data = [
             'channel_id' => 'channel_id',

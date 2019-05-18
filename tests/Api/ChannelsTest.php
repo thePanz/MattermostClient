@@ -2,6 +2,7 @@
 
 namespace Pnz\MattermostClient\Tests\Api;
 
+use Pnz\JsonException\Json;
 use Pnz\MattermostClient\Api\ChannelsApi;
 use Pnz\MattermostClient\Exception\InvalidArgumentException;
 use Pnz\MattermostClient\Model\Channel\Channel;
@@ -11,7 +12,7 @@ use Pnz\MattermostClient\Model\Post\Posts;
 use Pnz\MattermostClient\Model\Status;
 
 /**
- * @coversDefaultClass \Pnz\MattermostClient\Api\Channels
+ * @coversDefaultClass \Pnz\MattermostClient\Api\ChannelsApi
  */
 class ChannelsTest extends BaseHttpApiTest
 {
@@ -24,16 +25,16 @@ class ChannelsTest extends BaseHttpApiTest
     {
         parent::setUp();
 
-        $this->client = new ChannelsApi($this->httpClient, $this->messageFactory, $this->hydrator);
+        $this->client = new ChannelsApi($this->httpClient, $this->requestFactory, $this->hydrator);
     }
 
-    public function testCreateChannelSuccess()
+    public function testCreateChannelSuccess(): void
     {
         $data = [
             'name' => 'name',
             'display_name' => 'display_name,',
         ];
-        $this->configureMessage('POST', '/channels', [], json_encode($data));
+        $this->configureMessage('POST', '/channels', [], Json::encode($data));
         $this->configureRequestAndResponse(201);
         $this->configureHydrator(Channel::class);
 
@@ -42,18 +43,15 @@ class ChannelsTest extends BaseHttpApiTest
 
     /**
      * @dataProvider getErrorCodesExceptions
-     *
-     * @param string $exception
-     * @param int    $code
      */
-    public function testCreateChannelException($exception, $code)
+    public function testCreateChannelException(string $exception, int $code): void
     {
         $this->expectException($exception);
         $data = [
             'name' => 'name',
             'display_name' => 'display_name,',
         ];
-        $this->configureMessage('POST', '/channels', [], json_encode($data));
+        $this->configureMessage('POST', '/channels', [], Json::encode($data));
         $this->configureRequestAndResponse($code);
 
         $this->client->createChannel($data);
@@ -97,13 +95,13 @@ class ChannelsTest extends BaseHttpApiTest
             'display_name' => 'display_name',
         ];
 
-        $this->configureMessage('PUT', '/channels/'.$channelId, [], json_encode($data));
+        $this->configureMessage('PUT', '/channels/'.$channelId, [], Json::encode($data));
         $this->configureRequestAndResponse(201);
         $this->configureHydrator(Channel::class);
         $this->client->updateChannel($channelId, $data);
     }
 
-    public function testUpdateChannelEmptyId()
+    public function testUpdateChannelEmptyId(): void
     {
         $this->expectException(InvalidArgumentException ::class);
         $this->client->updateChannel('', []);
@@ -111,11 +109,8 @@ class ChannelsTest extends BaseHttpApiTest
 
     /**
      * @dataProvider getErrorCodesExceptions
-     *
-     * @param string $exception
-     * @param int    $code
      */
-    public function testUpdateChannelException($exception, $code)
+    public function testUpdateChannelException(string $exception, int $code): void
     {
         $this->expectException($exception);
         $channelId = '111';
@@ -124,19 +119,19 @@ class ChannelsTest extends BaseHttpApiTest
             'name' => 'name,',
         ];
 
-        $this->configureMessage('PUT', '/channels/'.$channelId, [], json_encode($data));
+        $this->configureMessage('PUT', '/channels/'.$channelId, [], Json::encode($data));
         $this->configureRequestAndResponse($code);
         $this->client->updateChannel($channelId, $data);
     }
 
-    public function testPatchChannelSuccess()
+    public function testPatchChannelSuccess(): void
     {
         $channelId = '111';
         $data = [
             'username' => 'username',
             'name' => 'name,',
         ];
-        $this->configureMessage('PUT', '/channels/'.$channelId.'/patch', [], json_encode($data));
+        $this->configureMessage('PUT', '/channels/'.$channelId.'/patch', [], Json::encode($data));
         $this->configureRequestAndResponse(201);
         $this->configureHydrator(Channel::class);
 
@@ -145,11 +140,8 @@ class ChannelsTest extends BaseHttpApiTest
 
     /**
      * @dataProvider getErrorCodesExceptions
-     *
-     * @param string $exception
-     * @param int    $code
      */
-    public function testPatchChannelException($exception, $code)
+    public function testPatchChannelException(string $exception, int $code): void
     {
         $this->expectException($exception);
         $channelId = '111';
@@ -157,19 +149,19 @@ class ChannelsTest extends BaseHttpApiTest
             'username' => 'username',
             'name' => 'name,',
         ];
-        $this->configureMessage('PUT', '/channels/'.$channelId.'/patch', [], json_encode($data));
+        $this->configureMessage('PUT', '/channels/'.$channelId.'/patch', [], Json::encode($data));
         $this->configureRequestAndResponse($code);
 
         $this->client->patchChannel($channelId, $data);
     }
 
-    public function testPatchChannelsEmptyId()
+    public function testPatchChannelsEmptyId(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->client->patchChannel('', []);
     }
 
-    public function testGetChannelByIdSuccess()
+    public function testGetChannelByIdSuccess(): void
     {
         $channelId = '12345';
         $this->configureMessage('GET', '/channels/'.$channelId);
@@ -180,11 +172,8 @@ class ChannelsTest extends BaseHttpApiTest
 
     /**
      * @dataProvider getErrorCodesExceptions
-     *
-     * @param string $exception
-     * @param int    $code
      */
-    public function testGetChannelByIdException($exception, $code)
+    public function testGetChannelByIdException(string $exception, int $code): void
     {
         $this->expectException($exception);
         $channelId = '12345';
@@ -193,13 +182,13 @@ class ChannelsTest extends BaseHttpApiTest
         $this->client->getChannelById($channelId);
     }
 
-    public function testGetChannelByIdEmptyId()
+    public function testGetChannelByIdEmptyId(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->client->getChannelById('');
     }
 
-    public function testGetChannelByNameSuccess()
+    public function testGetChannelByNameSuccess(): void
     {
         $channelName = 'channel-name';
         $teamId = '12345';
@@ -211,11 +200,8 @@ class ChannelsTest extends BaseHttpApiTest
 
     /**
      * @dataProvider getErrorCodesExceptions
-     *
-     * @param string $exception
-     * @param int    $code
      */
-    public function testGetChannelByNameException($exception, $code)
+    public function testGetChannelByNameException(string $exception, int $code): void
     {
         $this->expectException($exception);
         $channelName = 'channel-name';
@@ -225,25 +211,25 @@ class ChannelsTest extends BaseHttpApiTest
         $this->client->getChannelByName($teamId, $channelName);
     }
 
-    public function testGetChannelByNameEmpty()
+    public function testGetChannelByNameEmpty(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->client->getChannelByName('', '');
     }
 
-    public function testGetChannelByNameEmptyName()
+    public function testGetChannelByNameEmptyName(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->client->getChannelByName('12345', '');
     }
 
-    public function testGetChannelByNameEmptyTeamId()
+    public function testGetChannelByNameEmptyTeamId(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->client->getChannelByName('', 'channel-name');
     }
 
-    public function testGetChannelByNameAndTeamNameSuccess()
+    public function testGetChannelByNameAndTeamNameSuccess(): void
     {
         $channelName = 'channel-name';
         $teamName = 'team-name';
@@ -255,11 +241,8 @@ class ChannelsTest extends BaseHttpApiTest
 
     /**
      * @dataProvider getErrorCodesExceptions
-     *
-     * @param string $exception
-     * @param int    $code
      */
-    public function testGetChannelByNameAndTeamNameException($exception, $code)
+    public function testGetChannelByNameAndTeamNameException(string $exception, int $code): void
     {
         $this->expectException($exception);
         $channelName = 'channel-name';
@@ -269,25 +252,25 @@ class ChannelsTest extends BaseHttpApiTest
         $this->client->getChannelByNameAndTeamName($teamName, $channelName);
     }
 
-    public function testGetChannelByNameAndTeamNameEmpty()
+    public function testGetChannelByNameAndTeamNameEmpty(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->client->getChannelByNameAndTeamName('', '');
     }
 
-    public function testGetChannelByNameAndTeamNameEmptyName()
+    public function testGetChannelByNameAndTeamNameEmptyName(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->client->getChannelByNameAndTeamName('12345', '');
     }
 
-    public function testGetChannelByNameAndTeamNameEmptyTeamId()
+    public function testGetChannelByNameAndTeamNameEmptyTeamId(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->client->getChannelByNameAndTeamName('', 'channel-name');
     }
 
-    public function testGetChannelPostsSuccess()
+    public function testGetChannelPostsSuccess(): void
     {
         $channelId = '12345';
         $this->configureMessage('GET', '/channels/'.$channelId.'/posts');
@@ -296,7 +279,7 @@ class ChannelsTest extends BaseHttpApiTest
         $this->client->getChannelPosts($channelId);
     }
 
-    public function testGetChannelPostsParametersSuccess()
+    public function testGetChannelPostsParametersSuccess(): void
     {
         $channelId = '12345';
         $this->configureMessage('GET', '/channels/'.$channelId.
@@ -314,11 +297,8 @@ class ChannelsTest extends BaseHttpApiTest
 
     /**
      * @dataProvider getErrorCodesExceptions
-     *
-     * @param string $exception
-     * @param int    $code
      */
-    public function testGetChannelPostsException($exception, $code)
+    public function testGetChannelPostsException(string $exception, int $code): void
     {
         $this->expectException($exception);
         $channelId = '12345';
@@ -327,13 +307,13 @@ class ChannelsTest extends BaseHttpApiTest
         $this->client->getChannelPosts($channelId);
     }
 
-    public function testGetChannelPostsEmptyId()
+    public function testGetChannelPostsEmptyId(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->client->getChannelPosts('');
     }
 
-    public function testDeleteChannelSuccess()
+    public function testDeleteChannelSuccess(): void
     {
         $channelId = '12345';
         $this->configureMessage('DELETE', '/channels/'.$channelId);
@@ -344,11 +324,8 @@ class ChannelsTest extends BaseHttpApiTest
 
     /**
      * @dataProvider getErrorCodesExceptions
-     *
-     * @param string $exception
-     * @param int    $code
      */
-    public function testDeleteChannelException($exception, $code)
+    public function testDeleteChannelException(string $exception, int $code): void
     {
         $this->expectException($exception);
         $channelId = '12345';
@@ -357,13 +334,13 @@ class ChannelsTest extends BaseHttpApiTest
         $this->client->deleteChannel($channelId);
     }
 
-    public function testDeleteChannelEmptyId()
+    public function testDeleteChannelEmptyId(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->client->deleteChannel('');
     }
 
-    public function testGetChannelStatsSuccess()
+    public function testGetChannelStatsSuccess(): void
     {
         $channelId = '12345';
         $this->configureMessage('GET', '/channels/'.$channelId.'/stats');
@@ -374,11 +351,8 @@ class ChannelsTest extends BaseHttpApiTest
 
     /**
      * @dataProvider getErrorCodesExceptions
-     *
-     * @param string $exception
-     * @param int    $code
      */
-    public function testGetChannelStatsException($exception, $code)
+    public function testGetChannelStatsException(string $exception, int $code): void
     {
         $this->expectException($exception);
         $channelId = '12345';
@@ -387,13 +361,13 @@ class ChannelsTest extends BaseHttpApiTest
         $this->client->getChannelStats($channelId);
     }
 
-    public function testGetChannelStatsEmptyId()
+    public function testGetChannelStatsEmptyId(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->client->getChannelStats('');
     }
 
-    public function testRestoreChannelSuccess()
+    public function testRestoreChannelSuccess(): void
     {
         $channelId = '12345';
         $this->configureMessage('POST', '/channels/'.$channelId.'/restore');
@@ -404,11 +378,8 @@ class ChannelsTest extends BaseHttpApiTest
 
     /**
      * @dataProvider getErrorCodesExceptions
-     *
-     * @param string $exception
-     * @param int    $code
      */
-    public function testRestoreChannelException($exception, $code)
+    public function testRestoreChannelException(string $exception, int $code): void
     {
         $this->expectException($exception);
         $channelId = '12345';
@@ -417,13 +388,13 @@ class ChannelsTest extends BaseHttpApiTest
         $this->client->restoreChannel($channelId);
     }
 
-    public function testRestoreChannelEmptyId()
+    public function testRestoreChannelEmptyId(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->client->restoreChannel('');
     }
 
-    public function testRemoveChannelMemberSuccess()
+    public function testRemoveChannelMemberSuccess(): void
     {
         $channelId = '12345';
         $userId = '98765';
@@ -435,11 +406,8 @@ class ChannelsTest extends BaseHttpApiTest
 
     /**
      * @dataProvider getErrorCodesExceptions
-     *
-     * @param string $exception
-     * @param int    $code
      */
-    public function testRemoveChannelMemberException($exception, $code)
+    public function testRemoveChannelMemberException(string $exception, int $code): void
     {
         $this->expectException($exception);
         $channelId = '12345';
@@ -449,25 +417,25 @@ class ChannelsTest extends BaseHttpApiTest
         $this->client->removeChannelMember($channelId, $userId);
     }
 
-    public function testRemoveChannelMemberEmpty()
+    public function testRemoveChannelMemberEmpty(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->client->removeChannelMember('', '');
     }
 
-    public function testRemoveChannelMemberEmptyChannelId()
+    public function testRemoveChannelMemberEmptyChannelId(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->client->removeChannelMember('', 'user-id');
     }
 
-    public function testRemoveChannelMemberEmptyUserId()
+    public function testRemoveChannelMemberEmptyUserId(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->client->removeChannelMember('channel-id', '');
     }
 
-    public function testAddChannelMemberSuccess()
+    public function testAddChannelMemberSuccess(): void
     {
         $channelId = '12345';
         $userId = '98765';
@@ -478,18 +446,15 @@ class ChannelsTest extends BaseHttpApiTest
             'user_id' => $userId,
             'roles' => $roles,
         ];
-        $this->configureMessage('POST', '/channels/'.$channelId.'/members', [], json_encode($data));
+        $this->configureMessage('POST', '/channels/'.$channelId.'/members', [], Json::encode($data));
         $this->configureRequestAndResponse(201);
         $this->client->addChannelMember($channelId, $userId, $roles);
     }
 
     /**
      * @dataProvider getErrorCodesExceptions
-     *
-     * @param string $exception
-     * @param int    $code
      */
-    public function testAddChannelMemberException($exception, $code)
+    public function testAddChannelMemberException(string $exception, int $code): void
     {
         $this->expectException($exception);
         $channelId = '12345';
@@ -501,30 +466,30 @@ class ChannelsTest extends BaseHttpApiTest
             'user_id' => $userId,
             'roles' => $roles,
         ];
-        $this->configureMessage('POST', '/channels/'.$channelId.'/members', [], json_encode($data));
+        $this->configureMessage('POST', '/channels/'.$channelId.'/members', [], Json::encode($data));
         $this->configureRequestAndResponse($code);
         $this->client->addChannelMember($channelId, $userId, $roles);
     }
 
-    public function testAddChannelMemberEmpty()
+    public function testAddChannelMemberEmpty(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->client->addChannelMember('', '');
     }
 
-    public function testAddChannelMemberEmptyChannelId()
+    public function testAddChannelMemberEmptyChannelId(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->client->addChannelMember('', 'user-id');
     }
 
-    public function testAddChannelMemberEmptyUserId()
+    public function testAddChannelMemberEmptyUserId(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->client->addChannelMember('channel-id', '');
     }
 
-    public function testGetChannelMembersSuccess()
+    public function testGetChannelMembersSuccess(): void
     {
         $channelId = '12345';
         $this->configureMessage('GET', '/channels/'.$channelId.'/members'.
@@ -540,11 +505,8 @@ class ChannelsTest extends BaseHttpApiTest
 
     /**
      * @dataProvider getErrorCodesExceptions
-     *
-     * @param string $exception
-     * @param int    $code
      */
-    public function testGetChannelMembersException($exception, $code)
+    public function testGetChannelMembersException(string $exception, int $code): void
     {
         $this->expectException($exception);
         $channelId = '12345';
@@ -553,7 +515,7 @@ class ChannelsTest extends BaseHttpApiTest
         $this->client->getChannelMembers($channelId);
     }
 
-    public function testGetChannelMembersEmptyId()
+    public function testGetChannelMembersEmptyId(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->client->getChannelMembers('');

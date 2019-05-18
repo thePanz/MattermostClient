@@ -22,9 +22,6 @@ abstract class ModelCollection implements CreatableFromArray, \Countable, \Itera
     {
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function createFromArray(array $data)
     {
         $collection = new static();
@@ -35,64 +32,40 @@ abstract class ModelCollection implements CreatableFromArray, \Countable, \Itera
         return $collection;
     }
 
-    /**
-     * @return array
-     */
-    public function getItems()
+    public function getItems(): array
     {
         return $this->items;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function count()
+    public function count(): int
     {
-        return count($this->items);
+        return \count($this->items);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function key()
     {
         return $this->key;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function next()
+    public function next(): void
     {
         ++$this->key;
     }
 
-    /**
-     * @return bool
-     */
-    public function valid()
+    public function valid(): bool
     {
         return $this->key < $this->count();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function current()
     {
         return $this->items[$this->key];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function rewind()
+    public function rewind(): void
     {
         $this->key = 0;
     }
 
-    /**
-     * @param array $data
-     */
     abstract protected function createItem(array $data);
 }

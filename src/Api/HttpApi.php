@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Pnz\MattermostClient\Api;
 
 use Http\Client\HttpClient;
-use Http\Message\MessageFactory;
+use Http\Message\RequestFactory;
 use Pnz\JsonException\Json;
 use Pnz\MattermostClient\Exception\ApiException;
 use Pnz\MattermostClient\Exception\Domain as DomainExceptions;
@@ -13,34 +13,31 @@ use Pnz\MattermostClient\Hydrator\Hydrator;
 use Pnz\MattermostClient\Hydrator\ModelHydrator;
 use Pnz\MattermostClient\Model\Error;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
 
 abstract class HttpApi
 {
     /**
+     * @var RequestFactory
+     */
+    protected $requestFactory;
+    /**
      * @var HttpClient
      */
-    protected $httpClient;
+    private $httpClient;
 
     /**
      * @var Hydrator
      */
-    protected $hydrator;
+    private $hydrator;
 
-    /**
-     * @var MessageFactory
-     */
-    protected $messageFactory;
-
-    /**
-     * @param Hydrator $hydrator
-     */
     public function __construct(
         HttpClient $httpClient,
-        MessageFactory $messageFactory,
+        RequestFactory $messageFactory,
         Hydrator $hydrator = null
     ) {
         $this->httpClient = $httpClient;
-        $this->messageFactory = $messageFactory;
+        $this->requestFactory = $messageFactory;
         $this->hydrator = $hydrator ?: new ModelHydrator();
     }
 
@@ -53,12 +50,10 @@ abstract class HttpApi
      */
     protected function httpGet(string $path, array $params = [], array $requestHeaders = []): ResponseInterface
     {
-        if (count($params) > 0) {
-            $path .= '?'.http_build_query($params);
-        }
+        $path .= self::buildPathParams($params);
 
         return $this->httpClient->sendRequest(
-            $this->messageFactory->createRequest('GET', $path, $requestHeaders)
+            $this->requestFactory->createRequest('GET', $path, $requestHeaders)
         );
     }
 
@@ -73,7 +68,7 @@ abstract class HttpApi
     protected function httpPost(string $path, array $params = [], array $pathParams = [], array $requestHeaders = []): ResponseInterface
     {
         $body = $this->createJsonBody($params);
-        $path .= $this->buildPathParams($pathParams);
+        $path .= self::buildPathParams($pathParams);
 
         return $this->httpPostRaw($path, $body, $requestHeaders);
     }
@@ -81,14 +76,14 @@ abstract class HttpApi
     /**
      * Send a POST request with raw data.
      *
-     * @param string               $path           Request path
-     * @param resource|string|null $body           Request body
-     * @param array                $requestHeaders Request headers
+     * @param string                      $path           Request path
+     * @param StreamInterface|string|null $body           Request body
+     * @param array                       $requestHeaders Request headers
      */
     protected function httpPostRaw(string $path, $body, array $requestHeaders = []): ResponseInterface
     {
         return $this->httpClient->sendRequest(
-            $this->messageFactory->createRequest('POST', $path, $requestHeaders, $body)
+            $this->requestFactory->createRequest('POST', $path, $requestHeaders, $body)
         );
     }
 
@@ -102,7 +97,7 @@ abstract class HttpApi
     protected function httpPut(string $path, array $params = [], array $requestHeaders = []): ResponseInterface
     {
         return $this->httpClient->sendRequest(
-            $this->messageFactory->createRequest('PUT', $path, $requestHeaders, $this->createJsonBody($params))
+            $this->requestFactory->createRequest('PUT', $path, $requestHeaders, $this->createJsonBody($params))
         );
     }
 
@@ -116,10 +111,10 @@ abstract class HttpApi
      */
     protected function httpDelete(string $path, array $params = [], array $pathParams = [], array $requestHeaders = []): ResponseInterface
     {
-        $path .= $this->buildPathParams($pathParams);
+        $path .= self::buildPathParams($pathParams);
 
         return $this->httpClient->sendRequest(
-            $this->messageFactory->createRequest('DELETE', $path, $requestHeaders, $this->createJsonBody($params))
+            $this->requestFactory->createRequest('DELETE', $path, $requestHeaders, $this->createJsonBody($params))
         );
     }
 
@@ -133,7 +128,8 @@ abstract class HttpApi
      */
     protected function handleResponse(ResponseInterface $response, $class)
     {
-        if (200 !== $response->getStatusCode() && 201 !== $response->getStatusCode()) {
+        $returnCode = $response->getStatusCode();
+        if (200 !== $returnCode && 201 !== $returnCode) {
             $this->handleErrors($response);
         }
 
@@ -145,10 +141,9 @@ abstract class HttpApi
      *
      * Call is controlled by the specific API methods.
      *
-     *
      * @throws ApiException
      */
-    protected function handleErrors(ResponseInterface $response)
+    protected function handleErrors(ResponseInterface $response): void
     {
         $error = null;
         // We only hydrate the Error response if the hydrator is a Model one
@@ -174,27 +169,21 @@ abstract class HttpApi
 
     /**
      * Create a JSON encoded version of an array of parameters.
-     *
-     * @param array $params Request parameters
-     *
-     * @return null|string
      */
-    private function createJsonBody(array $params)
+    private function createJsonBody(array $params): ?string
     {
-        return (0 === count($params)) ? null : Json::encode($params, empty($params) ? JSON_FORCE_OBJECT : 0);
+        return (0 === \count($params)) ? null : Json::encode($params, empty($params) ? JSON_FORCE_OBJECT : 0);
     }
 
     /**
-     * Builds the Query string given the parameters, null if no parameters are provided.
-     *
-     * @param array $params
-     *
-     * @return string
+     * Returns the Query string for the given parameters.
      */
-    private function buildPathParams(array $params)
+    private static function buildPathParams(array $params): string
     {
-        if (count($params) > 0) {
+        if (\count($params) > 0) {
             return '?'.http_build_query($params);
         }
+
+        return '';
     }
 }

@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
  */
 class ModelCollectionTest extends TestCase
 {
-    public function testCreateModelCollection()
+    public function testCreateModelCollection(): void
     {
         $data = [
             ['element0'],

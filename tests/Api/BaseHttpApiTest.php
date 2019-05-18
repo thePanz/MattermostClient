@@ -3,9 +3,9 @@
 namespace Pnz\MattermostClient\Tests\Api;
 
 use Http\Client\HttpClient;
-use Http\Message\Decorator\ResponseDecorator;
-use Http\Message\MessageFactory;
-use Http\Message\StreamFactory\GuzzleStreamFactory;
+use Http\Message\RequestFactory;
+use Nyholm\Psr7\Factory\Psr17Factory;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Pnz\MattermostClient\Exception\ApiException;
 use Pnz\MattermostClient\Exception\Domain\DisabledFeatureException;
@@ -19,45 +19,45 @@ use Psr\Http\Message\ResponseInterface;
 
 abstract class BaseHttpApiTest extends TestCase
 {
-    /** @var HttpClient|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var HttpClient|MockObject */
     protected $httpClient;
 
-    /** @var ResponseDecorator|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var ResponseInterface|MockObject */
     protected $response;
 
-    /** @var RequestInterface|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var RequestInterface|MockObject */
     protected $request;
 
-    /** @var Hydrator|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var Hydrator|MockObject */
     protected $hydrator;
 
-    /** @var MessageFactory|\PHPUnit_Framework_MockObject_MockObject */
-    protected $messageFactory;
+    /** @var RequestFactory|MockObject */
+    protected $requestFactory;
 
     public function setUp()
     {
         $this->response = $this->createMock(ResponseInterface::class);
         $this->request = $this->createMock(RequestInterface::class);
         $this->httpClient = $this->createMock(HttpClient::class);
-        $this->messageFactory = $this->createMock(MessageFactory::class);
+        $this->requestFactory = $this->createMock(RequestFactory::class);
         $this->hydrator = $this->createMock(Hydrator::class);
     }
 
-    public function configureMessage(string $action, string $uri, array $headers = [], string $body = null)
+    public function configureMessage(string $action, string $uri, array $headers = [], string $body = null): void
     {
-        $this->messageFactory
+        $this->requestFactory
             ->expects($this->once())
             ->method('createRequest')
             ->with($action, $uri, $headers, $body)
             ->willReturn($this->request);
     }
 
-    public function configureRequestAndResponse(int $responseCode, string $body = '', array $headers = [], $contentType = 'application/json')
+    public function configureRequestAndResponse(int $responseCode, string $body = '', array $headers = [], $contentType = 'application/json'): void
     {
         $this->response->method('getStatusCode')
             ->willReturn($responseCode);
 
-        $bodyStream = (new GuzzleStreamFactory())->createStream($body);
+        $bodyStream = (new Psr17Factory())->createStream($body);
         $this->response->method('getBody')
             ->willReturn($bodyStream);
 
@@ -76,7 +76,7 @@ abstract class BaseHttpApiTest extends TestCase
             ->willReturn($this->response);
     }
 
-    public function configureHydrator($class)
+    public function configureHydrator($class): void
     {
         $this->hydrator
             ->expects($this->once())
@@ -84,7 +84,7 @@ abstract class BaseHttpApiTest extends TestCase
             ->with($this->response, $class);
     }
 
-    public function getErrorCodesExceptions()
+    public function getErrorCodesExceptions(): array
     {
         return [
             '400' => [ValidationException::class, 400],

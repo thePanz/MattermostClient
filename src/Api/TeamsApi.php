@@ -37,7 +37,6 @@ final class TeamsApi extends HttpApi
     /**
      * Create a team. Required parameters: 'name', 'display_name' and 'type'.
      *
-     * @param array $params
      *
      * @return Team|ResponseInterface
      */
@@ -236,8 +235,6 @@ final class TeamsApi extends HttpApi
      * Patch a team.
      *
      * @see https://api.mattermost.com/v4/#tag/teams%2Fpaths%2F~1teams~1%7Bteam_id%7D~1patch%2Fput
-     *
-     * @param array $params
      *
      * @return Team|ResponseInterface
      */

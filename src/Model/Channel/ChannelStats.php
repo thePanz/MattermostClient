@@ -24,10 +24,7 @@ final class ChannelStats extends Model
         return $this->data['member_count'];
     }
 
-    /**
-     * @return array
-     */
-    protected static function getFields()
+    protected static function getFields(): array
     {
         return [
            'channel_id',
