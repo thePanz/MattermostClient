@@ -10,7 +10,7 @@ use Pnz\MattermostClient\Model\Channel\Channels;
  */
 class ChannelsTest extends TestCase
 {
-    public function testChannelsCreation()
+    public function testChannelsCreation(): void
     {
         $data = [
             'id' => 'id',

@@ -31,30 +31,27 @@ class TeamBuilderTest extends TestCase
 
     /**
      * @dataProvider provideBuildTypesForFailure
-     *
-     * @param string $buildType
-     * @param string $expectedFailureMessage
      */
-    public function testTeamBuilderNoParams($buildType, $expectedFailureMessage)
+    public function testTeamBuilderNoParams(string $buildType, string $expectedFailureMessage): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage($expectedFailureMessage);
         $this->builder->build($buildType);
     }
 
-    public function testTeamBuilderPatch()
+    public function testTeamBuilderPatch(): void
     {
         $expected = [];
         $this->assertSame($expected, $this->builder->build(ModelBuilder::BUILD_FOR_PATCH));
     }
 
-    public function testTeamBuilderUpdate()
+    public function testTeamBuilderUpdate(): void
     {
         $expected = [];
         $this->assertSame($expected, $this->builder->build(ModelBuilder::BUILD_FOR_UPDATE));
     }
 
-    public function testTeamBuilderMinimal()
+    public function testTeamBuilderMinimal(): void
     {
         $this->builder->setType('Type');
         $this->builder->setName('Name');

@@ -8,24 +8,14 @@ use Pnz\MattermostClient\Model\ModelBuilder;
 
 class PostBuilder extends ModelBuilder
 {
-    /**
-     * @param $message
-     *
-     * @return $this
-     */
-    public function setMessage($message)
+    public function setMessage(string $message): self
     {
         $this->params['message'] = $message;
 
         return $this;
     }
 
-    /**
-     * @param $channelId
-     *
-     * @return $this
-     */
-    public function setChannelId($channelId)
+    public function setChannelId(string $channelId): self
     {
         $this->params['channel_id'] = $channelId;
 
@@ -34,12 +24,8 @@ class PostBuilder extends ModelBuilder
 
     /**
      * Set the post ID to comment on.
-     *
-     * @param $postId
-     *
-     * @return $this
      */
-    public function setRootId(string $postId)
+    public function setRootId(string $postId): self
     {
         $this->params['root_id'] = $postId;
 
@@ -49,11 +35,9 @@ class PostBuilder extends ModelBuilder
     /**
      * A list of file IDs to associate with the post.
      *
-     * @param $fileIds
-     *
-     * @return $this
+     * @param string[] $fileIds
      */
-    public function setFileIds(array $fileIds)
+    public function setFileIds(array $fileIds): self
     {
         $this->params['file_ids'] = $fileIds;
 
@@ -62,21 +46,15 @@ class PostBuilder extends ModelBuilder
 
     /**
      * Set if the post is pinned.
-     *
-     *
-     * @return $this
      */
-    public function setIsPinned(bool $isPinned)
+    public function setIsPinned(bool $isPinned): self
     {
         $this->params['is_pinned'] = $isPinned;
 
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function getRequiredFields($buildType = self::BUILD_FOR_CREATE)
+    protected function getRequiredFields(string $buildType = self::BUILD_FOR_CREATE): array
     {
         switch ($buildType) {
             case self::BUILD_FOR_CREATE:

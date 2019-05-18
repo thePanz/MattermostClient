@@ -10,7 +10,7 @@ use Pnz\MattermostClient\Model\Status;
  */
 class StatusTest extends TestCase
 {
-    public function testStatusCreationEmpty()
+    public function testStatusCreationEmpty(): void
     {
         $data = [];
 
@@ -19,7 +19,7 @@ class StatusTest extends TestCase
         $this->assertSame('', $error->getStatus());
     }
 
-    public function testStatusCreation()
+    public function testStatusCreation(): void
     {
         $data = [
             'status' => 'Status',

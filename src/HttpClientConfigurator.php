@@ -88,7 +88,7 @@ final class HttpClientConfigurator
 
         if (null !== $this->token) {
             $plugins[] = new Plugin\AuthenticationPlugin(new Authentication\Bearer($this->token));
-        } elseif (!empty($this->loginId) && (!empty($this->password))) {
+        } elseif (!empty($this->loginId) && !empty($this->password)) {
             $plugins[] = new MattermostLoginPlugin($this->loginId, $this->password, $this->requestFactory);
         } else {
             throw new \InvalidArgumentException('Unable to configure the client, no Token or LoginId/Password provided');
@@ -138,11 +138,6 @@ final class HttpClientConfigurator
         return $this;
     }
 
-    /**
-     * @param Plugin|Plugin[] ...$plugin
-     *
-     * @return HttpClientConfigurator
-     */
     public function appendPlugin(Plugin ...$plugin): self
     {
         foreach ($plugin as $p) {
@@ -152,11 +147,6 @@ final class HttpClientConfigurator
         return $this;
     }
 
-    /**
-     * @param Plugin|Plugin[] ...$plugin
-     *
-     * @return HttpClientConfigurator
-     */
     public function prependPlugin(Plugin ...$plugin): self
     {
         $plugin = array_reverse($plugin);

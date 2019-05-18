@@ -10,7 +10,7 @@ use Pnz\MattermostClient\Model\Post\Post;
  */
 class PostTest extends TestCase
 {
-    public function testPostCreationEmpty()
+    public function testPostCreationEmpty(): void
     {
         $data = [];
 
@@ -35,7 +35,7 @@ class PostTest extends TestCase
         $this->assertSame('', $post->getRootId());
     }
 
-    public function testPostCreation()
+    public function testPostCreation(): void
     {
         $data = [
             'id' => 'Data for: id',

@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
  */
 class ModelCollectionOrderedTest extends TestCase
 {
-    public function testCreateModelCollectionOrdered()
+    public function testCreateModelCollectionOrdered(): void
     {
         $elements = [
             'el-0' => ['element0'],

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Pnz\MattermostClient\Hydrator;
 
+use Pnz\JsonException\Json;
 use Pnz\MattermostClient\Exception\HydrationException;
 use Pnz\MattermostClient\Model\CreatableFromArray;
 use Psr\Http\Message\ResponseInterface;
@@ -25,13 +26,14 @@ class ModelHydrator implements Hydrator
             throw new HydrationException('The ModelHydrator cannot hydrate response with Content-Type:'.$response->getHeaderLine('Content-Type'));
         }
 
-        $data = json_decode($body, true);
-        if (JSON_ERROR_NONE !== json_last_error()) {
-            throw new HydrationException(sprintf('Error (%d) when trying to json_decode response', json_last_error()));
+        try {
+            $data = Json::decode($body, true);
+        } catch (\JsonException $exception) {
+            throw new HydrationException(sprintf('Error when trying to decode the JSON response: %s', $exception->getMessage()), 0, $exception);
         }
 
         if (is_subclass_of($class, CreatableFromArray::class)) {
-            $object = call_user_func($class.'::createFromArray', $data);
+            $object = \call_user_func($class.'::createFromArray', $data);
         } else {
             $object = new $class($data);
         }

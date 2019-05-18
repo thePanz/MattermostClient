@@ -10,7 +10,7 @@ use Pnz\MattermostClient\Model\User\Users;
  */
 class UsersTest extends TestCase
 {
-    public function testUsersCreation()
+    public function testUsersCreation(): void
     {
         $data = [
             'id' => 'Data for: id',

@@ -8,13 +8,13 @@ use Pnz\MattermostClient\Exception\InvalidArgumentException;
 
 abstract class ModelBuilder implements ModelBuilderInterface
 {
-    const BUILD_FOR_CREATE = 'create';
-    const BUILD_FOR_UPDATE = 'update';
-    const BUILD_FOR_PATCH = 'patch';
+    public const BUILD_FOR_CREATE = 'create';
+    public const BUILD_FOR_UPDATE = 'update';
+    public const BUILD_FOR_PATCH = 'patch';
 
     protected $params = [];
 
-    public function build($buildType = self::BUILD_FOR_CREATE)
+    public function build(string $buildType = self::BUILD_FOR_CREATE)
     {
         $this->validate($buildType);
 
@@ -24,18 +24,16 @@ abstract class ModelBuilder implements ModelBuilderInterface
     /**
      * Defined the required fields for the given build type.
      *
-     * @param string $buildType
-     *
-     * @return array
+     * @param string $buildType the build type see BUILD_FOR_* consts
      */
-    abstract protected function getRequiredFields($buildType = self::BUILD_FOR_CREATE);
+    abstract protected function getRequiredFields(string $buildType = self::BUILD_FOR_CREATE): array;
 
     /**
      * Validate the parameters.
      *
      * @param string $buildType the build type to validate the parameters
      */
-    protected function validate($buildType = self::BUILD_FOR_CREATE)
+    protected function validate(string $buildType = self::BUILD_FOR_CREATE): void
     {
         $requiredFields = $this->getRequiredFields($buildType);
 

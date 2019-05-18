@@ -11,7 +11,7 @@ use Pnz\MattermostClient\Model\Post\Posts;
  */
 class PostsTest extends TestCase
 {
-    public function testPostsCreation()
+    public function testPostsCreation(): void
     {
         $post1 = $this->buildPostData('post-id-1');
         $posts = Posts::createFromArray([
@@ -31,7 +31,7 @@ class PostsTest extends TestCase
         $this->assertFalse($posts->valid());
     }
 
-    public function testPostsCreationSorted()
+    public function testPostsCreationSorted(): void
     {
         $post1 = $this->buildPostData('post-id-1');
         $post2 = $this->buildPostData('post-id-2');
@@ -68,7 +68,7 @@ class PostsTest extends TestCase
         $this->assertFalse($posts->valid());
     }
 
-    private function buildPostData($id)
+    private function buildPostData(string $id): array
     {
         return [
             'id' => $id,
@@ -91,7 +91,7 @@ class PostsTest extends TestCase
         ];
     }
 
-    private function assertSamePost($data, Post $post)
+    private function assertSamePost(array $data, Post $post): void
     {
         $this->assertSame($data['id'], $post->getId());
         $this->assertSame($data['create_at'], $post->getCreateAt());

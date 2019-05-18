@@ -8,24 +8,14 @@ use Pnz\MattermostClient\Model\ModelBuilder;
 
 class UserBuilder extends ModelBuilder
 {
-    /**
-     * @param $email
-     *
-     * @return $this
-     */
-    public function setEmail($email)
+    public function setEmail(string $email): self
     {
         $this->params['email'] = $email;
 
         return $this;
     }
 
-    /**
-     * @param $username
-     *
-     * @return $this
-     */
-    public function setUsername($username)
+    public function setUsername(string $username): self
     {
         $this->params['username'] = $username;
 
@@ -34,12 +24,8 @@ class UserBuilder extends ModelBuilder
 
     /**
      * Set the user password.
-     *
-     * @param $password
-     *
-     * @return $this
      */
-    public function setPassword($password)
+    public function setPassword(string $password): self
     {
         $this->params['password'] = $password;
 
@@ -48,12 +34,8 @@ class UserBuilder extends ModelBuilder
 
     /**
      * Set the user first name.
-     *
-     * @param $firstName
-     *
-     * @return $this
      */
-    public function setFirstName($firstName)
+    public function setFirstName(string $firstName): self
     {
         $this->params['first_name'] = $firstName;
 
@@ -62,12 +44,8 @@ class UserBuilder extends ModelBuilder
 
     /**
      * Set the user last name.
-     *
-     * @param $lastName
-     *
-     * @return $this
      */
-    public function setLastName($lastName)
+    public function setLastName(string $lastName): self
     {
         $this->params['last_name'] = $lastName;
 
@@ -76,22 +54,15 @@ class UserBuilder extends ModelBuilder
 
     /**
      * Set the user's nickname.
-     *
-     * @param $nickname
-     *
-     * @return $this
      */
-    public function setNickname($nickname)
+    public function setNickname(string $nickname): self
     {
         $this->params['nickname'] = $nickname;
 
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function getRequiredFields($buildType = self::BUILD_FOR_CREATE)
+    protected function getRequiredFields(string $buildType = self::BUILD_FOR_CREATE): array
     {
         switch ($buildType) {
             case self::BUILD_FOR_CREATE:

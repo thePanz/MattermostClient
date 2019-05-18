@@ -10,7 +10,7 @@ use Pnz\MattermostClient\Model\Error;
  */
 class ErrorTest extends TestCase
 {
-    public function testErrorCreationEmpty()
+    public function testErrorCreationEmpty(): void
     {
         $data = [];
 
@@ -23,7 +23,7 @@ class ErrorTest extends TestCase
         $this->assertSame('', $error->getRequestId());
     }
 
-    public function testErrorCreation()
+    public function testErrorCreation(): void
     {
         $data = [
             'id' => 'Id',

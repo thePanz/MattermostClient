@@ -10,7 +10,7 @@ use Pnz\MattermostClient\Model\Channel\Channel;
  */
 class ChannelTest extends TestCase
 {
-    public function testChannelCreationEmpty()
+    public function testChannelCreationEmpty(): void
     {
         $data = [];
 
@@ -32,7 +32,7 @@ class ChannelTest extends TestCase
         $this->assertNull($channel->getType());
     }
 
-    public function testChannelCreation()
+    public function testChannelCreation(): void
     {
         $data = [
             'id' => 'id',

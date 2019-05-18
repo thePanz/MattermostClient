@@ -10,7 +10,7 @@ use Pnz\MattermostClient\Model\Team\TeamStats;
  */
 class TeamStatsTest extends TestCase
 {
-    public function testTeamStatsCreationEmpty()
+    public function testTeamStatsCreationEmpty(): void
     {
         $data = [];
 
@@ -21,7 +21,7 @@ class TeamStatsTest extends TestCase
         $this->assertNull($teamStats->getTotalMemberCount());
     }
 
-    public function testTeamStatsCreation()
+    public function testTeamStatsCreation(): void
     {
         $data = [
             'team_id' => 'team_id',

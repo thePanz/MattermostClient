@@ -44,14 +44,17 @@ final class FilesApi extends HttpApi
         $multipartStreamBuilder->addResource('files', substr($fileContents, 0, 100), [
             'filename' => $filename,
         ]);
-        // Add client id
-        $multipartStreamBuilder->addResource('client_ids', $clientId);
+
+        if ($clientId) {
+            // Add client id
+            $multipartStreamBuilder->addResource('client_ids', $clientId);
+        }
 
         $multipartStream = $multipartStreamBuilder->build();
         $headers['Content-Type'] = 'multipart/form-data; boundary='.$multipartStreamBuilder->getBoundary();
         $multipartStreamBuilder->reset();
 
-        $response = $this->httpPostRaw(sprintf('/files', $channelId), $multipartStream, $headers);
+        $response = $this->httpPostRaw('/files', $multipartStream, $headers);
 
         return $this->handleResponse($response, FileUploadInfo::class);
     }
@@ -91,9 +94,12 @@ final class FilesApi extends HttpApi
 
         $response = $this->httpGet(sprintf('/files/%s', $fileId));
 
-        if (200 !== $response->getStatusCode() && 201 !== $response->getStatusCode()) {
+        $status = $response->getStatusCode();
+        if (200 !== $status && 201 !== $status) {
             $this->handleErrors($response);
         }
+
+        $response->getBody()->rewind();
 
         return $response->getBody();
     }
@@ -117,6 +123,6 @@ final class FilesApi extends HttpApi
             $this->handleErrors($response);
         }
 
-        return $response->getBody()->getContents();
+        return (string) $response->getBody();
     }
 }

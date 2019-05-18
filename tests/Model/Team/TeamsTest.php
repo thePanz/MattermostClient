@@ -10,7 +10,7 @@ use Pnz\MattermostClient\Model\Team\Teams;
  */
 class TeamsTest extends TestCase
 {
-    public function testTeamsCreation()
+    public function testTeamsCreation(): void
     {
         $data = [
             'id' => 'Id',

@@ -16,10 +16,7 @@ final class Posts extends ModelCollectionOrdered
         return Post::createFromArray($data);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected static function getItemsDataName()
+    protected static function getItemsDataName(): string
     {
         return 'posts';
     }

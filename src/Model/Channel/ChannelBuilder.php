@@ -8,82 +8,49 @@ use Pnz\MattermostClient\Model\ModelBuilder;
 
 class ChannelBuilder extends ModelBuilder
 {
-    /**
-     * @param string $teamId
-     *
-     * @return $this
-     */
-    public function setTeamId($teamId)
+    public function setTeamId(string $teamId): self
     {
         $this->params['team_id'] = $teamId;
 
         return $this;
     }
 
-    /**
-     * @param string $name
-     *
-     * @return $this
-     */
-    public function setName($name)
+    public function setName(string $name): self
     {
         $this->params['name'] = $name;
 
         return $this;
     }
 
-    /**
-     * @param string $displayName
-     *
-     * @return $this
-     */
-    public function setDisplayName($displayName)
+    public function setDisplayName(string $displayName): self
     {
         $this->params['display_name'] = $displayName;
 
         return $this;
     }
 
-    /**
-     * @param string $purpose
-     *
-     * @return $this
-     */
-    public function setPurpose($purpose)
+    public function setPurpose(string $purpose): self
     {
         $this->params['purpose'] = $purpose;
 
         return $this;
     }
 
-    /**
-     * @param string $header
-     *
-     * @return $this
-     */
-    public function setHeader($header)
+    public function setHeader(string $header): self
     {
         $this->params['header'] = $header;
 
         return $this;
     }
 
-    /**
-     * @param string $type
-     *
-     * @return $this
-     */
-    public function setType($type)
+    public function setType(string $type): self
     {
         $this->params['type'] = $type;
 
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function getRequiredFields($buildType = self::BUILD_FOR_CREATE)
+    protected function getRequiredFields(string $buildType = self::BUILD_FOR_CREATE): array
     {
         switch ($buildType) {
             case self::BUILD_FOR_CREATE:

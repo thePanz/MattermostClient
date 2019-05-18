@@ -22,28 +22,23 @@ class UserBuilderTest extends TestCase
         $this->builder = new UserBuilder();
     }
 
-    public function provideBuildTypesForFailure()
+    public function provideBuildTypesForFailure(): iterable
     {
-        return [
-            'create' => [UserBuilder::BUILD_FOR_CREATE, 'Required parameters missing: username, email, password'],
-            'update' => [UserBuilder::BUILD_FOR_UPDATE, 'Required parameters missing: id'],
-        ];
+        yield 'create' => [UserBuilder::BUILD_FOR_CREATE, 'Required parameters missing: username, email, password'];
+        yield 'update' => [UserBuilder::BUILD_FOR_UPDATE, 'Required parameters missing: id'];
     }
 
     /**
      * @dataProvider provideBuildTypesForFailure
-     *
-     * @param string $buildType
-     * @param string $expectedFailureMessage
      */
-    public function testUserBuilderNoParams($buildType, $expectedFailureMessage)
+    public function testUserBuilderNoParams(string $buildType, string $expectedFailureMessage): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage($expectedFailureMessage);
         $this->builder->build($buildType);
     }
 
-    public function testUserBuilderMinimal()
+    public function testUserBuilderMinimal(): void
     {
         $this->builder->setUsername('username');
         $this->builder->setPassword('password');
@@ -58,7 +53,7 @@ class UserBuilderTest extends TestCase
         $this->assertSame($expected, $this->builder->build());
     }
 
-    public function testUserBuilderFull()
+    public function testUserBuilderFull(): void
     {
         $this->builder->setUsername('username');
         $this->builder->setPassword('password');
@@ -79,7 +74,7 @@ class UserBuilderTest extends TestCase
         $this->assertSame($expected, $this->builder->build());
     }
 
-    public function testChannelBuilderPatch()
+    public function testChannelBuilderPatch(): void
     {
         $expected = [];
         $this->assertSame($expected, $this->builder->build(ModelBuilder::BUILD_FOR_PATCH));

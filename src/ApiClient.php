@@ -7,7 +7,6 @@ namespace Pnz\MattermostClient;
 use Http\Client\HttpClient;
 use Http\Discovery\HttpClientDiscovery;
 use Http\Discovery\MessageFactoryDiscovery;
-use Http\Message\MessageFactory;
 use Http\Message\RequestFactory;
 use Pnz\MattermostClient\Api\ChannelsApi;
 use Pnz\MattermostClient\Api\FilesApi;
@@ -32,22 +31,22 @@ final class ApiClient
     /**
      * @var RequestFactory
      */
-    private $messageFactory;
+    private $requestFactory;
 
     /**
      * Construct an ApiClient instance.
      *
      * @param HttpClient|null     $httpClient     The HttpClient;  if null, the auto-discover will be used
-     * @param MessageFactory|null $requestFactory The MessageFactory; if null, the auto-discover will be used
+     * @param RequestFactory|null $requestFactory The RequestFactory; if null, the auto-discover will be used
      * @param Hydrator|null       $hydrator       The Hydrator to use, default to the ModelHydrator
      */
     public function __construct(
         HttpClient $httpClient = null,
-        MessageFactory $requestFactory = null,
+        RequestFactory $requestFactory = null,
         Hydrator $hydrator = null
     ) {
         $this->httpClient = $httpClient ?: HttpClientDiscovery::find();
-        $this->messageFactory = $requestFactory ?: MessageFactoryDiscovery::find();
+        $this->requestFactory = $requestFactory ?: MessageFactoryDiscovery::find();
         $this->hydrator = $hydrator ?: new ModelHydrator();
     }
 
@@ -74,7 +73,7 @@ final class ApiClient
      */
     public function users(): UsersApi
     {
-        return new Api\UsersApi($this->httpClient, $this->messageFactory, $this->hydrator);
+        return new Api\UsersApi($this->httpClient, $this->requestFactory, $this->hydrator);
     }
 
     /**
@@ -84,7 +83,7 @@ final class ApiClient
      */
     public function teams(): TeamsApi
     {
-        return new Api\TeamsApi($this->httpClient, $this->messageFactory, $this->hydrator);
+        return new Api\TeamsApi($this->httpClient, $this->requestFactory, $this->hydrator);
     }
 
     /**
@@ -94,7 +93,7 @@ final class ApiClient
      */
     public function channels(): ChannelsApi
     {
-        return new Api\ChannelsApi($this->httpClient, $this->messageFactory, $this->hydrator);
+        return new Api\ChannelsApi($this->httpClient, $this->requestFactory, $this->hydrator);
     }
 
     /**
@@ -104,7 +103,7 @@ final class ApiClient
      */
     public function posts(): PostsApi
     {
-        return new Api\PostsApi($this->httpClient, $this->messageFactory, $this->hydrator);
+        return new Api\PostsApi($this->httpClient, $this->requestFactory, $this->hydrator);
     }
 
     /**
@@ -114,6 +113,6 @@ final class ApiClient
      */
     public function files(): FilesApi
     {
-        return new Api\FilesApi($this->httpClient, $this->messageFactory, $this->hydrator);
+        return new Api\FilesApi($this->httpClient, $this->requestFactory, $this->hydrator);
     }
 }

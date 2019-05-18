@@ -10,10 +10,9 @@ use Pnz\MattermostClient\Model\User\User;
  */
 class UserTest extends TestCase
 {
-    public function testUserCreationEmpty()
+    public function testUserCreationEmpty(): void
     {
         $data = [];
-
         $user = User::createFromArray($data);
 
         $this->assertNull($user->getId());
@@ -32,7 +31,7 @@ class UserTest extends TestCase
         $this->assertNull($user->getDeleteAt());
     }
 
-    public function testUserCreation()
+    public function testUserCreation(): void
     {
         $data = [
             'id' => 'Data for: id',

@@ -6,18 +6,12 @@ use Pnz\MattermostClient\Model\ModelCollectionOrdered;
 
 class WrappedModelCollectionOrdered extends ModelCollectionOrdered
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function createItem(array $data)
     {
         return $data;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected static function getItemsDataName()
+    protected static function getItemsDataName(): string
     {
         return 'items';
     }

@@ -22,20 +22,15 @@ class PostBuilderTest extends TestCase
         $this->builder = new PostBuilder();
     }
 
-    public function provideBuildTypesForFailure()
+    public function provideBuildTypesForFailure(): iterable
     {
-        return [
-            'create' => [PostBuilder::BUILD_FOR_CREATE, 'Required parameters missing: channel_id, message'],
-        ];
+        yield 'create' => [PostBuilder::BUILD_FOR_CREATE, 'Required parameters missing: channel_id, message'];
     }
 
     /**
      * @dataProvider provideBuildTypesForFailure
-     *
-     * @param string $buildType
-     * @param string $expectedFailureMessage
      */
-    public function testPostBuilderNoParams($buildType, $expectedFailureMessage)
+    public function testPostBuilderNoParams(string $buildType, string $expectedFailureMessage): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage($expectedFailureMessage);
@@ -55,7 +50,7 @@ class PostBuilderTest extends TestCase
         $this->assertSame($expected, $this->builder->build());
     }
 
-    public function testPostBuilderAll()
+    public function testPostBuilderAll(): void
     {
         $this->builder->setChannelId('channel-id');
         $this->builder->setMessage('The message');
@@ -74,13 +69,13 @@ class PostBuilderTest extends TestCase
         $this->assertSame($expected, $this->builder->build());
     }
 
-    public function testPostBuilderUpdate()
+    public function testPostBuilderUpdate(): void
     {
         $expected = [];
         $this->assertSame($expected, $this->builder->build(ModelBuilder::BUILD_FOR_UPDATE));
     }
 
-    public function testPostBuilderPatch()
+    public function testPostBuilderPatch(): void
     {
         $expected = [];
         $this->assertSame($expected, $this->builder->build(ModelBuilder::BUILD_FOR_PATCH));

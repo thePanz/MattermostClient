@@ -72,10 +72,7 @@ final class ChannelMember extends Model
         return $this->data['last_update_at'];
     }
 
-    /**
-     * @return array
-     */
-    protected static function getFields()
+    protected static function getFields(): array
     {
         return [
             'channel_id',

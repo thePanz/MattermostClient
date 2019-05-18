@@ -8,6 +8,7 @@ use Pnz\MattermostClient\Model\Model;
 
 final class Channel extends Model
 {
+    const CHANNEL_DIRECT = 'D';
     const CHANNEL_OPEN = 'O';
     const CHANNEL_PRIVATE = 'P';
 
@@ -123,10 +124,7 @@ final class Channel extends Model
         return $this->data['creator_id'];
     }
 
-    /**
-     * @return array
-     */
-    protected static function getFields()
+    protected static function getFields(): array
     {
         return [
             'id',

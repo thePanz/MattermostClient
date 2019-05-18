@@ -1,6 +1,6 @@
 <?php
 
-namespace Pnz\MattermostClient\Tests\Model\Team;
+namespace Pnz\MattermostClient\Tests\Model\Channel;
 
 use PHPUnit\Framework\TestCase;
 use Pnz\MattermostClient\Model\Channel\ChannelMember;
@@ -10,7 +10,7 @@ use Pnz\MattermostClient\Model\Channel\ChannelMember;
  */
 class ChannelMemberTest extends TestCase
 {
-    public function testChannelMemberCreationEmpty()
+    public function testChannelMemberCreationEmpty(): void
     {
         $data = [];
 
@@ -26,7 +26,7 @@ class ChannelMemberTest extends TestCase
         $this->assertNull($member->getNotifyProps());
     }
 
-    public function testChannelCreation()
+    public function testChannelCreation(): void
     {
         $data = [
             'channel_id' => 'channel-id',

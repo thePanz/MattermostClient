@@ -104,7 +104,7 @@ class FileInfo extends Model
     /**
      * {@inheritdoc}
      */
-    protected static function getFields()
+    protected static function getFields(): array
     {
         return [
             'id',

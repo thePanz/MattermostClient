@@ -14,7 +14,6 @@ final class PostsApi extends HttpApi
     /**
      * Create a post. Required parameters: 'channel_id', 'message'.
      *
-     * @param array $params
      *
      * @return Post|ResponseInterface
      */
@@ -30,8 +29,6 @@ final class PostsApi extends HttpApi
      * Omitted fields will not be updated.
      *
      * @see https://api.mattermost.com/v4/#tag/posts%2Fpaths%2F~1posts~1%7Bpost_id%7D~1patch%2Fput
-     *
-     * @param array $params
      *
      * @return Post|ResponseInterface
      */
@@ -52,7 +49,6 @@ final class PostsApi extends HttpApi
      * @see https://api.mattermost.com/v4/#tag/posts%2Fpaths%2F~1posts~1%7Bpost_id%7D%2Fput
      *
      * @param string $postId ID of the post to update
-     * @param array  $params
      *
      * @return Post|ResponseInterface
      */

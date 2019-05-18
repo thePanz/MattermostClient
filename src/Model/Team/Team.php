@@ -50,10 +50,7 @@ final class Team extends Model
         return $this->data['type'];
     }
 
-    /**
-     * @return array
-     */
-    protected static function getFields()
+    protected static function getFields(): array
     {
         return [
            'id',

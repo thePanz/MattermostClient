@@ -9,11 +9,9 @@ use Pnz\MattermostClient\Model\ModelBuilder;
 class TeamBuilder extends ModelBuilder
 {
     /**
-     * @param $name
-     *
-     * @return $this
+     * Set the Team name.
      */
-    public function setName($name)
+    public function setName(string $name): self
     {
         $this->params['name'] = $name;
 
@@ -22,12 +20,8 @@ class TeamBuilder extends ModelBuilder
 
     /**
      * Set the Team type.
-     *
-     * @param $type
-     *
-     * @return $this
      */
-    public function setType($type)
+    public function setType(string $type): self
     {
         $this->params['type'] = $type;
 
@@ -36,22 +30,15 @@ class TeamBuilder extends ModelBuilder
 
     /**
      * Set the display name.
-     *
-     * @param $diplayName
-     *
-     * @return $this
      */
-    public function setDisplayName($diplayName)
+    public function setDisplayName(string $diplayName): self
     {
         $this->params['display_name'] = $diplayName;
 
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function getRequiredFields($buildType = self::BUILD_FOR_CREATE)
+    protected function getRequiredFields(string $buildType = self::BUILD_FOR_CREATE): array
     {
         switch ($buildType) {
             case self::BUILD_FOR_CREATE:

@@ -42,12 +42,9 @@ abstract class ModelCollectionOrdered extends ModelCollection
         return $this->order[$this->key];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function valid()
+    public function valid(): bool
     {
-        return $this->key < count($this->order);
+        return $this->key < \count($this->order);
     }
 
     /**
@@ -60,8 +57,6 @@ abstract class ModelCollectionOrdered extends ModelCollection
 
     /**
      * Returns the name of the data containing the items to be sorted.
-     *
-     * @return string
      */
-    abstract protected static function getItemsDataName();
+    abstract protected static function getItemsDataName(): string;
 }
