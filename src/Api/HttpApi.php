@@ -6,6 +6,7 @@ namespace Pnz\MattermostClient\Api;
 
 use Http\Client\HttpClient;
 use Http\Message\MessageFactory;
+use Pnz\JsonException\Json;
 use Pnz\MattermostClient\Exception\ApiException;
 use Pnz\MattermostClient\Exception\Domain as DomainExceptions;
 use Pnz\MattermostClient\Hydrator\Hydrator;
@@ -180,7 +181,7 @@ abstract class HttpApi
      */
     private function createJsonBody(array $params)
     {
-        return (0 === count($params)) ? null : json_encode($params, empty($params) ? JSON_FORCE_OBJECT : 0);
+        return (0 === count($params)) ? null : Json::encode($params, empty($params) ? JSON_FORCE_OBJECT : 0);
     }
 
     /**
