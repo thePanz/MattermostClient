@@ -30,7 +30,7 @@ The list of supported APIs endpoints are available in this [Google Spreadsheet](
 
 **TL;DR**
 ```bash
-composer require php-http/guzzle6-adapter guzzlehttp/psr7 php-http/message pnz/mattermost-client
+composer require php-http/curl-client nyholm/psr7 php-http/message pnz/mattermost-client
 ```
 
 This library does not have a dependency on Guzzle or any other library that sends HTTP requests. We use the awesome 
@@ -40,14 +40,14 @@ find clients to use. For more information about virtual packages please refer to
 [HTTPlug](http://docs.php-http.org/en/latest/httplug/users.html). Example:
 
 ```bash
-composer require php-http/guzzle6-adapter
+composer require php-http/curl-client
 ```
 
 You do also need to install a PSR-7 implementation and a factory to create PSR-7 messages (PSR-17 whenever that is 
-released). You could use Guzzles PSR-7 implementation and factories from php-http:
+released). You could use Nyholm PSR-7 implementation and factories from php-http:
 
 ```bash
-composer require guzzlehttp/psr7 php-http/message 
+composer require nyholm/psr7 php-http/message
 ```
 
 Now you may install the library by running the following:
