@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Expose User's delete_at property
 - Enable new scrutinizer analysis
 ### Changed
+- Refactored Authentication process
+- Requirements for HttpPlug 2.x
 ### Deprecated
 ### Removed
 ### Fixed

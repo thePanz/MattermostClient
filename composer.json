@@ -14,17 +14,17 @@
     "require": {
         "ext-json": "*",
         "php": "^7.1",
-        "php-http/httplug": "^1.0",
+        "php-http/httplug": "^2.0",
         "php-http/multipart-stream-builder": "^1.0",
-        "php-http/client-common": ">=1.1 <1.8",
-        "php-http/discovery": "^1.0",
+        "php-http/client-common": "^2.0",
+        "php-http/discovery": "^1.7",
         "pnz/json-exception": "^0.1"
     },
     "require-dev": {
         "phpunit/phpunit": "^7.5",
         "php-http/message-factory": "^1.0",
-        "php-http/curl-client": "^1.6",
-        "php-http/message": "^1.0",
+        "php-http/curl-client": "^2.0",
+        "php-http/message": "^1.7",
         "nyholm/psr7": "^1.1"
     },
     "autoload": {
