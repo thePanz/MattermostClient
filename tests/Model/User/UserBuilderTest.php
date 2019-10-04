@@ -17,7 +17,7 @@ class UserBuilderTest extends TestCase
      */
     private $builder;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->builder = new UserBuilder();
     }

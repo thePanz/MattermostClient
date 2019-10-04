@@ -34,7 +34,7 @@ abstract class BaseHttpApiTest extends TestCase
     /** @var RequestFactory|MockObject */
     protected $requestFactory;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->response = $this->createMock(ResponseInterface::class);
         $this->request = $this->createMock(RequestInterface::class);

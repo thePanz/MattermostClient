@@ -2,6 +2,7 @@
 
 namespace Pnz\MattermostClient\Tests\Api;
 
+use Pnz\JsonException\Json;
 use Pnz\MattermostClient\Api\TeamsApi;
 use Pnz\MattermostClient\Exception\InvalidArgumentException;
 use Pnz\MattermostClient\Model\Channel\Channels;
@@ -22,7 +23,7 @@ class TeamsTest extends BaseHttpApiTest
      */
     private $client;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -127,7 +128,7 @@ class TeamsTest extends BaseHttpApiTest
             'display_name' => 'display_name',
             'invite_id' => 'invite_id,',
         ];
-        $this->configureMessage('POST', '/teams', [], json_encode($data));
+        $this->configureMessage('POST', '/teams', [], Json::encode($data));
         $this->configureRequestAndResponse(201);
         $this->configureHydrator(Team::class);
 
@@ -144,7 +145,7 @@ class TeamsTest extends BaseHttpApiTest
             'display_name' => 'display_name',
             'invite_id' => 'invite_id,',
         ];
-        $this->configureMessage('POST', '/teams', [], json_encode($data));
+        $this->configureMessage('POST', '/teams', [], Json::encode($data));
         $this->configureRequestAndResponse($code);
 
         $this->client->createTeam($data);
@@ -157,7 +158,7 @@ class TeamsTest extends BaseHttpApiTest
             'display_name' => 'display_name',
             'invite_id' => 'invite_id,',
         ];
-        $this->configureMessage('PUT', '/teams/'.$teamId.'/patch', [], json_encode($data));
+        $this->configureMessage('PUT', '/teams/'.$teamId.'/patch', [], Json::encode($data));
         $this->configureRequestAndResponse(201);
         $this->configureHydrator(Team::class);
 
@@ -175,7 +176,7 @@ class TeamsTest extends BaseHttpApiTest
             'display_name' => 'display_name',
             'invite_id' => 'invite_id,',
         ];
-        $this->configureMessage('PUT', '/teams/'.$teamId.'/patch', [], json_encode($data));
+        $this->configureMessage('PUT', '/teams/'.$teamId.'/patch', [], Json::encode($data));
         $this->configureRequestAndResponse($code);
 
         $this->client->patchTeam($teamId, $data);
@@ -195,7 +196,7 @@ class TeamsTest extends BaseHttpApiTest
             'email' => 'email,',
         ];
 
-        $this->configureMessage('PUT', '/teams/'.$teamId, [], json_encode($data));
+        $this->configureMessage('PUT', '/teams/'.$teamId, [], Json::encode($data));
         $this->configureRequestAndResponse(201);
         $this->configureHydrator(Team::class);
         $this->client->updateTeam($teamId, $data);
@@ -213,7 +214,7 @@ class TeamsTest extends BaseHttpApiTest
             'email' => 'email,',
         ];
 
-        $this->configureMessage('PUT', '/teams/'.$teamId, [], json_encode($data));
+        $this->configureMessage('PUT', '/teams/'.$teamId, [], Json::encode($data));
         $this->configureRequestAndResponse($code);
         $this->client->updateTeam($teamId, $data);
     }
@@ -344,7 +345,7 @@ class TeamsTest extends BaseHttpApiTest
             'user_id' => $userId,
             'roles' => $roles,
         ];
-        $this->configureMessage('POST', '/teams/'.$teamId.'/members', [], json_encode($data));
+        $this->configureMessage('POST', '/teams/'.$teamId.'/members', [], Json::encode($data));
         $this->configureRequestAndResponse(201);
         $this->client->addTeamMember($teamId, $userId, $roles);
     }
@@ -364,7 +365,7 @@ class TeamsTest extends BaseHttpApiTest
             'user_id' => $userId,
             'roles' => $roles,
         ];
-        $this->configureMessage('POST', '/teams/'.$teamId.'/members', [], json_encode($data));
+        $this->configureMessage('POST', '/teams/'.$teamId.'/members', [], Json::encode($data));
         $this->configureRequestAndResponse($code);
         $this->client->addTeamMember($teamId, $userId, $roles);
     }

@@ -70,7 +70,7 @@ class PostTest extends TestCase
         $this->assertSame($data['file_ids'], $post->getFileIds());
         $this->assertSame($data['filenames'], $post->getFilenames());
         $this->assertSame($data['hashtag'], $post->getHashtag());
-        $this->assertSame($data['is_pinned'], $post->getIsPinned());
+        $this->assertTrue($post->getIsPinned());
         $this->assertSame($data['original_id'], $post->getOriginalId());
         $this->assertSame($data['parent_id'], $post->getParentId());
         $this->assertSame($data['pending_post_id'], $post->getPendingPostId());

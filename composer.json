@@ -15,17 +15,21 @@
         "ext-json": "*",
         "php": "^7.1",
         "php-http/httplug": "^2.0",
-        "php-http/multipart-stream-builder": "^1.0",
+        "php-http/multipart-stream-builder": "^1.1",
         "php-http/client-common": "^2.0",
         "php-http/discovery": "^1.7",
         "pnz/json-exception": "^0.1"
     },
     "require-dev": {
-        "phpunit/phpunit": "^7.5",
-        "php-http/message-factory": "^1.0",
+        "nyholm/psr7": "^1.2.1",
         "php-http/curl-client": "^2.0",
-        "php-http/message": "^1.7",
-        "nyholm/psr7": "^1.1"
+        "php-http/message": "^1.8",
+        "php-http/message-factory": "^1.0",
+        "phpstan/extension-installer": "^1.0",
+        "phpstan/phpstan-phpunit": "^0.11.2",
+        "phpstan/phpstan-shim": "^0.11",
+        "phpunit/phpunit": "^7.5",
+        "psr/http-message": "^1.0.1"
     },
     "autoload": {
         "psr-4": {
@@ -37,7 +41,17 @@
             "Pnz\\MattermostClient\\Tests\\": "tests/"
         }
     },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.1.x-dev"
+        }
+    },
     "scripts": {
+        "ci": ["@phpstan", "@test-ci" ],
+        "phpstan": "vendor/bin/phpstan analyze --level=7 src/ tests/",
         "test": "vendor/bin/phpunit",
         "test-ci": "vendor/bin/phpunit --coverage-text --coverage-clover=build/coverage.xml"
     }

@@ -20,7 +20,7 @@ class UsersTest extends BaseHttpApiTest
      */
     private $client;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
