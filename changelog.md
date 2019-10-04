@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Expose User's delete_at property
 - Enable new scrutinizer analysis
+- Run PHPStan level=7 for code checks
 ### Changed
 - Refactored Authentication process
 - Requirements for HttpPlug 2.x

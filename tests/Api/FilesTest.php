@@ -15,7 +15,7 @@ class FilesTest extends BaseHttpApiTest
     /** @var FilesApi */
     private $client;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
