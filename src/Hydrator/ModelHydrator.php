@@ -11,17 +11,13 @@ use Psr\Http\Message\ResponseInterface;
 
 /**
  * Hydrate an HTTP response to domain object.
- *
- * @author Tobias Nyholm <tobias.nyholm@gmail.com>
  */
 class ModelHydrator implements Hydrator
 {
-    /**
-     * {@inheritdoc}
-     */
     public function hydrate(ResponseInterface $response, string $class)
     {
         $body = (string) $response->getBody();
+
         if (0 !== strpos($response->getHeaderLine('Content-Type'), 'application/json')) {
             throw new HydrationException('The ModelHydrator cannot hydrate response with Content-Type:'.$response->getHeaderLine('Content-Type'));
         }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pnz\MattermostClient\Hydrator;
 
 use Psr\Http\Message\ResponseInterface;

@@ -14,7 +14,7 @@ abstract class ModelBuilder implements ModelBuilderInterface
 
     protected $params = [];
 
-    public function build(string $buildType = self::BUILD_FOR_CREATE)
+    public function build(string $buildType = self::BUILD_FOR_CREATE): array
     {
         $this->validate($buildType);
 

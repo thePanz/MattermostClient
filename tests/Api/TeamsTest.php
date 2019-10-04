@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pnz\MattermostClient\Tests\Api;
 
 use Pnz\JsonException\Json;
@@ -299,7 +301,7 @@ class TeamsTest extends BaseHttpApiTest
         $userId = '98765';
         $this->configureMessage('GET', '/teams/'.$teamId.'/members/'.$userId);
         $this->configureRequestAndResponse(200);
-        $this->configureHydrator(TeamMember::class);
+        $this->configureHydrator(TeamMember::class, TeamMember::createFromArray([]));
         $this->client->getTeamMember($teamId, $userId);
     }
 
@@ -391,11 +393,13 @@ class TeamsTest extends BaseHttpApiTest
     public function testGetTeamMembersSuccess(): void
     {
         $teamId = '12345';
-        $this->configureMessage('GET', '/teams/'.$teamId.'/members'.
+        $this->configureMessage(
+            'GET',
+            '/teams/'.$teamId.'/members'.
             '?per_page=1&page=2'
         );
         $this->configureRequestAndResponse(200);
-        $this->configureHydrator(TeamMembers::class);
+        $this->configureHydrator(TeamMembers::class, TeamMembers::createFromArray([]));
         $this->client->getTeamMembers($teamId, [
             'per_page' => 1,
             'page' => 2,
@@ -423,7 +427,9 @@ class TeamsTest extends BaseHttpApiTest
     public function testGetTeamPublicChannelsSuccess(): void
     {
         $teamId = '12345';
-        $this->configureMessage('GET', '/teams/'.$teamId.'/channels'.
+        $this->configureMessage(
+            'GET',
+            '/teams/'.$teamId.'/channels'.
             '?per_page=1&page=2'
         );
         $this->configureRequestAndResponse(200);
@@ -454,7 +460,9 @@ class TeamsTest extends BaseHttpApiTest
 
     public function testGetTeamsSuccess(): void
     {
-        $this->configureMessage('GET', '/teams'.
+        $this->configureMessage(
+            'GET',
+            '/teams'.
             '?per_page=1&page=2'
         );
         $this->configureRequestAndResponse(200);

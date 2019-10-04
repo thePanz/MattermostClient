@@ -8,44 +8,35 @@ use Pnz\MattermostClient\Model\Model;
 
 final class Team extends Model
 {
-    const TEAM_OPEN = 'O';
-    const TEAM_INVITE_ONLY = 'I';
+    public const TEAM_OPEN = 'O';
+    public const TEAM_INVITE_ONLY = 'I';
 
-    /**
-     * @return string
-     */
-    public function getId()
+    public function getId(): ?string
     {
         return $this->data['id'];
     }
 
-    /**
-     * @return string
-     */
-    public function getCreateAt()
+    public function getCreateAt(): ?string
     {
         return $this->data['create_at'];
     }
 
-    /**
-     * @return string
-     */
-    public function getUpdateAt()
+    public function getUpdateAt(): ?string
     {
         return $this->data['update_at'];
     }
 
-    public function getName()
+    public function getName(): ?string
     {
         return $this->data['name'];
     }
 
-    public function getDisplayName()
+    public function getDisplayName(): ?string
     {
         return $this->data['display_name'];
     }
 
-    public function getType()
+    public function getType(): ?string
     {
         return $this->data['type'];
     }
@@ -53,12 +44,12 @@ final class Team extends Model
     protected static function getFields(): array
     {
         return [
-           'id',
-           'create_at',
-           'update_at',
-           'name',
-           'display_name',
-           'type',
-       ];
+            'id',
+            'create_at',
+            'update_at',
+            'name',
+            'display_name',
+            'type',
+        ];
     }
 }

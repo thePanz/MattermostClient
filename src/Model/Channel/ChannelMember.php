@@ -8,66 +8,42 @@ use Pnz\MattermostClient\Model\Model;
 
 final class ChannelMember extends Model
 {
-    /**
-     * @return string|null
-     */
-    public function getChannelId()
+    public function getChannelId(): ?string
     {
         return $this->data['channel_id'];
     }
 
-    /**
-     * @return string|null
-     */
-    public function getUserId()
+    public function getUserId(): ?string
     {
         return $this->data['user_id'];
     }
 
-    /**
-     * @return string|null
-     */
-    public function getRoles()
+    public function getRoles(): ?string
     {
         return $this->data['roles'];
     }
 
-    /**
-     * @return int|null
-     */
-    public function getLastViewedAt()
+    public function getLastViewedAt(): ?int
     {
         return $this->data['last_viewed_at'];
     }
 
-    /**
-     * @return int|null
-     */
-    public function getMsgCount()
+    public function getMsgCount(): ?int
     {
         return $this->data['msg_count'];
     }
 
-    /**
-     * @return int|null
-     */
-    public function getMentionCount()
+    public function getMentionCount(): ?int
     {
         return $this->data['mention_count'];
     }
 
-    /**
-     * @return string|null
-     */
-    public function getNotifyProps()
+    public function getNotifyProps(): ?array
     {
         return $this->data['notify_props'];
     }
 
-    /**
-     * @return int|null
-     */
-    public function getLastUpdateAt()
+    public function getLastUpdateAt(): ?int
     {
         return $this->data['last_update_at'];
     }

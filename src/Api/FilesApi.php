@@ -83,10 +83,8 @@ final class FilesApi extends HttpApi
      * Gets a file that has been uploaded previously.
      *
      * @param string $fileId The ID of the file to get
-     *
-     * @return StreamInterface
      */
-    public function getFile(string $fileId)
+    public function getFile(string $fileId): StreamInterface
     {
         if (empty($fileId)) {
             throw new InvalidArgumentException('FileID can not be empty');
@@ -108,10 +106,8 @@ final class FilesApi extends HttpApi
      * Gets a public link for a file that can be accessed without logging into Mattermost.
      *
      * @param string $fileId The ID of the file to get a link for
-     *
-     * @return string
      */
-    public function getFileLink(string $fileId)
+    public function getFileLink(string $fileId): string
     {
         if (empty($fileId)) {
             throw new InvalidArgumentException('FileID can not be empty');

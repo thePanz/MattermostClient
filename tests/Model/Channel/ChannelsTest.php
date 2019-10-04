@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pnz\MattermostClient\Tests\Model\Channel;
 
 use PHPUnit\Framework\TestCase;
+use Pnz\MattermostClient\Model\Channel\Channel;
 use Pnz\MattermostClient\Model\Channel\Channels;
 
 /**
@@ -25,12 +28,14 @@ class ChannelsTest extends TestCase
             'header' => 'Header',
             'creator_id' => 'CreatorId',
             'purpose' => 'Purpose',
-            'total_msg_count' => 'TotalMsgCount',
+            'total_msg_count' => 11,
             'type' => 'Type',
         ];
 
         $channels = Channels::createFromArray([$data]);
         $this->assertCount(1, $channels);
+
+        /** @var Channel $channel */
         $channel = $channels->current();
 
         $this->assertSame($data['id'], $channel->getId());

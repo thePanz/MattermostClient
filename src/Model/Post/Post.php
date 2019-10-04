@@ -96,23 +96,23 @@ final class Post extends Model
     protected static function getFields(): array
     {
         return [
-           'id',
-           'create_at',
-           'update_at',
-           'delete_at',
-           'user_id',
-           'channel_id',
-           'is_pinned',
-           'root_id',
-           'parent_id',
-           'original_id',
-           'message',
-           'type',
-           'props',
-           'hashtag',
-           'filenames',
-           'file_ids',
-           'pending_post_id',
-       ];
+            'id',
+            'create_at',
+            'update_at',
+            'delete_at',
+            'user_id',
+            'channel_id',
+            'is_pinned',
+            'root_id',
+            'parent_id',
+            'original_id',
+            'message',
+            'type',
+            'props',
+            'hashtag',
+            'filenames',
+            'file_ids',
+            'pending_post_id',
+        ];
     }
 }

@@ -116,7 +116,6 @@ final class UsersApi extends HttpApi
     /**
      * Returns a user given its email.
      *
-     *
      * @return User|ResponseInterface
      */
     public function getUserByEmail(string $email)

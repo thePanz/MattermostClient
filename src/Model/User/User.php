@@ -8,111 +8,72 @@ use Pnz\MattermostClient\Model\Model;
 
 final class User extends Model
 {
-    /**
-     * @return string
-     */
-    public function getId()
+    public function getId(): ?string
     {
         return $this->data['id'];
     }
 
-    /**
-     * @return string
-     */
-    public function getCreateAt()
+    public function getCreateAt(): ?string
     {
         return $this->data['create_at'];
     }
 
-    /**
-     * @return string
-     */
-    public function getDeleteAt()
+    public function getDeleteAt(): ?string
     {
         return $this->data['delete_at'];
     }
 
-    /**
-     * @return string
-     */
-    public function getUpdateAt()
+    public function getUpdateAt(): ?string
     {
         return $this->data['update_at'];
     }
 
-    public function getRoles()
+    public function getRoles(): ?string
     {
         return $this->data['roles'];
     }
 
-    /**
-     * @return bool
-     */
-    public function getAllowMarketing()
+    public function getAllowMarketing(): ?bool
     {
         return $this->data['allow_marketing'];
     }
 
-    /**
-     * @return string
-     */
-    public function getLocale()
+    public function getLocale(): ?string
     {
         return $this->data['locale'];
     }
 
-    /**
-     * @return string
-     */
-    public function getUsername()
+    public function getUsername(): ?string
     {
         return $this->data['username'];
     }
 
-    /**
-     * @return string
-     */
-    public function getAuthData()
+    public function getAuthData(): ?string
     {
         return $this->data['auth_data'];
     }
 
-    /**
-     * @return string
-     */
-    public function getEmail()
+    public function getEmail(): ?string
     {
         return $this->data['email'];
     }
 
-    /**
-     * @return string
-     */
-    public function getFirstName()
+    public function getFirstName(): ?string
     {
         return $this->data['first_name'];
     }
 
-    /**
-     * @return string
-     */
-    public function getLastName()
+    public function getLastName(): ?string
     {
         return $this->data['last_name'];
     }
 
-    /**
-     * @return string
-     */
-    public function getNickname()
+    public function getNickname(): ?string
     {
         return $this->data['nickname'];
     }
 
-    /**
-     * @return bool
-     */
-    public function getEmailVerified()
+    public function getEmailVerified(): ?bool
     {
         return $this->data['email_verified'];
     }
@@ -120,22 +81,22 @@ final class User extends Model
     protected static function getFields(): array
     {
         return [
-           'id',
-           'create_at',
-           'update_at',
-           'delete_at',
-           'roles',
-           'allow_marketing',
-           'locale',
-           'username',
-           'auth_data',
-           'email',
-           'email_verified',
-           'notify_props',
-           'last_password_update',
-           'last_name',
-           'nickname',
-           'first_name',
-       ];
+            'id',
+            'create_at',
+            'update_at',
+            'delete_at',
+            'roles',
+            'allow_marketing',
+            'locale',
+            'username',
+            'auth_data',
+            'email',
+            'email_verified',
+            'notify_props',
+            'last_password_update',
+            'last_name',
+            'nickname',
+            'first_name',
+        ];
     }
 }

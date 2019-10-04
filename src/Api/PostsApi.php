@@ -14,7 +14,6 @@ final class PostsApi extends HttpApi
     /**
      * Create a post. Required parameters: 'channel_id', 'message'.
      *
-     *
      * @return Post|ResponseInterface
      */
     public function createPost(array $params)

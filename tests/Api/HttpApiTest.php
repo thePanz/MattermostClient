@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pnz\MattermostClient\Tests\Api;
 
 use PHPUnit\Framework\MockObject\MockObject;
@@ -20,7 +22,8 @@ class HttpApiTest extends BaseHttpApiTest
         /** @var ResponseInterface|MockObject $response */
         $response = $this->createMock(ResponseInterface::class);
         $response->method('getStatusCode')
-            ->willReturn($responseCode);
+            ->willReturn($responseCode)
+        ;
 
         $httpApi = new WrappedHttpApi($this->httpClient, $this->requestFactory, $this->hydrator);
 
@@ -36,7 +39,8 @@ class HttpApiTest extends BaseHttpApiTest
         /** @var ResponseInterface|MockObject $response */
         $response = $this->createMock(ResponseInterface::class);
         $response->method('getStatusCode')
-            ->willReturn($responseCode);
+            ->willReturn($responseCode)
+        ;
 
         $error = Error::createFromArray([
             'message' => 'Error code:'.$responseCode,
@@ -45,7 +49,8 @@ class HttpApiTest extends BaseHttpApiTest
         /** @var ModelHydrator|MockObject $hydrator */
         $hydrator = $this->createMock(ModelHydrator::class);
         $hydrator->method('hydrate')
-            ->willReturn($error);
+            ->willReturn($error)
+        ;
 
         $httpApi = new WrappedHttpApi($this->httpClient, $this->requestFactory, $hydrator);
 

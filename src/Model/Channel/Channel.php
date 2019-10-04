@@ -8,118 +8,76 @@ use Pnz\MattermostClient\Model\Model;
 
 final class Channel extends Model
 {
-    const CHANNEL_DIRECT = 'D';
-    const CHANNEL_OPEN = 'O';
-    const CHANNEL_PRIVATE = 'P';
+    public const CHANNEL_DIRECT = 'D';
+    public const CHANNEL_OPEN = 'O';
+    public const CHANNEL_PRIVATE = 'P';
 
-    /**
-     * @return string
-     */
-    public function getId()
+    public function getId(): ?string
     {
         return $this->data['id'];
     }
 
-    /**
-     * @return string
-     */
-    public function getCreateAt()
+    public function getCreateAt(): ?string
     {
         return $this->data['create_at'];
     }
 
-    /**
-     * @return string
-     */
-    public function getUpdateAt()
+    public function getUpdateAt(): ?string
     {
         return $this->data['update_at'];
     }
 
-    /**
-     * @return string
-     */
-    public function getDeleteAt()
+    public function getDeleteAt(): ?string
     {
         return $this->data['delete_at'];
     }
 
-    /**
-     * @return string
-     */
-    public function getTeamId()
+    public function getTeamId(): ?string
     {
         return $this->data['team_id'];
     }
 
-    /**
-     * @return string
-     */
-    public function getType()
+    public function getType(): ?string
     {
         return $this->data['type'];
     }
 
-    /**
-     * @return string
-     */
-    public function getDisplayName()
+    public function getDisplayName(): ?string
     {
         return $this->data['display_name'];
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->data['name'];
     }
 
-    /**
-     * @return string
-     */
-    public function getHeader()
+    public function getHeader(): ?string
     {
         return $this->data['header'];
     }
 
-    /**
-     * @return string
-     */
-    public function getPurpose()
+    public function getPurpose(): ?string
     {
         return $this->data['purpose'];
     }
 
-    /**
-     * @return string
-     */
-    public function getLastPostAt()
+    public function getLastPostAt(): ?string
     {
         return $this->data['last_post_at'];
     }
 
-    /**
-     * @return string
-     */
-    public function getTotalMsgCount()
+    public function getTotalMsgCount(): ?int
     {
         return $this->data['total_msg_count'];
     }
 
-    /**
-     * @return string
-     */
-    public function getExtraUpdateAt()
+    public function getExtraUpdateAt(): ?string
     {
         return $this->data['extra_update_at'];
     }
 
-    /**
-     * @return string
-     */
-    public function getCreatorId()
+    public function getCreatorId(): ?string
     {
         return $this->data['creator_id'];
     }
@@ -141,6 +99,6 @@ final class Channel extends Model
             'total_msg_count',
             'extra_update_at',
             'creator_id',
-       ];
+        ];
     }
 }

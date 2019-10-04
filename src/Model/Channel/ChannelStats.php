@@ -8,18 +8,12 @@ use Pnz\MattermostClient\Model\Model;
 
 final class ChannelStats extends Model
 {
-    /**
-     * @return string
-     */
-    public function getChannelId()
+    public function getChannelId(): ?string
     {
         return $this->data['channel_id'];
     }
 
-    /**
-     * @return string
-     */
-    public function getMemberCount()
+    public function getMemberCount(): ?int
     {
         return $this->data['member_count'];
     }
@@ -27,8 +21,8 @@ final class ChannelStats extends Model
     protected static function getFields(): array
     {
         return [
-           'channel_id',
-           'member_count',
-       ];
+            'channel_id',
+            'member_count',
+        ];
     }
 }

@@ -88,7 +88,6 @@ final class ChannelsApi extends HttpApi
     /**
      * Create a Channel. Required parameters: 'team_id', 'name', 'display_name' and 'type'.
      *
-     *
      * @return Channel|ResponseInterface
      */
     public function createChannel(array $params)
@@ -189,7 +188,6 @@ final class ChannelsApi extends HttpApi
     /**
      * Add a user to a channel, with specific roles.
      *
-     *
      * @return ChannelMember|ResponseInterface
      */
     public function addChannelMember(string $channelId, string $userId, string $roles = '')
@@ -211,7 +209,6 @@ final class ChannelsApi extends HttpApi
 
     /**
      * Remove a user from a channel.
-     *
      *
      * @return Status|ResponseInterface
      */

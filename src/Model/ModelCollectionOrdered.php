@@ -7,7 +7,7 @@ namespace Pnz\MattermostClient\Model;
 abstract class ModelCollectionOrdered extends ModelCollection
 {
     /**
-     * @var array
+     * @var string[]
      */
     protected $order = [];
 
