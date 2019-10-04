@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pnz\MattermostClient\Tests\Model\Team;
 
 use PHPUnit\Framework\TestCase;

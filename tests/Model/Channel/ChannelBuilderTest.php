@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pnz\MattermostClient\Tests\Model\Channel;
 
 use PHPUnit\Framework\TestCase;
@@ -38,7 +40,7 @@ class ChannelBuilderTest extends TestCase
         $this->builder->build($buildType);
     }
 
-    public function testChannelBuilderMinimal()
+    public function testChannelBuilderMinimal(): void
     {
         $this->builder->setTeamId('team-id');
 

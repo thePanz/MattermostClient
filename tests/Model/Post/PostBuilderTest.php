@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pnz\MattermostClient\Tests\Model\Post;
 
 use PHPUnit\Framework\TestCase;
@@ -37,7 +39,7 @@ class PostBuilderTest extends TestCase
         $this->builder->build($buildType);
     }
 
-    public function testPostBuilderMinimal()
+    public function testPostBuilderMinimal(): void
     {
         $this->builder->setChannelId('channel-id');
         $this->builder->setMessage('The message');

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pnz\MattermostClient\Tests\Api;
 
 use Pnz\JsonException\Json;
@@ -282,10 +284,12 @@ class ChannelsTest extends BaseHttpApiTest
     public function testGetChannelPostsParametersSuccess(): void
     {
         $channelId = '12345';
-        $this->configureMessage('GET', '/channels/'.$channelId.
-            '/posts?per_page=10&page=10&before=1111&after=0000&since=9999');
+        $this->configureMessage(
+            'GET',
+            '/channels/'.$channelId.'/posts?per_page=10&page=10&before=1111&after=0000&since=9999'
+        );
         $this->configureRequestAndResponse(200);
-        $this->configureHydrator(Posts::class);
+        $this->configureHydrator(Posts::class, Posts::createFromArray(['posts' => [], 'order' => []]));
         $this->client->getChannelPosts($channelId, [
             'per_page' => 10,
             'page' => 10,
@@ -492,7 +496,9 @@ class ChannelsTest extends BaseHttpApiTest
     public function testGetChannelMembersSuccess(): void
     {
         $channelId = '12345';
-        $this->configureMessage('GET', '/channels/'.$channelId.'/members'.
+        $this->configureMessage(
+            'GET',
+            '/channels/'.$channelId.'/members'.
             '?per_page=1&page=2'
         );
         $this->configureRequestAndResponse(200);

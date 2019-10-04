@@ -37,12 +37,12 @@ final class TeamsApi extends HttpApi
     /**
      * Create a team. Required parameters: 'name', 'display_name' and 'type'.
      *
-     *
      * @return Team|ResponseInterface
      */
     public function createTeam(array $params)
     {
-        $response = $this->httpPost('/teams',
+        $response = $this->httpPost(
+            '/teams',
             $params
         );
 
@@ -140,10 +140,8 @@ final class TeamsApi extends HttpApi
      * @param array  $params The listing params, 'page', 'per_page'
      *
      * @see https://api.mattermost.com/v4/#tag/teams%2Fpaths%2F~1teams~1%7Bteam_id%7D~1members%2Fget
-     *
-     * @return TeamMembers
      */
-    public function getTeamMembers(string $teamId, array $params = [])
+    public function getTeamMembers(string $teamId, array $params = []): TeamMembers
     {
         if (empty($teamId)) {
             throw new InvalidArgumentException('TeamID can not be empty');
@@ -159,10 +157,8 @@ final class TeamsApi extends HttpApi
      *
      * @param string $teamId The Team GUID
      * @param string $userId The User GUID
-     *
-     * @return TeamMember
      */
-    public function getTeamMember(string $teamId, string $userId)
+    public function getTeamMember(string $teamId, string $userId): TeamMember
     {
         if (empty($teamId) || empty($userId)) {
             throw new InvalidArgumentException('TeamID and UserId can not be empty');

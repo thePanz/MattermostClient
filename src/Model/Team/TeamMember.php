@@ -8,31 +8,22 @@ use Pnz\MattermostClient\Model\Model;
 
 final class TeamMember extends Model
 {
-    /**
-     * @return string
-     */
-    public function getTeamId()
+    public function getTeamId(): ?string
     {
         return $this->data['team_id'];
     }
 
-    /**
-     * @return string
-     */
-    public function getUserId()
+    public function getUserId(): ?string
     {
         return $this->data['user_id'];
     }
 
-    /**
-     * @return string
-     */
-    public function getCreateAt()
+    public function getCreateAt(): ?int
     {
         return $this->data['create_at'];
     }
 
-    public function getRoles()
+    public function getRoles(): ?string
     {
         return $this->data['roles'];
     }
@@ -40,7 +31,7 @@ final class TeamMember extends Model
     protected static function getFields(): array
     {
         return [
-           'team_id',
+            'team_id',
             'user_id',
             'roles',
             'create_at',

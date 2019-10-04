@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pnz\MattermostClient\Tests\Model\User;
 
 use PHPUnit\Framework\TestCase;
@@ -20,10 +22,10 @@ class UsersTest extends TestCase
             'first_name' => 'Data for: first_name',
             'locale' => 'Data for: locale',
             'roles' => 'Data for: roles',
-            'allow_marketing' => 'Data for: allow_marketing',
+            'allow_marketing' => true,
             'auth_data' => 'Data for: auth_data',
             'create_at' => 'Data for: create_at',
-            'email_verified' => 'Data for: email_verified',
+            'email_verified' => false,
             'nickname' => 'Data for: nickname',
             'update_at' => 'Data for: update_at',
         ];
@@ -40,10 +42,10 @@ class UsersTest extends TestCase
         $this->assertSame($data['first_name'], $user->getFirstName());
         $this->assertSame($data['locale'], $user->getLocale());
         $this->assertSame($data['roles'], $user->getRoles());
-        $this->assertSame($data['allow_marketing'], $user->getAllowMarketing());
+        $this->assertTrue($user->getAllowMarketing());
         $this->assertSame($data['auth_data'], $user->getAuthData());
         $this->assertSame($data['create_at'], $user->getCreateAt());
-        $this->assertSame($data['email_verified'], $user->getEmailVerified());
+        $this->assertFalse($user->getEmailVerified());
         $this->assertSame($data['nickname'], $user->getNickname());
         $this->assertSame($data['update_at'], $user->getUpdateAt());
     }

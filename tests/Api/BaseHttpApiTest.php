@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pnz\MattermostClient\Tests\Api;
 
 use Http\Client\HttpClient;
@@ -49,39 +51,47 @@ abstract class BaseHttpApiTest extends TestCase
             ->expects($this->once())
             ->method('createRequest')
             ->with($action, $uri, $headers, $body)
-            ->willReturn($this->request);
+            ->willReturn($this->request)
+        ;
     }
 
-    public function configureRequestAndResponse(int $responseCode, string $body = '', array $headers = [], $contentType = 'application/json'): void
+    public function configureRequestAndResponse(int $responseCode, string $responseBody = '', array $headers = [], $contentType = 'application/json'): void
     {
         $this->response->method('getStatusCode')
-            ->willReturn($responseCode);
+            ->willReturn($responseCode)
+        ;
 
-        $bodyStream = (new Psr17Factory())->createStream($body);
+        $bodyStream = (new Psr17Factory())->createStream($responseBody);
         $this->response->method('getBody')
-            ->willReturn($bodyStream);
+            ->willReturn($bodyStream)
+        ;
 
         $headersMap = [];
         foreach ($headers as $key => $value) {
             $headersMap[] = [$key, $value];
         }
         $this->response->method('getHeader')
-            ->willReturnMap($headersMap);
+            ->willReturnMap($headersMap)
+        ;
 
         $this->response->method('getHeaderLine')
             ->with('Content-Type')
-            ->willReturn($contentType);
+            ->willReturn($contentType)
+        ;
 
         $this->httpClient->method('sendRequest')
-            ->willReturn($this->response);
+            ->willReturn($this->response)
+        ;
     }
 
-    public function configureHydrator($class): void
+    public function configureHydrator(string $class, $object = null): void
     {
         $this->hydrator
             ->expects($this->once())
             ->method('hydrate')
-            ->with($this->response, $class);
+            ->with($this->response, $class)
+            ->willReturn($object)
+        ;
     }
 
     public function getErrorCodesExceptions(): array

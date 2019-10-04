@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pnz\MattermostClient\Authentication;
 
 use Http\Message\Authentication;
@@ -81,7 +83,8 @@ class MattermostAuthentication implements Authentication
         $request = $this->requestFactory->createRequest('POST', self::AUTHORIZATION_URL)
             ->withBody($this->streamFactory->createStream(
                 Json::encode($credentials, JSON_FORCE_OBJECT)
-            ));
+            ))
+        ;
 
         $response = $this->client->sendRequest($request);
 

@@ -53,7 +53,6 @@ final class ApiClient
     /**
      * Returns configured ApiClient from the given Configurator, Hydrator and RequestFactory.
      *
-     *
      * @return ApiClient
      */
     public static function configure(

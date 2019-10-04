@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pnz\MattermostClient\Tests\Model\Team;
 
 use PHPUnit\Framework\TestCase;
+use Pnz\MattermostClient\Model\Team\TeamMember;
 use Pnz\MattermostClient\Model\Team\TeamMembers;
 
 /**
@@ -21,6 +24,7 @@ class TeamMembersTest extends TestCase
 
         $teamMembers = TeamMembers::createFromArray([$data]);
         $this->assertCount(1, $teamMembers);
+        /** @var TeamMember $teamMember */
         $teamMember = $teamMembers->current();
 
         $this->assertSame($data['team_id'], $teamMember->getTeamId());

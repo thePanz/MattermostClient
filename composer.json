@@ -50,8 +50,11 @@
         }
     },
     "scripts": {
-        "ci": ["@phpstan", "@test-ci" ],
+        "ci": ["@phpcs", "@phpstan", "@test-ci" ],
         "phpstan": "vendor/bin/phpstan analyze --level=7 src/ tests/",
+        "phpcs": "vendor/bin/php-cs-fixer fix --dry-run --verbose --ansi",
+        "phpcs-install": "curl -L https://cs.symfony.com/download/php-cs-fixer-v2.phar -o vendor/bin/php-cs-fixer && chmod u+x vendor/bin/php-cs-fixer",
+        "phpcs-fix": "vendor/bin/php-cs-fixer fix --verbose --ansi",
         "test": "vendor/bin/phpunit",
         "test-ci": "vendor/bin/phpunit --coverage-text --coverage-clover=build/coverage.xml"
     }
