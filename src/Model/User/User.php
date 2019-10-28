@@ -13,12 +13,12 @@ final class User extends Model
         return $this->data['id'];
     }
 
-    public function getCreateAt(): ?string
+    public function getCreateAt(): ?int
     {
         return $this->data['create_at'];
     }
 
-    public function getDeleteAt(): ?string
+    public function getDeleteAt(): ?int
     {
         return $this->data['delete_at'];
     }
