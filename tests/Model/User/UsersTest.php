@@ -24,10 +24,10 @@ class UsersTest extends TestCase
             'roles' => 'Data for: roles',
             'allow_marketing' => true,
             'auth_data' => 'Data for: auth_data',
-            'create_at' => 'Data for: create_at',
             'email_verified' => false,
             'nickname' => 'Data for: nickname',
-            'update_at' => 'Data for: update_at',
+            'create_at' => 1234567890,
+            'update_at' => 1234567891,
         ];
 
         $users = Users::createFromArray([$data]);

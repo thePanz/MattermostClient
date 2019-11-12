@@ -36,7 +36,7 @@ class ChannelMemberTest extends TestCase
             'msg_count' => 10,
             'roles' => 'role1, role2',
             'last_update_at' => 1234567890,
-            'last_viewed_at' => 1234567890,
+            'last_viewed_at' => 1234567891,
             'mention_count' => 30,
             'notify_props' => [],
         ];

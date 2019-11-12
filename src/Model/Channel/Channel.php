@@ -17,17 +17,17 @@ final class Channel extends Model
         return $this->data['id'];
     }
 
-    public function getCreateAt(): ?string
+    public function getCreateAt(): ?int
     {
         return $this->data['create_at'];
     }
 
-    public function getUpdateAt(): ?string
+    public function getUpdateAt(): ?int
     {
         return $this->data['update_at'];
     }
 
-    public function getDeleteAt(): ?string
+    public function getDeleteAt(): ?int
     {
         return $this->data['delete_at'];
     }
@@ -62,7 +62,7 @@ final class Channel extends Model
         return $this->data['purpose'];
     }
 
-    public function getLastPostAt(): ?string
+    public function getLastPostAt(): ?int
     {
         return $this->data['last_post_at'];
     }
@@ -72,7 +72,7 @@ final class Channel extends Model
         return $this->data['total_msg_count'];
     }
 
-    public function getExtraUpdateAt(): ?string
+    public function getExtraUpdateAt(): ?int
     {
         return $this->data['extra_update_at'];
     }

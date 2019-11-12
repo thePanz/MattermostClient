@@ -45,11 +45,11 @@ class UserTest extends TestCase
             'roles' => 'Data for: roles',
             'allow_marketing' => true,
             'auth_data' => 'Data for: auth_data',
-            'create_at' => 'Data for: create_at',
             'email_verified' => false,
             'nickname' => 'Data for: nickname',
-            'update_at' => 'Data for: update_at',
-            'delete_at' => 'Data for: delete_at',
+            'create_at' => 1234567890,
+            'update_at' => 1234567891,
+            'delete_at' => 1234567892,
         ];
 
         $user = User::createFromArray($data);
@@ -64,9 +64,9 @@ class UserTest extends TestCase
         $this->assertSame($data['roles'], $user->getRoles());
         $this->assertTrue($user->getAllowMarketing());
         $this->assertSame($data['auth_data'], $user->getAuthData());
-        $this->assertSame($data['create_at'], $user->getCreateAt());
         $this->assertFalse($user->getEmailVerified());
         $this->assertSame($data['nickname'], $user->getNickname());
+        $this->assertSame($data['create_at'], $user->getCreateAt());
         $this->assertSame($data['update_at'], $user->getUpdateAt());
         $this->assertSame($data['delete_at'], $user->getDeleteAt());
     }

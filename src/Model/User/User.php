@@ -23,7 +23,7 @@ final class User extends Model
         return $this->data['delete_at'];
     }
 
-    public function getUpdateAt(): ?string
+    public function getUpdateAt(): ?int
     {
         return $this->data['update_at'];
     }
