@@ -341,7 +341,7 @@ final class UsersApi extends HttpApi
 
 
     /**
-     * Delete a user's picture.
+     * Update a user's picture.
      *
      * @param string $userId User GUID
      * @param resource $imageResource Image resource
