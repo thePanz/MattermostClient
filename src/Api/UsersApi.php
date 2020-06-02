@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Pnz\MattermostClient\Api;
 
+use Http\Message\MultipartStream\MultipartStreamBuilder;
 use Pnz\MattermostClient\Exception\InvalidArgumentException;
 use Pnz\MattermostClient\Model\Status;
 use Pnz\MattermostClient\Model\Team\Teams;
@@ -318,5 +319,51 @@ final class UsersApi extends HttpApi
         $response = $this->httpGet(sprintf('/users/%s/status', $userId));
 
         return $this->handleResponse($response, UserStatus::class);
+    }
+
+
+    /**
+     * Delete a user's picture.
+     *
+     * @param string $userId User GUID
+     *
+     * @return Status|ResponseInterface
+     */
+    public function deleteProfileImage(string $userId)
+    {
+        if (empty($userId)) {
+            throw new InvalidArgumentException('UserId can not be empty');
+        }
+
+        $response = $this->httpDelete(sprintf('/users/%s/image', $userId));
+        return $this->handleResponse($response, Status::class);
+    }
+
+
+    /**
+     * Delete a user's picture.
+     *
+     * @param string $userId User GUID
+     * @param resource $imageResource Image resource
+     *
+     * @return Status|ResponseInterface
+     */
+    public function updateProfileImage(string $userId, $imageResource)
+    {
+        if (empty($userId)) {
+            throw new InvalidArgumentException('UserId can not be empty');
+        }
+
+        if (empty($imageResource)) {
+            throw new InvalidArgumentException('Image resource can not be empty');
+        }
+
+        $headers = [];
+        $multipartStreamBuilder = new MultipartStreamBuilder();
+        $multipartStreamBuilder->addResource('image', $imageResource);
+        $multipartStream = $multipartStreamBuilder->build();
+        $headers['Content-Type'] = 'multipart/form-data; boundary=' . $multipartStreamBuilder->getBoundary();
+        $response = $this->httpPostRaw(sprintf('/users/%s/image', $userId), $multipartStream, $headers);
+        return $this->handleResponse($response, Status::class);
     }
 }
