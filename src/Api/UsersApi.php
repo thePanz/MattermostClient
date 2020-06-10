@@ -321,7 +321,6 @@ final class UsersApi extends HttpApi
         return $this->handleResponse($response, UserStatus::class);
     }
 
-
     /**
      * Delete a user's picture.
      *
@@ -338,7 +337,6 @@ final class UsersApi extends HttpApi
         $response = $this->httpDelete(sprintf('/users/%s/image', $userId));
         return $this->handleResponse($response, Status::class);
     }
-
 
     /**
      * Update a user's picture.
