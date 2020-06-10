@@ -517,4 +517,33 @@ class UsersTest extends BaseHttpApiTest
         $this->configureRequestAndResponse($code);
         $this->client->getUsers();
     }
+
+    public function testDeleteProfileImageEmptyId(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->client->deleteProfileImage('');
+    }
+
+    public function testDeleteProfileImageSuccess(): void
+    {
+        $userId = '1234';
+        $this->configureMessage('DELETE', "/users/{$userId}/image");
+        $this->configureRequestAndResponse(200);
+        $this->configureHydrator(Status::class);
+        $this->client->deleteProfileImage($userId);
+    }
+
+    public function testUpdateProfileImageEmptyId(): void
+    {
+        $resource = fopen(__FILE__, 'rb');
+        $this->expectException(InvalidArgumentException::class);
+        $this->client->updateProfileImage('', $resource);
+    }
+
+    public function testUpdateProfileImageEmptyResource(): void
+    {
+        $userId = '1234';
+        $this->expectException(InvalidArgumentException::class);
+        $this->client->updateProfileImage($userId, null);
+    }
 }
