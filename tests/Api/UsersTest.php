@@ -83,7 +83,7 @@ class UsersTest extends BaseHttpApiTest
     public function testGetUserByEmailSuccess(): void
     {
         $userEmail = 'user@example.com';
-        $this->configureMessage('GET', '/users/email/' . $userEmail);
+        $this->configureMessage('GET', '/users/email/'.$userEmail);
         $this->configureRequestAndResponse(200);
         $this->configureHydrator(User::class);
 
@@ -97,7 +97,7 @@ class UsersTest extends BaseHttpApiTest
     {
         $this->expectException($exception);
         $userEmail = 'user@example.com';
-        $this->configureMessage('GET', '/users/email/' . $userEmail);
+        $this->configureMessage('GET', '/users/email/'.$userEmail);
         $this->configureRequestAndResponse($code);
 
         $this->client->getUserByEmail($userEmail);
@@ -112,7 +112,7 @@ class UsersTest extends BaseHttpApiTest
     public function testGetUserByIdSuccess(): void
     {
         $userId = '12345';
-        $this->configureMessage('GET', '/users/' . $userId);
+        $this->configureMessage('GET', '/users/'.$userId);
         $this->configureRequestAndResponse(200);
         $this->configureHydrator(User::class);
         $this->client->getUserById($userId);
@@ -125,7 +125,7 @@ class UsersTest extends BaseHttpApiTest
     {
         $this->expectException($exception);
         $userId = '12345';
-        $this->configureMessage('GET', '/users/' . $userId);
+        $this->configureMessage('GET', '/users/'.$userId);
         $this->configureRequestAndResponse($code);
         $this->client->getUserById($userId);
     }
@@ -139,7 +139,7 @@ class UsersTest extends BaseHttpApiTest
     public function testGetUserTeamsSuccess(): void
     {
         $userId = '12345';
-        $this->configureMessage('GET', '/users/' . $userId . '/teams');
+        $this->configureMessage('GET', '/users/'.$userId.'/teams');
         $this->configureRequestAndResponse(200);
         $this->configureHydrator(Teams::class);
         $this->client->getUserTeams($userId);
@@ -152,7 +152,7 @@ class UsersTest extends BaseHttpApiTest
     {
         $this->expectException($exception);
         $userId = '12345';
-        $this->configureMessage('GET', '/users/' . $userId . '/teams');
+        $this->configureMessage('GET', '/users/'.$userId.'/teams');
         $this->configureRequestAndResponse($code);
         $this->client->getUserTeams($userId);
     }
@@ -166,7 +166,7 @@ class UsersTest extends BaseHttpApiTest
     public function testGetUserByUsernameSuccess(): void
     {
         $username = 'user-name';
-        $this->configureMessage('GET', '/users/username/' . $username);
+        $this->configureMessage('GET', '/users/username/'.$username);
         $this->configureRequestAndResponse(200);
         $this->configureHydrator(User::class);
         $this->client->getUserByUsername($username);
@@ -179,7 +179,7 @@ class UsersTest extends BaseHttpApiTest
     {
         $this->expectException($exception);
         $username = 'user-name';
-        $this->configureMessage('GET', '/users/username/' . $username);
+        $this->configureMessage('GET', '/users/username/'.$username);
         $this->configureRequestAndResponse($code);
         $this->client->getUserByUsername($username);
     }
@@ -193,7 +193,7 @@ class UsersTest extends BaseHttpApiTest
     public function testDeactivateUserSuccess(): void
     {
         $userId = '12345';
-        $this->configureMessage('DELETE', '/users/' . $userId);
+        $this->configureMessage('DELETE', '/users/'.$userId);
         $this->configureRequestAndResponse(200);
         $this->configureHydrator(Status::class);
         $this->client->deactivateUser($userId);
@@ -206,7 +206,7 @@ class UsersTest extends BaseHttpApiTest
     {
         $this->expectException($exception);
         $userId = '12345';
-        $this->configureMessage('DELETE', '/users/' . $userId);
+        $this->configureMessage('DELETE', '/users/'.$userId);
         $this->configureRequestAndResponse($code);
         $this->client->deactivateUser($userId);
     }
@@ -220,7 +220,7 @@ class UsersTest extends BaseHttpApiTest
     public function testSetUserActiveSuccess(): void
     {
         $userId = '12345';
-        $this->configureMessage('PUT', '/users/' . $userId . '/active', [], Json::encode([
+        $this->configureMessage('PUT', '/users/'.$userId.'/active', [], Json::encode([
             'active' => true,
         ]));
         $this->configureRequestAndResponse(200);
@@ -235,7 +235,7 @@ class UsersTest extends BaseHttpApiTest
     {
         $this->expectException($exception);
         $userId = '12345';
-        $this->configureMessage('PUT', '/users/' . $userId . '/active', [], Json::encode([
+        $this->configureMessage('PUT', '/users/'.$userId.'/active', [], Json::encode([
             'active' => false,
         ]));
         $this->configureRequestAndResponse($code);
@@ -251,7 +251,7 @@ class UsersTest extends BaseHttpApiTest
     public function testUpdateUserPasswordSuccess(): void
     {
         $userId = '12345';
-        $this->configureMessage('PUT', '/users/' . $userId . '/password', [], Json::encode([
+        $this->configureMessage('PUT', '/users/'.$userId.'/password', [], Json::encode([
             'current_password' => 'current-pw',
             'new_password' => 'new-pw',
         ]));
@@ -268,7 +268,7 @@ class UsersTest extends BaseHttpApiTest
         $this->expectException($exception);
 
         $userId = '12345';
-        $this->configureMessage('PUT', '/users/' . $userId . '/password', [], Json::encode([
+        $this->configureMessage('PUT', '/users/'.$userId.'/password', [], Json::encode([
             'current_password' => 'current-pw',
             'new_password' => 'new-pw',
         ]));
@@ -298,7 +298,7 @@ class UsersTest extends BaseHttpApiTest
     {
         $userId = '12345';
         $data = ['roles' => 'system_admin'];
-        $this->configureMessage('PUT', '/users/' . $userId . '/roles', [], Json::encode($data));
+        $this->configureMessage('PUT', '/users/'.$userId.'/roles', [], Json::encode($data));
         $this->configureRequestAndResponse(200);
         $this->configureHydrator(Status::class);
         $this->client->updateUserRoles($userId, 'system_admin');
@@ -312,7 +312,7 @@ class UsersTest extends BaseHttpApiTest
         $this->expectException($exception);
         $userId = '12345';
         $data = ['roles' => 'system_admin'];
-        $this->configureMessage('PUT', '/users/' . $userId . '/roles', [], Json::encode($data));
+        $this->configureMessage('PUT', '/users/'.$userId.'/roles', [], Json::encode($data));
         $this->configureRequestAndResponse($code);
         $this->client->updateUserRoles($userId, 'system_admin');
     }
@@ -417,7 +417,7 @@ class UsersTest extends BaseHttpApiTest
             'username' => 'username',
             'email' => 'email,',
         ];
-        $this->configureMessage('PUT', '/users/' . $userId . '/patch', [], Json::encode($data));
+        $this->configureMessage('PUT', '/users/'.$userId.'/patch', [], Json::encode($data));
         $this->configureRequestAndResponse(201);
         $this->configureHydrator(User::class);
 
@@ -435,7 +435,7 @@ class UsersTest extends BaseHttpApiTest
             'username' => 'username',
             'email' => 'email,',
         ];
-        $this->configureMessage('PUT', '/users/' . $userId . '/patch', [], Json::encode($data));
+        $this->configureMessage('PUT', '/users/'.$userId.'/patch', [], Json::encode($data));
         $this->configureRequestAndResponse($code);
 
         $this->client->patchUser($userId, $data);
@@ -455,7 +455,7 @@ class UsersTest extends BaseHttpApiTest
             'email' => 'email,',
         ];
 
-        $this->configureMessage('PUT', '/users/' . $userId, [], Json::encode($data));
+        $this->configureMessage('PUT', '/users/'.$userId, [], Json::encode($data));
         $this->configureRequestAndResponse(201);
         $this->configureHydrator(User::class);
         $this->client->updateUser($userId, $data);
@@ -473,7 +473,7 @@ class UsersTest extends BaseHttpApiTest
             'email' => 'email,',
         ];
 
-        $this->configureMessage('PUT', '/users/' . $userId, [], Json::encode($data));
+        $this->configureMessage('PUT', '/users/'.$userId, [], Json::encode($data));
         $this->configureRequestAndResponse($code);
         $this->client->updateUser($userId, $data);
     }
@@ -494,7 +494,7 @@ class UsersTest extends BaseHttpApiTest
 
     public function testGetUserParametersSuccess(): void
     {
-        $this->configureMessage('GET', '/users' .
+        $this->configureMessage('GET', '/users'.
             '?per_page=1&page=2&in_channel=channel&in_team=team&not_in_channel=channel-not-in');
         $this->configureRequestAndResponse(200);
         $this->configureHydrator(Users::class);
@@ -516,34 +516,5 @@ class UsersTest extends BaseHttpApiTest
         $this->configureMessage('GET', '/users');
         $this->configureRequestAndResponse($code);
         $this->client->getUsers();
-    }
-
-    public function testDeleteProfileImageEmptyId(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->client->deleteProfileImage('');
-    }
-
-    public function testDeleteProfileImageSuccess(): void
-    {
-        $userId = '1234';
-        $this->configureMessage('DELETE', "/users/{$userId}/image");
-        $this->configureRequestAndResponse(200);
-        $this->configureHydrator(Status::class);
-        $this->client->deleteProfileImage($userId);
-    }
-
-    public function testUpdateProfileImageEmptyId(): void
-    {
-        $resource = fopen(__FILE__, 'rb');
-        $this->expectException(InvalidArgumentException::class);
-        $this->client->updateProfileImage('', $resource);
-    }
-
-    public function testUpdateProfileImageEmptyResource(): void
-    {
-        $userId = '1234';
-        $this->expectException(InvalidArgumentException::class);
-        $this->client->updateProfileImage($userId, null);
     }
 }
