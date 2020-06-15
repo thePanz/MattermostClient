@@ -527,7 +527,7 @@ class UsersTest extends BaseHttpApiTest
     public function testDeleteProfileImageSuccess(): void
     {
         $userId = '1234';
-        $this->configureMessage('DELETE', "/users/{$userId}/image");
+        $this->configureMessage('DELETE', '/users/{$userId}/image');
         $this->configureRequestAndResponse(200);
         $this->configureHydrator(Status::class);
         $this->client->deleteProfileImage($userId);
