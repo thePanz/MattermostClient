@@ -18,41 +18,34 @@ final class FilesApi extends HttpApi
      *
      * @see: https://api.mattermost.com/v4/#tag/files%2Fpaths%2F~1files%2Fpost
      *
-     * @param string      $fileContents The file contents to send
-     * @param string      $filename     The filename to be used
-     * @param string      $channelId    The ID of the channel that this file will be uploaded to
-     * @param string|null $clientId     A unique identifier for the file that will be returned in the response
+     * @param string|resource|StreamInterface $file The file contents to send
+     * @param string|null $clientId                 A unique identifier for the file that will be returned in the response
      *
      * @return FileUploadInfo|ResponseInterface
      */
-    public function sendFile(string $fileContents, string $filename, string $channelId, string $clientId = null)
+    public function sendFile($file, string $filename, string $channelId, string $clientId = null)
     {
-        if (empty($fileContents) || empty($filename)) {
-            throw new InvalidArgumentException('File contents and filename can not be empty');
+        if (!is_string($file) || !is_resource($file) || !$file instanceof StreamInterface) {
+            throw new InvalidArgumentException('Image: must be a string, resource or StreamInterface');
         }
-
+        if (empty($filename)) {
+            throw new InvalidArgumentException('File filename can not be empty');
+        }
         if (empty($channelId)) {
             throw new InvalidArgumentException('ChannelID can not be empty');
         }
 
-        $headers = [];
         $multipartStreamBuilder = new MultipartStreamBuilder();
-
-        // Add channelID
         $multipartStreamBuilder->addResource('channel_id', $channelId);
-        // Add file contents
-        $multipartStreamBuilder->addResource('files', substr($fileContents, 0, 100), [
-            'filename' => $filename,
-        ]);
+        $multipartStreamBuilder->addResource('files', $file, ['filename' => $filename]);
 
         if ($clientId) {
             // Add client id
             $multipartStreamBuilder->addResource('client_ids', $clientId);
         }
 
+        $headers = ['Content-Type' => 'multipart/form-data; boundary='.$multipartStreamBuilder->getBoundary()];
         $multipartStream = $multipartStreamBuilder->build();
-        $headers['Content-Type'] = 'multipart/form-data; boundary='.$multipartStreamBuilder->getBoundary();
-        $multipartStreamBuilder->reset();
 
         $response = $this->httpPostRaw('/files', $multipartStream, $headers);
 

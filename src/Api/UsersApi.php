@@ -12,6 +12,7 @@ use Pnz\MattermostClient\Model\User\User;
 use Pnz\MattermostClient\Model\User\Users;
 use Pnz\MattermostClient\Model\User\UserStatus;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
 
 final class UsersApi extends HttpApi
 {
@@ -324,8 +325,6 @@ final class UsersApi extends HttpApi
     /**
      * Delete a user's picture.
      *
-     * @param string $userId User GUID
-     *
      * @return Status|ResponseInterface
      */
     public function deleteProfileImage(string $userId)
@@ -335,33 +334,34 @@ final class UsersApi extends HttpApi
         }
 
         $response = $this->httpDelete(sprintf('/users/%s/image', $userId));
+
         return $this->handleResponse($response, Status::class);
     }
 
     /**
      * Update a user's picture.
      *
-     * @param string $userId User GUID
-     * @param resource $imageResource Image resource
+     * @param string|resource|StreamInterface $image The image contents to use as profile image
      *
      * @return Status|ResponseInterface
      */
-    public function updateProfileImage(string $userId, $imageResource)
+    public function updateProfileImage(string $userId, $image)
     {
         if (empty($userId)) {
             throw new InvalidArgumentException('UserId can not be empty');
         }
 
-        if (empty($imageResource)) {
-            throw new InvalidArgumentException('Image resource can not be empty');
+        if (!is_string($image) || !is_resource($image) || !$image instanceof StreamInterface) {
+            throw new InvalidArgumentException('Image: must be a string, resource or StreamInterface');
         }
 
-        $headers = [];
         $multipartStreamBuilder = new MultipartStreamBuilder();
-        $multipartStreamBuilder->addResource('image', $imageResource);
+        $multipartStreamBuilder->addResource('image', $image);
+        $headers = ['Content-Type' => 'multipart/form-data; boundary='.$multipartStreamBuilder->getBoundary()];
         $multipartStream = $multipartStreamBuilder->build();
-        $headers['Content-Type'] = 'multipart/form-data; boundary=' . $multipartStreamBuilder->getBoundary();
+
         $response = $this->httpPostRaw(sprintf('/users/%s/image', $userId), $multipartStream, $headers);
+
         return $this->handleResponse($response, Status::class);
     }
 }
