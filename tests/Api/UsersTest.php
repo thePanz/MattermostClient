@@ -527,7 +527,7 @@ class UsersTest extends BaseHttpApiTest
     public function testDeleteProfileImageSuccess(): void
     {
         $userId = '1234';
-        $this->configureMessage('DELETE', '/users/{$userId}/image');
+        $this->configureMessage('DELETE', '/users/'.$userId.'/image');
         $this->configureRequestAndResponse(200);
         $this->configureHydrator(Status::class);
         $this->client->deleteProfileImage($userId);
@@ -535,15 +535,13 @@ class UsersTest extends BaseHttpApiTest
 
     public function testUpdateProfileImageEmptyId(): void
     {
-        $resource = fopen(__FILE__, 'rb');
         $this->expectException(InvalidArgumentException::class);
-        $this->client->updateProfileImage('', $resource);
+        $this->client->updateProfileImage('', 'some-contents-here');
     }
 
     public function testUpdateProfileImageEmptyResource(): void
     {
-        $userId = '1234';
         $this->expectException(InvalidArgumentException::class);
-        $this->client->updateProfileImage($userId, null);
+        $this->client->updateProfileImage('1234', null);
     }
 }
