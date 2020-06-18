@@ -341,7 +341,7 @@ final class UsersApi extends HttpApi
     /**
      * Update a user's picture.
      *
-     * @param string|resource|StreamInterface $image The image contents to use as profile image
+     * @param string|resource|StreamInterface|null $image The image contents to use as profile image
      *
      * @return Status|ResponseInterface
      */
@@ -351,7 +351,7 @@ final class UsersApi extends HttpApi
             throw new InvalidArgumentException('UserId can not be empty');
         }
 
-        if (!is_string($image) || !is_resource($image) || !$image instanceof StreamInterface) {
+        if (!($image instanceof StreamInterface || \is_resource($image) || \is_string($image))) {
             throw new InvalidArgumentException('Image: must be a string, resource or StreamInterface');
         }
 

@@ -18,15 +18,15 @@ final class FilesApi extends HttpApi
      *
      * @see: https://api.mattermost.com/v4/#tag/files%2Fpaths%2F~1files%2Fpost
      *
-     * @param string|resource|StreamInterface $file The file contents to send
-     * @param string|null $clientId                 A unique identifier for the file that will be returned in the response
+     * @param string|resource|StreamInterface|null $file     The file contents to send
+     * @param string|null                          $clientId A unique identifier for the file that will be returned in the response
      *
      * @return FileUploadInfo|ResponseInterface
      */
     public function sendFile($file, string $filename, string $channelId, string $clientId = null)
     {
-        if (!is_string($file) || !is_resource($file) || !$file instanceof StreamInterface) {
-            throw new InvalidArgumentException('Image: must be a string, resource or StreamInterface');
+        if (!($file instanceof StreamInterface || \is_resource($file) || \is_string($file))) {
+            throw new InvalidArgumentException('File must be a string, resource or StreamInterface');
         }
         if (empty($filename)) {
             throw new InvalidArgumentException('File filename can not be empty');
