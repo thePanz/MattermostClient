@@ -18,7 +18,7 @@
         "php-http/multipart-stream-builder": "^1.1",
         "php-http/client-common": "^2.0",
         "php-http/discovery": "^1.7",
-        "pnz/json-exception": "^0.1"
+        "pnz/json-exception": "^1.0"
     },
     "require-dev": {
         "nyholm/psr7": "^1.2.1",
