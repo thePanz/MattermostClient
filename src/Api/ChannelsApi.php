@@ -189,11 +189,13 @@ final class ChannelsApi extends HttpApi
     }
 
     /**
-     * Add a user to a channel, with specific roles.
+     * Add a user to a channel.
+     *
+     * @see https://api.mattermost.com/v4/#tag/channels%2Fpaths%2F~1channels~1%7Bchannel_id%7D~1members%2Fpost
      *
      * @return ChannelMember|ResponseInterface
      */
-    public function addChannelMember(string $channelId, string $userId, string $roles = '')
+    public function addChannelMember(string $channelId, string $userId, string $postRootId = '')
     {
         if (empty($channelId) || empty($userId)) {
             throw new InvalidArgumentException('Channel ID or user ID can not be empty');
@@ -202,7 +204,7 @@ final class ChannelsApi extends HttpApi
         $body = [
             'channel_id' => $channelId,
             'user_id' => $userId,
-            'roles' => $roles,
+            'post_root_id' => $postRootId,
         ];
 
         $response = $this->httpPost(sprintf('/channels/%s/members', $channelId), $body);
