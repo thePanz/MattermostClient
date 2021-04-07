@@ -118,15 +118,18 @@ final class ChannelsApi extends HttpApi
      *
      * @see https://api.mattermost.com/v4/#tag/channels%2Fpaths%2F~1channels~1%7Bchannel_id%7D%2Fdelete
      *
+     * @param array $params Query parameters
+     *  - permanent => "true"|"false" (Mattermost >= 5.28)
+     *
      * @return Status|ResponseInterface
      */
-    public function deleteChannel(string $channelId)
+    public function deleteChannel(string $channelId, array $params = [])
     {
         if (empty($channelId)) {
             throw new InvalidArgumentException('Channel ID can not be empty');
         }
 
-        $response = $this->httpDelete(sprintf('/channels/%s', $channelId));
+        $response = $this->httpDelete(sprintf('/channels/%s', $channelId), [], $params);
 
         return $this->handleResponse($response, Status::class);
     }
