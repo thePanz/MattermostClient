@@ -1,33 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!-- https://phpunit.readthedocs.io/en/8.3/configuration.html -->
-<phpunit
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/7.5/phpunit.xsd"
-    colors                                     = "true"
-    beStrictAboutOutputDuringTests             = "true"
-    beStrictAboutResourceUsageDuringSmallTests = "true"
-    failOnWarning                              = "true"
-    failOnRisky                                = "true"
-    timeoutForSmallTests                       = "2"
-    timeoutForMediumTests                      = "30"
-    timeoutForLargeTests                       = "60"
-    verbose                                    = "true"
-    bootstrap                                  = "vendor/autoload.php"
->
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
+         colors="true"
+         beStrictAboutOutputDuringTests="true"
+         failOnWarning="true"
+         failOnRisky="true"
+         timeoutForSmallTests="2"
+         timeoutForMediumTests="30"
+         bootstrap="vendor/autoload.php"
+         cacheDirectory=".cache/phpunit">
+    <coverage/>
     <testsuites>
-        <testsuite name="Tests">
-            <directory>./tests</directory>
+        <testsuite name="Main tests">
+            <directory>tests/</directory>
         </testsuite>
     </testsuites>
-
-    <filter>
-        <whitelist>
-            <directory suffix=".php">./</directory>
-            <exclude>
-                <directory>vendor</directory>
-                <directory>Tests</directory>
-            </exclude>
-        </whitelist>
-    </filter>
+    <source>
+        <include>
+            <directory suffix=".php">src</directory>
+        </include>
+    </source>
 </phpunit>
