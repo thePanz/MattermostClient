@@ -6,5 +6,8 @@ namespace Pnz\MattermostClient\Model;
 
 interface ModelBuilderInterface
 {
-    public function build(): array;
+    /**
+     * @return array<string, mixed>
+     */
+    public function build(ModelBuildTargetEnum $buildTarget = ModelBuildTargetEnum::BUILD_FOR_CREATE): array;
 }

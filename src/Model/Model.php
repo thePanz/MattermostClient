@@ -7,23 +7,29 @@ namespace Pnz\MattermostClient\Model;
 abstract class Model implements CreatableFromArray
 {
     /**
-     * @var array
+     * @param array<string, mixed> $data
      */
-    protected $data;
+    final private function __construct(protected array $data) {}
 
-    protected function __construct(array $data)
-    {
-        $this->data = $data;
-    }
-
-    public static function createFromArray(array $data)
+    public static function createFromArray(array $data): static
     {
         // Clearing the data
         $emptyModel = array_fill_keys(static::getFields(), null);
 
-        $data = array_merge($emptyModel, array_intersect_key($data, $emptyModel));
+        $data = [...$emptyModel, ...array_intersect_key($data, $emptyModel)];
+        $data = static::prepareData($data);
 
         return new static($data);
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     *
+     * @return array<string, mixed>
+     */
+    protected static function prepareData(array $data): array
+    {
+        return $data;
     }
 
     /**

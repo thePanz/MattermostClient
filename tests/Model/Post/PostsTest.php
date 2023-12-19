@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace Pnz\MattermostClient\Tests\Model\Post;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Pnz\MattermostClient\Model\Post\Post;
 use Pnz\MattermostClient\Model\Post\Posts;
 
 /**
- * @coversDefaultClass \Pnz\MattermostClient\Model\Post\Posts
+ * @internal
  */
-class PostsTest extends TestCase
+#[CoversClass(Posts::class)]
+final class PostsTest extends TestCase
 {
     public function testPostsCreation(): void
     {
@@ -70,6 +72,9 @@ class PostsTest extends TestCase
         $this->assertFalse($posts->valid());
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function buildPostData(string $id): array
     {
         return [
@@ -93,6 +98,9 @@ class PostsTest extends TestCase
         ];
     }
 
+    /**
+     * @param array<string, mixed> $data
+     */
     private function assertSamePost(array $data, Post $post): void
     {
         $this->assertSame($data['id'], $post->getId());

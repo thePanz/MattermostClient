@@ -4,68 +4,60 @@ declare(strict_types=1);
 
 namespace Pnz\MattermostClient\Tests\Api;
 
-use Pnz\JsonException\Json;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Pnz\MattermostClient\Api\UsersApi;
+use Pnz\MattermostClient\Exception\DomainException;
 use Pnz\MattermostClient\Exception\InvalidArgumentException;
+use Pnz\MattermostClient\Model\Error;
 use Pnz\MattermostClient\Model\Status;
 use Pnz\MattermostClient\Model\Team\Teams;
 use Pnz\MattermostClient\Model\User\User;
 use Pnz\MattermostClient\Model\User\Users;
 
 /**
- * @coversDefaultClass \Pnz\MattermostClient\Api\UsersApi
+ * @internal
  */
-class UsersTest extends BaseHttpApiTest
+#[CoversClass(UsersApi::class)]
+final class UsersTest extends AbstractHttpApiTestCase
 {
-    /**
-     * @var UsersApi
-     */
-    private $client;
+    private UsersApi $client;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->client = new UsersApi($this->httpClient, $this->requestFactory, $this->hydrator);
+        $this->client = new UsersApi($this->httpClient, $this->psr17factory, $this->psr17factory, $this->hydrator);
     }
 
-    public function testLoginSuccess(): void
+    public function testLoginSucceeds(): void
     {
-        $loginId = 'user@example.com';
-        $password = 'password';
-        $expectedToken = '123456';
-        $data = [
-            'login_id' => $loginId,
-            'password' => $password,
-        ];
+        $requestData = ['login_id' => self::USER_EMAIL, 'password' => self::USER_PASSWORD];
+
+        $response = $this->buildResponse(200, [], ['Token' => ['f3c63140']]);
+        $this->expectRequest('POST', '/users/login', $requestData, $response);
+        $this->expectHydration($response, User::class);
 
         $token = null;
-        $this->configureMessage('POST', '/users/login', [], Json::encode($data));
-        $this->configureRequestAndResponse(200, '', ['Token' => [$expectedToken]]);
-        $this->configureHydrator(User::class);
+        $this->client->login(self::USER_EMAIL, self::USER_PASSWORD, $token);
 
-        $this->client->login($loginId, $password, $token);
-
-        $this->assertSame($expectedToken, $token, 'Returned token must match!');
+        $this->assertSame('f3c63140', $token, 'Returned token must match!');
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
-    public function testLoginSuccessException(string $exception, int $code): void
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testLoginSuccessThrows(string $exception, int $code): void
     {
+        $requestData = ['login_id' => self::USER_EMAIL, 'password' => self::USER_PASSWORD];
+
+        $response = $this->buildResponse($code);
+        $this->expectRequest('POST', '/users/login', $requestData, $response);
+        $this->expectHydration($response, Error::class);
         $this->expectException($exception);
-        $loginId = 'user@example.com';
-        $password = 'password';
-        $data = [
-            'login_id' => $loginId,
-            'password' => $password,
-        ];
 
-        $this->configureMessage('POST', '/users/login', [], Json::encode($data));
-        $this->configureRequestAndResponse($code);
-
-        $this->client->login($loginId, $password, $token);
+        $this->client->login(self::USER_EMAIL, self::USER_PASSWORD, $token);
     }
 
     public function testLoginEmptyLoginId(): void
@@ -80,27 +72,29 @@ class UsersTest extends BaseHttpApiTest
         $this->client->login('login-id', '');
     }
 
-    public function testGetUserByEmailSuccess(): void
+    public function testGetUserByEmailSucceeds(): void
     {
-        $userEmail = 'user@example.com';
-        $this->configureMessage('GET', '/users/email/'.$userEmail);
-        $this->configureRequestAndResponse(200);
-        $this->configureHydrator(User::class);
+        $response = $this->buildResponse(200);
 
-        $this->client->getUserByEmail($userEmail);
+        $this->expectRequest('GET', '/users/email/'.self::USER_EMAIL, [], $response);
+        $this->expectHydration($response, User::class);
+
+        $this->client->getUserByEmail(self::USER_EMAIL);
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
-    public function testGetUserByEmailException(string $exception, int $code): void
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testGetUserByEmailThrows(string $exception, int $code): void
     {
-        $this->expectException($exception);
-        $userEmail = 'user@example.com';
-        $this->configureMessage('GET', '/users/email/'.$userEmail);
-        $this->configureRequestAndResponse($code);
+        $response = $this->buildResponse($code);
 
-        $this->client->getUserByEmail($userEmail);
+        $this->expectRequest('GET', '/users/email/'.self::USER_EMAIL, [], $response);
+        $this->expectHydration($response, Error::class);
+        $this->expectException($exception);
+
+        $this->client->getUserByEmail(self::USER_EMAIL);
     }
 
     public function testGetUserByEmailEmptyEmail(): void
@@ -109,79 +103,91 @@ class UsersTest extends BaseHttpApiTest
         $this->client->getUserByEmail('');
     }
 
-    public function testGetUserByIdSuccess(): void
+    public function testGetUserByIdSucceeds(): void
     {
-        $userId = '12345';
-        $this->configureMessage('GET', '/users/'.$userId);
-        $this->configureRequestAndResponse(200);
-        $this->configureHydrator(User::class);
-        $this->client->getUserById($userId);
+        $response = $this->buildResponse(200);
+
+        $this->expectRequest('GET', '/users/'.self::USER_UUID, [], $response);
+        $this->expectHydration($response, User::class);
+
+        $this->client->getUserById(self::USER_UUID);
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
-    public function testGetUserByIdException(string $exception, int $code): void
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testGetUserByIdThrows(string $exception, int $code): void
     {
+        $response = $this->buildResponse($code);
+
+        $this->expectRequest('GET', '/users/'.self::USER_UUID, [], $response);
+        $this->expectHydration($response, Error::class);
         $this->expectException($exception);
-        $userId = '12345';
-        $this->configureMessage('GET', '/users/'.$userId);
-        $this->configureRequestAndResponse($code);
-        $this->client->getUserById($userId);
+
+        $this->client->getUserById(self::USER_UUID);
     }
 
-    public function testGetUserByIdEmptyId(): void
+    public function testGetUserByIdEmptyIdThrows(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->client->getUserById('');
     }
 
-    public function testGetUserTeamsSuccess(): void
+    public function testGetUserTeamsSucceeds(): void
     {
-        $userId = '12345';
-        $this->configureMessage('GET', '/users/'.$userId.'/teams');
-        $this->configureRequestAndResponse(200);
-        $this->configureHydrator(Teams::class);
-        $this->client->getUserTeams($userId);
+        $response = $this->buildResponse(200);
+
+        $this->expectRequest('GET', '/users/'.self::USER_UUID.'/teams', [], $response);
+        $this->expectHydration($response, Teams::class);
+
+        $this->client->getUserTeams(self::USER_UUID);
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
-    public function testGetUserTeamsException(string $exception, int $code): void
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testGetUserTeamsThrows(string $exception, int $code): void
     {
+        $response = $this->buildResponse($code);
+
+        $this->expectRequest('GET', '/users/'.self::USER_UUID.'/teams', [], $response);
+        $this->expectHydration($response, Error::class);
         $this->expectException($exception);
-        $userId = '12345';
-        $this->configureMessage('GET', '/users/'.$userId.'/teams');
-        $this->configureRequestAndResponse($code);
-        $this->client->getUserTeams($userId);
+
+        $this->client->getUserTeams(self::USER_UUID);
     }
 
-    public function testGetUserTeamsEmptyId(): void
+    public function testGetUserTeamsEmptyIdThrows(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->client->getUserTeams('');
     }
 
-    public function testGetUserByUsernameSuccess(): void
+    public function testGetUserByUsernameSucceeds(): void
     {
-        $username = 'user-name';
-        $this->configureMessage('GET', '/users/username/'.$username);
-        $this->configureRequestAndResponse(200);
-        $this->configureHydrator(User::class);
-        $this->client->getUserByUsername($username);
+        $response = $this->buildResponse(200);
+
+        $this->expectRequest('GET', '/users/username/'.self::USER_USERNAME, [], $response);
+        $this->expectHydration($response, User::class);
+
+        $this->client->getUserByUsername(self::USER_USERNAME);
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
-    public function testGetUserByUsernameException(string $exception, int $code): void
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testGetUserByUsernameThrows(string $exception, int $code): void
     {
+        $response = $this->buildResponse($code);
+
+        $this->expectRequest('GET', '/users/username/'.self::USER_USERNAME, [], $response);
+        $this->expectHydration($response, Error::class);
         $this->expectException($exception);
-        $username = 'user-name';
-        $this->configureMessage('GET', '/users/username/'.$username);
-        $this->configureRequestAndResponse($code);
-        $this->client->getUserByUsername($username);
+
+        $this->client->getUserByUsername(self::USER_USERNAME);
     }
 
     public function testGetUserByUsernameEmptyId(): void
@@ -190,25 +196,29 @@ class UsersTest extends BaseHttpApiTest
         $this->client->getUserByUsername('');
     }
 
-    public function testDeactivateUserSuccess(): void
+    public function testDeactivateUserSucceeds(): void
     {
-        $userId = '12345';
-        $this->configureMessage('DELETE', '/users/'.$userId);
-        $this->configureRequestAndResponse(200);
-        $this->configureHydrator(Status::class);
-        $this->client->deactivateUser($userId);
+        $response = $this->buildResponse(200);
+
+        $this->expectRequest('DELETE', '/users/'.self::USER_UUID, [], $response);
+        $this->expectHydration($response, Status::class);
+
+        $this->client->deactivateUser(self::USER_UUID);
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
-    public function testDeactivateUserException(string $exception, int $code): void
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testDeactivateUserThrows(string $exception, int $code): void
     {
+        $response = $this->buildResponse($code);
+
+        $this->expectRequest('DELETE', '/users/'.self::USER_UUID, [], $response);
+        $this->expectHydration($response, Error::class);
         $this->expectException($exception);
-        $userId = '12345';
-        $this->configureMessage('DELETE', '/users/'.$userId);
-        $this->configureRequestAndResponse($code);
-        $this->client->deactivateUser($userId);
+
+        $this->client->deactivateUser(self::USER_UUID);
     }
 
     public function testDeactivateUserEmptyId(): void
@@ -217,63 +227,64 @@ class UsersTest extends BaseHttpApiTest
         $this->client->deactivateUser('');
     }
 
-    public function testSetUserActiveSuccess(): void
+    public function testSetUserActiveSucceeds(): void
     {
-        $userId = '12345';
-        $this->configureMessage('PUT', '/users/'.$userId.'/active', [], Json::encode([
-            'active' => true,
-        ]));
-        $this->configureRequestAndResponse(200);
-        $this->configureHydrator(Status::class);
-        $this->client->setUserActive($userId, true);
+        $requestData = ['active' => true];
+        $response = $this->buildResponse(200);
+
+        $this->expectRequest('PUT', '/users/'.self::USER_UUID.'/active', $requestData, $response);
+        $this->expectHydration($response, Status::class);
+
+        $this->client->setUserActive(self::USER_UUID, true);
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
-    public function testSetUserActiveException(string $exception, int $code): void
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testSetUserActiveThrows(string $exception, int $code): void
     {
+        $requestData = ['active' => false];
+        $response = $this->buildResponse($code);
+
+        $this->expectRequest('PUT', '/users/'.self::USER_UUID.'/active', $requestData, $response);
+        $this->expectHydration($response, Error::class);
         $this->expectException($exception);
-        $userId = '12345';
-        $this->configureMessage('PUT', '/users/'.$userId.'/active', [], Json::encode([
-            'active' => false,
-        ]));
-        $this->configureRequestAndResponse($code);
-        $this->client->setUserActive($userId, false);
+
+        $this->client->setUserActive(self::USER_UUID, false);
     }
 
-    public function testSetUserActiveEmptyId(): void
+    public function testSetUserActiveWithEmptyIdThrows(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->client->setUserActive('', false);
     }
 
-    public function testUpdateUserPasswordSuccess(): void
+    public function testUpdateUserPasswordSucceeds(): void
     {
-        $userId = '12345';
-        $this->configureMessage('PUT', '/users/'.$userId.'/password', [], Json::encode([
-            'current_password' => 'current-pw',
-            'new_password' => 'new-pw',
-        ]));
-        $this->configureRequestAndResponse(200);
-        $this->configureHydrator(Status::class);
-        $this->client->updateUserPassword($userId, 'current-pw', 'new-pw');
+        $requestData = ['current_password' => self::USER_PASSWORD, 'new_password' => self::USER_PASSWORD2];
+        $response = $this->buildResponse(200);
+
+        $this->expectRequest('PUT', '/users/'.self::USER_UUID.'/password', $requestData, $response);
+        $this->expectHydration($response, Status::class);
+
+        $this->client->updateUserPassword(self::USER_UUID, 'current-pw', 'new-pw');
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
-    public function testUpdateUserPasswordException(string $exception, int $code): void
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testUpdateUserPasswordThrows(string $exception, int $code): void
     {
+        $requestData = ['current_password' => self::USER_PASSWORD, 'new_password' => self::USER_PASSWORD2];
+        $response = $this->buildResponse($code);
+
+        $this->expectRequest('PUT', '/users/'.self::USER_UUID.'/password', $requestData, $response);
+        $this->expectHydration($response, Error::class);
         $this->expectException($exception);
 
-        $userId = '12345';
-        $this->configureMessage('PUT', '/users/'.$userId.'/password', [], Json::encode([
-            'current_password' => 'current-pw',
-            'new_password' => 'new-pw',
-        ]));
-        $this->configureRequestAndResponse($code);
-        $this->client->updateUserPassword($userId, 'current-pw', 'new-pw');
+        $this->client->updateUserPassword(self::USER_UUID, 'current-pw', 'new-pw');
     }
 
     public function testUpdateUserPasswordEmptyIdException(): void
@@ -294,27 +305,31 @@ class UsersTest extends BaseHttpApiTest
         $this->client->updateUserPassword('user-12345', 'current-pw', '');
     }
 
-    public function testUpdateUserRolesSuccess(): void
+    public function testUpdateUserRolesSucceeds(): void
     {
-        $userId = '12345';
-        $data = ['roles' => 'system_admin'];
-        $this->configureMessage('PUT', '/users/'.$userId.'/roles', [], Json::encode($data));
-        $this->configureRequestAndResponse(200);
-        $this->configureHydrator(Status::class);
-        $this->client->updateUserRoles($userId, 'system_admin');
+        $requestData = ['roles' => 'system_admin'];
+        $response = $this->buildResponse(200);
+
+        $this->expectRequest('PUT', '/users/'.self::USER_UUID.'/roles', $requestData, $response);
+        $this->expectHydration($response, Status::class);
+
+        $this->client->updateUserRoles(self::USER_UUID, 'system_admin');
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
-    public function testUpdateUserRolesException(string $exception, int $code): void
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testUpdateUserRolesThrows(string $exception, int $code): void
     {
+        $requestData = ['roles' => 'system_admin'];
+        $response = $this->buildResponse($code);
+
+        $this->expectRequest('PUT', '/users/'.self::USER_UUID.'/roles', $requestData, $response);
+        $this->expectHydration($response, Error::class);
         $this->expectException($exception);
-        $userId = '12345';
-        $data = ['roles' => 'system_admin'];
-        $this->configureMessage('PUT', '/users/'.$userId.'/roles', [], Json::encode($data));
-        $this->configureRequestAndResponse($code);
-        $this->client->updateUserRoles($userId, 'system_admin');
+
+        $this->client->updateUserRoles(self::USER_UUID, 'system_admin');
     }
 
     public function testUpdateUserRolesEmptyId(): void
@@ -323,56 +338,64 @@ class UsersTest extends BaseHttpApiTest
         $this->client->updateUserRoles('', '');
     }
 
-    public function testGetUsersByIdsSuccess(): void
+    public function testGetUsersByIdsSucceeds(): void
     {
-        $userIds = ['111', '222'];
-        $this->configureMessage('POST', '/users/ids', [], Json::encode($userIds));
-        $this->configureRequestAndResponse(200);
-        $this->configureHydrator(Users::class);
-        $this->client->getUsersByIds($userIds);
+        $requestData = [self::USER_UUID, self::USER_UUID2];
+
+        $response = $this->buildResponse(200);
+        $this->expectRequest('POST', '/users/ids', $requestData, $response);
+        $this->expectHydration($response, Users::class);
+
+        $this->client->getUsersByIds($requestData);
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
-    public function testGetUsersByIdsException(string $exception, int $code): void
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testGetUsersByIdsThrows(string $exception, int $code): void
     {
+        $requestData = [self::USER_UUID, self::USER_UUID2];
+        $response = $this->buildResponse($code);
+
+        $this->expectRequest('POST', '/users/ids', $requestData, $response);
+        $this->expectHydration($response, Error::class);
         $this->expectException($exception);
-        $userIds = ['111', '222'];
-        $this->configureMessage('POST', '/users/ids', [], Json::encode($userIds));
-        $this->configureRequestAndResponse($code);
-        $this->client->getUsersByIds($userIds);
+
+        $this->client->getUsersByIds($requestData);
     }
 
-    public function testGetUsersByIdsEmptyId(): void
+    public function testGetUsersByIdsEmptyIdThrows(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->client->getUsersByIds([]);
     }
 
-    public function testGetUsersByUsernamesSuccess(): void
+    public function testGetUsersByUsernamesSucceeds(): void
     {
-        $userIds = ['username-1', 'username-2'];
+        $requestData = [self::USER_USERNAME, 'username-2'];
+        $response = $this->buildResponse(200);
 
-        $this->configureMessage('POST', '/users/usernames', [], Json::encode($userIds));
-        $this->configureRequestAndResponse(200);
-        $this->configureHydrator(Users::class);
+        $this->expectRequest('POST', '/users/usernames', $requestData, $response);
+        $this->expectHydration($response, Users::class);
 
-        $this->client->getUsersByUsernames($userIds);
+        $this->client->getUsersByUsernames($requestData);
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
-    public function testGetUsersByUsernamesException(string $exception, int $code): void
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testGetUsersByUsernamesThrows(string $exception, int $code): void
     {
+        $requestData = [self::USER_USERNAME, 'username-2'];
+        $response = $this->buildResponse($code);
+
+        $this->expectRequest('POST', '/users/usernames', $requestData, $response);
+        $this->expectHydration($response, Error::class);
         $this->expectException($exception);
-        $userIds = ['username-1', 'username-2'];
 
-        $this->configureMessage('POST', '/users/usernames', [], Json::encode($userIds));
-        $this->configureRequestAndResponse($code);
-
-        $this->client->getUsersByUsernames($userIds);
+        $this->client->getUsersByUsernames($requestData);
     }
 
     public function testGetUsersByUsernamesEmptyNames(): void
@@ -381,64 +404,58 @@ class UsersTest extends BaseHttpApiTest
         $this->client->getUsersByUsernames([]);
     }
 
-    public function testCreateUserSuccess(): void
+    public function testCreateUserSucceeds(): void
     {
-        $data = [
-            'username' => 'username',
-            'email' => 'email,',
-        ];
-        $this->configureMessage('POST', '/users', [], Json::encode($data));
-        $this->configureRequestAndResponse(201);
-        $this->configureHydrator(User::class);
+        $requestData = ['username' => self::USER_USERNAME, 'email' => self::USER_EMAIL];
 
-        $this->client->createUser($data);
+        $response = $this->buildResponse(201);
+        $this->expectRequest('POST', '/users', $requestData, $response);
+        $this->expectHydration($response, User::class);
+
+        $this->client->createUser($requestData);
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
-    public function testCreateUserException(string $exception, int $code): void
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testCreateUserThrows(string $exception, int $code): void
     {
-        $this->expectException($exception);
-        $data = [
-            'username' => 'username',
-            'email' => 'email,',
-        ];
-        $this->configureMessage('POST', '/users', [], Json::encode($data));
-        $this->configureRequestAndResponse($code);
+        $requestData = ['username' => self::USER_USERNAME, 'email' => self::USER_EMAIL];
+        $response = $this->buildResponse($code);
 
-        $this->client->createUser($data);
+        $this->expectRequest('POST', '/users', $requestData, $response);
+        $this->expectHydration($response, Error::class);
+        $this->expectException($exception);
+
+        $this->client->createUser($requestData);
     }
 
-    public function testPatchUserSuccess(): void
+    public function testPatchUserSucceeds(): void
     {
-        $userId = '111';
-        $data = [
-            'username' => 'username',
-            'email' => 'email,',
-        ];
-        $this->configureMessage('PUT', '/users/'.$userId.'/patch', [], Json::encode($data));
-        $this->configureRequestAndResponse(201);
-        $this->configureHydrator(User::class);
+        $requestData = ['username' => self::USER_USERNAME];
 
-        $this->client->patchUser($userId, $data);
+        $response = $this->buildResponse(201);
+        $this->expectRequest('PUT', '/users/'.self::USER_UUID.'/patch', $requestData, $response);
+        $this->expectHydration($response, User::class);
+
+        $this->client->patchUser(self::USER_UUID, $requestData);
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
-    public function testPatchUserException(string $exception, int $code): void
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testPatchUserThrows(string $exception, int $code): void
     {
-        $this->expectException($exception);
-        $userId = '111';
-        $data = [
-            'username' => 'username',
-            'email' => 'email,',
-        ];
-        $this->configureMessage('PUT', '/users/'.$userId.'/patch', [], Json::encode($data));
-        $this->configureRequestAndResponse($code);
+        $requestData = ['username' => self::USER_USERNAME];
+        $response = $this->buildResponse($code);
 
-        $this->client->patchUser($userId, $data);
+        $this->expectRequest('PUT', '/users/'.self::USER_UUID.'/patch', $requestData, $response);
+        $this->expectHydration($response, Error::class);
+        $this->expectException($exception);
+
+        $this->client->patchUser(self::USER_UUID, $requestData);
     }
 
     public function testPatchUsersEmptyId(): void
@@ -447,74 +464,87 @@ class UsersTest extends BaseHttpApiTest
         $this->client->patchUser('', []);
     }
 
-    public function testUpdateUserSuccess(): void
+    public function testUpdateUserSucceeds(): void
     {
-        $userId = '111';
-        $data = [
-            'username' => 'username',
-            'email' => 'email,',
-        ];
+        $requestData = ['username' => self::USER_USERNAME];
+        $response = $this->buildResponse(201);
 
-        $this->configureMessage('PUT', '/users/'.$userId, [], Json::encode($data));
-        $this->configureRequestAndResponse(201);
-        $this->configureHydrator(User::class);
-        $this->client->updateUser($userId, $data);
+        $this->expectRequest('PUT', '/users/'.self::USER_UUID, $requestData, $response);
+        $this->expectHydration($response, User::class);
+
+        $this->client->updateUser(self::USER_UUID, $requestData);
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
-    public function testUpdateUserException(string $exception, int $code): void
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testUpdateUserThrows(string $exception, int $code): void
     {
-        $this->expectException($exception);
-        $userId = '111';
-        $data = [
-            'username' => 'username',
-            'email' => 'email,',
-        ];
+        $requestData = ['username' => self::USER_USERNAME];
+        $response = $this->buildResponse($code);
 
-        $this->configureMessage('PUT', '/users/'.$userId, [], Json::encode($data));
-        $this->configureRequestAndResponse($code);
-        $this->client->updateUser($userId, $data);
+        $this->expectRequest('PUT', '/users/'.self::USER_UUID, $requestData, $response);
+        $this->expectHydration($response, Error::class);
+        $this->expectException($exception);
+
+        $this->client->updateUser(self::USER_UUID, $requestData);
     }
 
-    public function testUpdateUsersEmptyId(): void
+    public function testUpdateUsersEmptyIdThrows(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->client->updateUser('', []);
     }
 
-    public function testGetUserSuccess(): void
+    public function testGetUsersSucceeds(): void
     {
-        $this->configureMessage('GET', '/users');
-        $this->configureRequestAndResponse(200);
-        $this->configureHydrator(Users::class);
-        $this->client->getUsers();
+        $responseData = [];
+        $response = $this->buildResponse(200, $responseData);
+
+        $this->expectRequest('GET', '/users', [], $response);
+        $this->expectHydration($response, Users::class);
+
+        $users = $this->client->getUsers();
+        $this->assertCount(0, $users);
     }
 
-    public function testGetUserParametersSuccess(): void
+    public function testGetUserParametersSucceeds(): void
     {
-        $this->configureMessage('GET', '/users'.
-            '?per_page=1&page=2&in_channel=channel&in_team=team&not_in_channel=channel-not-in');
-        $this->configureRequestAndResponse(200);
-        $this->configureHydrator(Users::class);
-        $this->client->getUsers([
+        $responseData = [];
+        $response = $this->buildResponse(200, $responseData);
+
+        $this->expectRequest(
+            'GET',
+            '/users?per_page=1&page=2&in_channel=channel&in_team=team&not_in_channel=channel-not-in',
+            [],
+            $response
+        );
+        $this->expectHydration($response, Users::class);
+
+        $users = $this->client->getUsers([
             'per_page' => 1,
             'page' => 2,
             'in_channel' => 'channel',
             'in_team' => 'team',
             'not_in_channel' => 'channel-not-in',
         ]);
+
+        $this->assertCount(0, $users);
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
-    public function testGetChannelPostsException(string $exception, int $code): void
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testGetChannelPostsThrows(string $exception, int $code): void
     {
+        $response = $this->buildResponse($code);
+
+        $this->expectRequest('GET', '/users', [], $response);
+        $this->expectHydration($response, Error::class);
         $this->expectException($exception);
-        $this->configureMessage('GET', '/users');
-        $this->configureRequestAndResponse($code);
+
         $this->client->getUsers();
     }
 
@@ -524,13 +554,14 @@ class UsersTest extends BaseHttpApiTest
         $this->client->deleteProfileImage('');
     }
 
-    public function testDeleteProfileImageSuccess(): void
+    public function testDeleteProfileImageSucceeds(): void
     {
-        $userId = '1234';
-        $this->configureMessage('DELETE', '/users/'.$userId.'/image');
-        $this->configureRequestAndResponse(200);
-        $this->configureHydrator(Status::class);
-        $this->client->deleteProfileImage($userId);
+        $response = $this->buildResponse(200);
+
+        $this->expectRequest('DELETE', '/users/'.self::USER_UUID.'/image', [], $response);
+        $this->expectHydration($response, Status::class);
+
+        $this->client->deleteProfileImage(self::USER_UUID);
     }
 
     public function testUpdateProfileImageEmptyId(): void
@@ -542,6 +573,6 @@ class UsersTest extends BaseHttpApiTest
     public function testUpdateProfileImageEmptyResource(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->client->updateProfileImage('1234', null);
+        $this->client->updateProfileImage(self::USER_UUID, null);
     }
 }

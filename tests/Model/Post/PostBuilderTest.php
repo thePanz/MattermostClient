@@ -4,35 +4,36 @@ declare(strict_types=1);
 
 namespace Pnz\MattermostClient\Tests\Model\Post;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Pnz\MattermostClient\Exception\InvalidArgumentException;
-use Pnz\MattermostClient\Model\ModelBuilder;
+use Pnz\MattermostClient\Model\ModelBuildTargetEnum;
 use Pnz\MattermostClient\Model\Post\PostBuilder;
 
 /**
- * @coversDefaultClass \Pnz\MattermostClient\Model\Post\PostBuilder
+ * @internal
  */
-class PostBuilderTest extends TestCase
+#[CoversClass(PostBuilder::class)]
+final class PostBuilderTest extends TestCase
 {
-    /**
-     * @var PostBuilder
-     */
-    private $builder;
+    private PostBuilder $builder;
 
     protected function setUp(): void
     {
         $this->builder = new PostBuilder();
     }
 
-    public function provideBuildTypesForFailure(): iterable
+    /**
+     * @return iterable<string, array{ModelBuildTargetEnum, string}>
+     */
+    public static function providePostBuilderNoParamsCases(): iterable
     {
-        yield 'create' => [PostBuilder::BUILD_FOR_CREATE, 'Required parameters missing: channel_id, message'];
+        yield 'create' => [ModelBuildTargetEnum::BUILD_FOR_CREATE, 'Required parameters missing: channel_id, message'];
     }
 
-    /**
-     * @dataProvider provideBuildTypesForFailure
-     */
-    public function testPostBuilderNoParams(string $buildType, string $expectedFailureMessage): void
+    #[DataProvider('providePostBuilderNoParamsCases')]
+    public function testPostBuilderNoParams(ModelBuildTargetEnum $buildType, string $expectedFailureMessage): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage($expectedFailureMessage);
@@ -74,12 +75,12 @@ class PostBuilderTest extends TestCase
     public function testPostBuilderUpdate(): void
     {
         $expected = [];
-        $this->assertSame($expected, $this->builder->build(ModelBuilder::BUILD_FOR_UPDATE));
+        $this->assertSame($expected, $this->builder->build(ModelBuildTargetEnum::BUILD_FOR_UPDATE));
     }
 
     public function testPostBuilderPatch(): void
     {
         $expected = [];
-        $this->assertSame($expected, $this->builder->build(ModelBuilder::BUILD_FOR_PATCH));
+        $this->assertSame($expected, $this->builder->build(ModelBuildTargetEnum::BUILD_FOR_PATCH));
     }
 }

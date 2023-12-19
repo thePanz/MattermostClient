@@ -6,11 +6,11 @@ namespace Pnz\MattermostClient\Model\Channel;
 
 use Pnz\MattermostClient\Model\ModelCollection;
 
+/**
+ * @extends ModelCollection<ChannelMember>
+ */
 final class ChannelMembers extends ModelCollection
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function createItem(array $data)
     {
         return ChannelMember::createFromArray($data);

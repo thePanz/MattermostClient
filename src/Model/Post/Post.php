@@ -68,6 +68,9 @@ final class Post extends Model
         return $this->data['type'] ?? '';
     }
 
+    /**
+     * @return list<string>
+     */
     public function getProps(): array
     {
         return $this->data['props'] ?? [];
@@ -78,11 +81,17 @@ final class Post extends Model
         return $this->data['hashtag'] ?? '';
     }
 
+    /**
+     * @return list<string>
+     */
     public function getFilenames(): array
     {
         return $this->data['filenames'] ?? [];
     }
 
+    /**
+     * @return list<string>
+     */
     public function getFileIds(): array
     {
         return $this->data['file_ids'] ?? [];

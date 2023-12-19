@@ -7,18 +7,17 @@ namespace Pnz\MattermostClient\Api;
 use Pnz\MattermostClient\Exception\InvalidArgumentException;
 use Pnz\MattermostClient\Model\Post\Post;
 use Pnz\MattermostClient\Model\Status;
-use Psr\Http\Message\ResponseInterface;
 
 final class PostsApi extends HttpApi
 {
     /**
-     * Create a post. Required parameters: 'channel_id', 'message'.
+     * @param array<mixed> $data
      *
-     * @return Post|ResponseInterface
+     * Create a post. Required parameters: 'channel_id', 'message'.
      */
-    public function createPost(array $params)
+    public function createPost(array $data): Post
     {
-        $response = $this->httpPost('/posts', $params);
+        $response = $this->httpPost('/posts', $data);
 
         return $this->handleResponse($response, Post::class);
     }
@@ -27,17 +26,17 @@ final class PostsApi extends HttpApi
      * Partially update a post by providing only the fields you want to update.
      * Omitted fields will not be updated.
      *
-     * @see https://api.mattermost.com/v4/#tag/posts%2Fpaths%2F~1posts~1%7Bpost_id%7D~1patch%2Fput
+     * @param array<mixed> $data
      *
-     * @return Post|ResponseInterface
+     * @see https://api.mattermost.com/v4/#tag/posts%2Fpaths%2F~1posts~1%7Bpost_id%7D~1patch%2Fput
      */
-    public function patchPost(string $postId, array $params)
+    public function patchPost(string $postId, array $data): Post
     {
         if (empty($postId)) {
             throw new InvalidArgumentException('PostId can not be empty');
         }
 
-        $response = $this->httpPut(sprintf('/posts/%s/patch', $postId), $params);
+        $response = $this->httpPut(sprintf('/posts/%s/patch', $postId), $data);
 
         return $this->handleResponse($response, Post::class);
     }
@@ -47,17 +46,16 @@ final class PostsApi extends HttpApi
      *
      * @see https://api.mattermost.com/v4/#tag/posts%2Fpaths%2F~1posts~1%7Bpost_id%7D%2Fput
      *
-     * @param string $postId ID of the post to update
-     *
-     * @return Post|ResponseInterface
+     * @param array<mixed> $data
+     * @param string       $postId ID of the post to update
      */
-    public function updatePost(string $postId, array $params)
+    public function updatePost(string $postId, array $data): Post
     {
         if (empty($postId)) {
             throw new InvalidArgumentException('PostId can not be empty');
         }
 
-        $response = $this->httpPut(sprintf('/posts/%s', $postId), $params);
+        $response = $this->httpPut(sprintf('/posts/%s', $postId), $data);
 
         return $this->handleResponse($response, Post::class);
     }
@@ -66,10 +64,8 @@ final class PostsApi extends HttpApi
      * Get a single post.
      *
      * @param string $postId ID of the post to get
-     *
-     * @return Post|ResponseInterface
      */
-    public function getPost(string $postId)
+    public function getPost(string $postId): Post
     {
         if (empty($postId)) {
             throw new InvalidArgumentException('PostId can not be empty');
@@ -86,10 +82,8 @@ final class PostsApi extends HttpApi
      * @see https://api.mattermost.com/v4/#tag/posts%2Fpaths%2F~1posts~1%7Bpost_id%7D~1pin%2Fpost
      *
      * @param string $postId Post GUID
-     *
-     * @return Status|ResponseInterface
      */
-    public function pinPost($postId)
+    public function pinPost(string $postId): Status
     {
         if (empty($postId)) {
             throw new InvalidArgumentException('PostId can not be empty');
@@ -106,10 +100,8 @@ final class PostsApi extends HttpApi
      * @see https://api.mattermost.com/v4/#tag/posts%2Fpaths%2F~1posts~1%7Bpost_id%7D~1unpin%2Fpost
      *
      * @param string $postId Post GUID
-     *
-     * @return Status|ResponseInterface
      */
-    public function unpinPost($postId)
+    public function unpinPost(string $postId): Status
     {
         if (empty($postId)) {
             throw new InvalidArgumentException('PostId can not be empty');
@@ -126,10 +118,8 @@ final class PostsApi extends HttpApi
      * @see https://api.mattermost.com/v4/#tag/posts%2Fpaths%2F~1posts~1%7Bpost_id%7D%2Fdelete
      *
      * @param string $postId ID of the post to delete
-     *
-     * @return Status|ResponseInterface
      */
-    public function deletePost(string $postId)
+    public function deletePost(string $postId): Status
     {
         if (empty($postId)) {
             throw new InvalidArgumentException('PostId can not be empty');

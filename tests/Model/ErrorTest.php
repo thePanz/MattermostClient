@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace Pnz\MattermostClient\Tests\Model;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Pnz\MattermostClient\Model\Error;
 
 /**
- * @coversDefaultClass \Pnz\MattermostClient\Model\Error
+ * @internal
  */
-class ErrorTest extends TestCase
+#[CoversClass(Error::class)]
+final class ErrorTest extends TestCase
 {
     public function testErrorCreationEmpty(): void
     {

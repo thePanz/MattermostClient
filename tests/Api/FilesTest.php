@@ -4,108 +4,119 @@ declare(strict_types=1);
 
 namespace Pnz\MattermostClient\Tests\Api;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Pnz\MattermostClient\Api\FilesApi;
+use Pnz\MattermostClient\Exception\DomainException;
 use Pnz\MattermostClient\Exception\InvalidArgumentException;
+use Pnz\MattermostClient\Model\Error;
 use Pnz\MattermostClient\Model\File\FileInfo;
-use Psr\Http\Message\StreamInterface;
 
 /**
- * @coversDefaultClass \Pnz\MattermostClient\Api\FilesApi
+ * @internal
  */
-class FilesTest extends BaseHttpApiTest
+#[CoversClass(FilesApi::class)]
+final class FilesTest extends AbstractHttpApiTestCase
 {
-    /** @var FilesApi */
-    private $client;
+    private FilesApi $client;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->client = new FilesApi($this->httpClient, $this->requestFactory, $this->hydrator);
+        $this->client = new FilesApi($this->httpClient, $this->psr17factory, $this->psr17factory, $this->hydrator);
     }
 
-    public function testGetFileSuccess(): void
+    public function testGetFileSucceeds(): void
     {
-        $fileId = '12345';
-        $contents = 'Lorem Lipsum';
-        $this->configureMessage('GET', '/files/'.$fileId);
-        $this->configureRequestAndResponse(200, $contents);
-        $stream = $this->client->getFile($fileId);
+        $fileContents = 'Lorem Ipsum';
+        $response = $this->buildResponse(200, $fileContents);
 
-        $this->assertInstanceOf(StreamInterface::class, $stream);
-        $this->assertSame($contents, $stream->getContents());
+        $this->expectRequest('GET', '/files/'.self::FILE_UUID, [], $response);
+
+        $stream = $this->client->getFile(self::FILE_UUID);
+
+        $this->assertSame($fileContents, (string) $stream);
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
-    public function testGetFileException(string $exception, int $code): void
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testGetFileThrows(string $exception, int $code): void
     {
+        $response = $this->buildResponse($code);
+        $this->expectRequest('GET', '/files/'.self::FILE_UUID, [], $response);
+        $this->expectHydration($response, Error::class);
         $this->expectException($exception);
-        $fileId = '12345';
-        $this->configureMessage('GET', '/files/'.$fileId);
-        $this->configureRequestAndResponse($code);
-        $this->client->getFile($fileId);
+
+        $this->client->getFile(self::FILE_UUID);
     }
 
-    public function testGetFileEmptyId(): void
+    public function testGetFileEmptyIdThrows(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->client->getFile('');
     }
 
-    public function testGetFileLinkSuccess(): void
+    public function testGetFileLinkSucceeds(): void
     {
-        $fileId = '12345';
         $contents = 'http://somelinks.com/file';
-        $this->configureMessage('GET', '/files/'.$fileId.'/link');
-        $this->configureRequestAndResponse(200, $contents);
-        $link = $this->client->getFileLink($fileId);
+        $response = $this->buildResponse(200, $contents);
 
-        $this->assertIsString($link);
+        $this->expectRequest('GET', '/files/'.self::FILE_UUID.'/link', [], $response);
+        $link = $this->client->getFileLink(self::FILE_UUID);
+
         $this->assertSame($contents, $link);
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
-    public function testGetFileLinkException(string $exception, int $code): void
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testGetFileLinkThrows(string $exception, int $code): void
     {
+        $response = $this->buildResponse($code);
+
+        $this->expectRequest('GET', '/files/'.self::FILE_UUID.'/link', [], $response);
+        $this->expectHydration($response, Error::class);
         $this->expectException($exception);
-        $fileId = '12345';
-        $this->configureMessage('GET', '/files/'.$fileId.'/link');
-        $this->configureRequestAndResponse($code);
-        $this->client->getFileLink($fileId);
+
+        $this->client->getFileLink(self::FILE_UUID);
     }
 
-    public function testGetFileLinkEmptyId(): void
+    public function testGetFileLinkEmptyIdThrows(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->client->getFileLink('');
     }
 
-    public function testGetFileInfoSuccess(): void
+    public function testGetFileInfoSucceeds(): void
     {
-        $fileId = '12345';
-        $this->configureMessage('GET', '/files/'.$fileId.'/info');
-        $this->configureRequestAndResponse(200);
-        $this->configureHydrator(FileInfo::class);
-        $this->client->getFileInfo($fileId);
+        $response = $this->buildResponse(200);
+
+        $this->expectRequest('GET', '/files/'.self::FILE_UUID.'/info', [], $response);
+        $this->expectHydration($response, FileInfo::class);
+
+        $this->client->getFileInfo(self::FILE_UUID);
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
-    public function testGetFileInfoException(string $exception, int $code): void
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testGetFileInfoThrows(string $exception, int $code): void
     {
+        $response = $this->buildResponse($code);
+
+        $this->expectRequest('GET', '/files/'.self::FILE_UUID.'/info', [], $response);
         $this->expectException($exception);
-        $fileId = '12345';
-        $this->configureMessage('GET', '/files/'.$fileId.'/info');
-        $this->configureRequestAndResponse($code);
-        $this->client->getFileInfo($fileId);
+        $this->expectHydration($response, Error::class);
+
+        $this->client->getFileInfo(self::FILE_UUID);
     }
 
-    public function testGetFileInfoEmptyId(): void
+    public function testGetFileInfoEmptyIdThrows(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->client->getFileInfo('');

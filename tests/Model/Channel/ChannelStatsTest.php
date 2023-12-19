@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace Pnz\MattermostClient\Tests\Model\Channel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Pnz\MattermostClient\Model\Channel\ChannelStats;
 
 /**
- * @coversDefaultClass \Pnz\MattermostClient\Model\Channel\ChannelStats
+ * @internal
  */
-class ChannelStatsTest extends TestCase
+#[CoversClass(ChannelStats::class)]
+final class ChannelStatsTest extends TestCase
 {
     public function testChannelStatsCreationEmpty(): void
     {

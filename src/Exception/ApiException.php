@@ -9,21 +9,8 @@ use Psr\Http\Message\ResponseInterface;
 
 class ApiException extends \Exception implements DomainException
 {
-    /**
-     * @var Error|null
-     */
-    protected $error;
-
-    /**
-     * @var ResponseInterface
-     */
-    protected $response;
-
-    public function __construct(ResponseInterface $response, Error $error = null)
+    public function __construct(protected ResponseInterface $response, protected ?Error $error = null)
     {
-        $this->error = $error;
-        $this->response = $response;
-
         parent::__construct($error ? $error->getMessage() : '', $response->getStatusCode());
     }
 

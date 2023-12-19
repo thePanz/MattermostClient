@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace Pnz\MattermostClient\Tests\Api;
 
-use Pnz\JsonException\Json;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Pnz\MattermostClient\Api\TeamsApi;
+use Pnz\MattermostClient\Exception\DomainException;
 use Pnz\MattermostClient\Exception\InvalidArgumentException;
 use Pnz\MattermostClient\Model\Channel\Channels;
+use Pnz\MattermostClient\Model\Error;
 use Pnz\MattermostClient\Model\Status;
 use Pnz\MattermostClient\Model\Team\Team;
 use Pnz\MattermostClient\Model\Team\TeamMember;
@@ -16,106 +19,117 @@ use Pnz\MattermostClient\Model\Team\Teams;
 use Pnz\MattermostClient\Model\Team\TeamStats;
 
 /**
- * @coversDefaultClass \Pnz\MattermostClient\Api\TeamsApi
+ * @internal
  */
-class TeamsTest extends BaseHttpApiTest
+#[CoversClass(TeamsApi::class)]
+final class TeamsTest extends AbstractHttpApiTestCase
 {
-    /**
-     * @var TeamsApi
-     */
-    private $client;
+    private TeamsApi $client;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->client = new TeamsApi($this->httpClient, $this->requestFactory, $this->hydrator);
+        $this->client = new TeamsApi($this->httpClient, $this->psr17factory, $this->psr17factory, $this->hydrator);
     }
 
-    public function testGetTeamByNameSuccess(): void
+    public function testGetTeamByNameSucceeds(): void
     {
-        $teamName = 'team-name';
-        $this->configureMessage('GET', '/teams/name/'.$teamName);
-        $this->configureRequestAndResponse(200);
-        $this->configureHydrator(Team::class);
+        $response = $this->buildResponse(200);
 
-        $this->client->getTeamByName($teamName);
+        $this->expectRequest('GET', '/teams/name/'.self::TEAM_NAME, [], $response);
+        $this->expectHydration($response, Team::class);
+
+        $this->client->getTeamByName(self::TEAM_NAME);
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
-    public function testGetTeamByNameException(string $exception, int $code): void
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testGetTeamByNameThrows(string $exception, int $code): void
     {
-        $this->expectException($exception);
-        $teamName = 'team-name';
-        $this->configureMessage('GET', '/teams/name/'.$teamName);
-        $this->configureRequestAndResponse($code);
+        $response = $this->buildResponse($code);
 
-        $this->client->getTeamByName($teamName);
+        $this->expectRequest('GET', '/teams/name/'.self::TEAM_NAME, [], $response);
+        $this->expectHydration($response, Error::class);
+        $this->expectException($exception);
+
+        $this->client->getTeamByName(self::TEAM_NAME);
     }
 
     public function testGetTeamByNameEmptyEmail(): void
     {
         $this->expectException(InvalidArgumentException::class);
+
         $this->client->getTeamByName('');
     }
 
-    public function testGetTeamByIdSuccess(): void
+    public function testGetTeamByIdSucceeds(): void
     {
-        $teamId = '12345';
-        $this->configureMessage('GET', '/teams/'.$teamId);
-        $this->configureRequestAndResponse(200);
-        $this->configureHydrator(Team::class);
-        $this->client->getTeamById($teamId);
+        $response = $this->buildResponse(200);
+
+        $this->expectRequest('GET', '/teams/'.self::TEAM_ID, [], $response);
+        $this->expectHydration($response, Team::class);
+
+        $this->client->getTeamById(self::TEAM_ID);
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
-    public function testGetTeamByIdException(string $exception, int $code): void
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testGetTeamByIdThrows(string $exception, int $code): void
     {
+        $response = $this->buildResponse($code);
+
+        $this->expectRequest('GET', '/teams/'.self::TEAM_ID, [], $response);
+        $this->expectHydration($response, Error::class);
         $this->expectException($exception);
-        $teamId = '12345';
-        $this->configureMessage('GET', '/teams/'.$teamId);
-        $this->configureRequestAndResponse($code);
-        $this->client->getTeamById($teamId);
+
+        $this->client->getTeamById(self::TEAM_ID);
     }
 
     public function testGetTeamByIdEmptyId(): void
     {
         $this->expectException(InvalidArgumentException::class);
+
         $this->client->getTeamById('');
     }
 
-    public function testDeleteTeamSuccess(): void
+    public function testDeleteTeamSucceeds(): void
     {
-        $teamId = '12345';
-        $this->configureMessage('DELETE', '/teams/'.$teamId);
-        $this->configureRequestAndResponse(200);
-        $this->configureHydrator(Status::class);
-        $this->client->deleteTeam($teamId);
+        $response = $this->buildResponse(200);
+
+        $this->expectRequest('DELETE', '/teams/'.self::TEAM_ID, [], $response);
+        $this->expectHydration($response, Status::class);
+
+        $this->client->deleteTeam(self::TEAM_ID);
     }
 
-    public function testDeleteTeamPermanentSuccess(): void
+    public function testDeleteTeamPermanentSucceeds(): void
     {
-        $teamId = '12345';
-        $this->configureMessage('DELETE', '/teams/'.$teamId.'?permanent=1');
-        $this->configureRequestAndResponse(200);
-        $this->configureHydrator(Status::class);
-        $this->client->deleteTeam($teamId, true);
+        $response = $this->buildResponse(200);
+
+        $this->expectRequest('DELETE', '/teams/'.self::TEAM_ID.'?permanent=1', [], $response);
+        $this->expectHydration($response, Status::class);
+
+        $this->client->deleteTeam(self::TEAM_ID, true);
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
-    public function testDeleteTeamException(string $exception, int $code): void
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testDeleteTeamThrows(string $exception, int $code): void
     {
+        $response = $this->buildResponse($code);
+
+        $this->expectRequest('DELETE', '/teams/'.self::TEAM_ID, [], $response);
+        $this->expectHydration($response, Error::class);
         $this->expectException($exception);
-        $teamId = '12345';
-        $this->configureMessage('DELETE', '/teams/'.$teamId);
-        $this->configureRequestAndResponse($code);
-        $this->client->deleteTeam($teamId);
+
+        $this->client->deleteTeam(self::TEAM_ID);
     }
 
     public function testDeleteTeamEmptyId(): void
@@ -124,363 +138,371 @@ class TeamsTest extends BaseHttpApiTest
         $this->client->deleteTeam('');
     }
 
-    public function testCreateTeamSuccess(): void
+    public function testCreateTeamSucceeds(): void
     {
-        $data = [
-            'display_name' => 'display_name',
-            'invite_id' => 'invite_id,',
-        ];
-        $this->configureMessage('POST', '/teams', [], Json::encode($data));
-        $this->configureRequestAndResponse(201);
-        $this->configureHydrator(Team::class);
+        $requestData = ['display_name' => 'display_name', 'invite_id' => self::TEAM_INVITE_ID];
+        $response = $this->buildResponse(201);
 
-        $this->client->createTeam($data);
+        $this->expectRequest('POST', '/teams', $requestData, $response);
+        $this->expectHydration($response, Team::class);
+
+        $this->client->createTeam($requestData);
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
-    public function testCreateTeamException(string $exception, int $code): void
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testCreateTeamThrows(string $exception, int $code): void
     {
-        $this->expectException($exception);
-        $data = [
-            'display_name' => 'display_name',
-            'invite_id' => 'invite_id,',
-        ];
-        $this->configureMessage('POST', '/teams', [], Json::encode($data));
-        $this->configureRequestAndResponse($code);
+        $requestData = ['display_name' => 'display_name', 'invite_id' => self::TEAM_INVITE_ID];
+        $response = $this->buildResponse($code);
 
-        $this->client->createTeam($data);
+        $this->expectRequest('POST', '/teams', $requestData, $response);
+        $this->expectHydration($response, Error::class);
+        $this->expectException($exception);
+
+        $this->client->createTeam($requestData);
     }
 
-    public function testPatchTeamSuccess(): void
+    public function testPatchTeamSucceeds(): void
     {
-        $teamId = '111';
-        $data = [
-            'display_name' => 'display_name',
-            'invite_id' => 'invite_id,',
-        ];
-        $this->configureMessage('PUT', '/teams/'.$teamId.'/patch', [], Json::encode($data));
-        $this->configureRequestAndResponse(201);
-        $this->configureHydrator(Team::class);
+        $requestData = ['display_name' => 'display_name', 'invite_id' => self::TEAM_INVITE_ID];
+        $response = $this->buildResponse(201);
 
-        $this->client->patchTeam($teamId, $data);
+        $this->expectRequest('PUT', '/teams/'.self::TEAM_ID.'/patch', $requestData, $response);
+        $this->expectHydration($response, Team::class);
+
+        $this->client->patchTeam(self::TEAM_ID, $requestData);
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
-    public function testPatchTeamException(string $exception, int $code): void
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testPatchTeamThrows(string $exception, int $code): void
     {
-        $this->expectException($exception);
-        $teamId = '111';
-        $data = [
-            'display_name' => 'display_name',
-            'invite_id' => 'invite_id,',
-        ];
-        $this->configureMessage('PUT', '/teams/'.$teamId.'/patch', [], Json::encode($data));
-        $this->configureRequestAndResponse($code);
+        $requestData = ['display_name' => 'display_name', 'invite_id' => self::TEAM_INVITE_ID];
+        $response = $this->buildResponse($code);
 
-        $this->client->patchTeam($teamId, $data);
+        $this->expectRequest('PUT', '/teams/'.self::TEAM_ID.'/patch', $requestData, $response);
+        $this->expectHydration($response, Error::class);
+        $this->expectException($exception);
+
+        $this->client->patchTeam(self::TEAM_ID, $requestData);
     }
 
     public function testPatchTeamsEmptyId(): void
     {
         $this->expectException(InvalidArgumentException::class);
+
         $this->client->patchTeam('', []);
     }
 
-    public function testUpdateTeamSuccess(): void
+    public function testUpdateTeamSucceeds(): void
     {
-        $teamId = '111';
-        $data = [
-            'username' => 'username',
-            'email' => 'email,',
-        ];
+        $requestData = ['username' => self::USER_USERNAME, 'email' => self::USER_EMAIL];
 
-        $this->configureMessage('PUT', '/teams/'.$teamId, [], Json::encode($data));
-        $this->configureRequestAndResponse(201);
-        $this->configureHydrator(Team::class);
-        $this->client->updateTeam($teamId, $data);
+        $response = $this->buildResponse(201);
+
+        $this->expectRequest('PUT', '/teams/'.self::TEAM_ID, $requestData, $response);
+        $this->expectHydration($response, Team::class);
+
+        $this->client->updateTeam(self::TEAM_ID, $requestData);
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
-    public function testUpdateTeamException(string $exception, int $code): void
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testUpdateTeamThrows(string $exception, int $code): void
     {
-        $this->expectException($exception);
-        $teamId = '111';
-        $data = [
-            'username' => 'username',
-            'email' => 'email,',
-        ];
+        $requestData = ['username' => self::USER_USERNAME, 'email' => self::USER_EMAIL];
+        $response = $this->buildResponse($code);
 
-        $this->configureMessage('PUT', '/teams/'.$teamId, [], Json::encode($data));
-        $this->configureRequestAndResponse($code);
-        $this->client->updateTeam($teamId, $data);
+        $this->expectRequest('PUT', '/teams/'.self::TEAM_ID, $requestData, $response);
+        $this->expectHydration($response, Error::class);
+        $this->expectException($exception);
+
+        $this->client->updateTeam(self::TEAM_ID, $requestData);
     }
 
     public function testUpdateTeamsEmptyId(): void
     {
         $this->expectException(InvalidArgumentException::class);
+
         $this->client->updateTeam('', []);
     }
 
-    public function testGetTeamStatsSuccess(): void
+    public function testGetTeamStatsSucceeds(): void
     {
-        $teamId = '12345';
-        $this->configureMessage('GET', '/teams/'.$teamId.'/stats');
-        $this->configureRequestAndResponse(200);
-        $this->configureHydrator(TeamStats::class);
-        $this->client->getTeamStats($teamId);
+        $response = $this->buildResponse(200);
+
+        $this->expectRequest('GET', '/teams/'.self::TEAM_ID.'/stats', [], $response);
+        $this->expectHydration($response, TeamStats::class);
+
+        $this->client->getTeamStats(self::TEAM_ID);
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
-    public function testGetTeamStatsException(string $exception, int $code): void
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testGetTeamStatsThrows(string $exception, int $code): void
     {
+        $response = $this->buildResponse($code);
+
+        $this->expectRequest('GET', '/teams/'.self::TEAM_ID.'/stats', [], $response);
+        $this->expectHydration($response, Error::class);
         $this->expectException($exception);
-        $teamId = '12345';
-        $this->configureMessage('GET', '/teams/'.$teamId.'/stats');
-        $this->configureRequestAndResponse($code);
-        $this->client->getTeamStats($teamId);
+
+        $this->client->getTeamStats(self::TEAM_ID);
     }
 
     public function testGetTeamStatsEmptyId(): void
     {
         $this->expectException(InvalidArgumentException::class);
+
         $this->client->getTeamStats('');
     }
 
-    public function testRemoveTeamMemberSuccess(): void
+    public function testRemoveTeamMemberSucceeds(): void
     {
-        $teamId = '12345';
-        $userId = '98765';
-        $this->configureMessage('DELETE', '/teams/'.$teamId.'/members/'.$userId);
-        $this->configureRequestAndResponse(200);
-        $this->configureHydrator(Status::class);
-        $this->client->removeTeamMember($teamId, $userId);
+        $response = $this->buildResponse(200);
+
+        $this->expectRequest('DELETE', '/teams/'.self::TEAM_ID.'/members/'.self::USER_UUID, [], $response);
+        $this->expectHydration($response, Status::class);
+
+        $this->client->removeTeamMember(self::TEAM_ID, self::USER_UUID);
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
-    public function testRemoveTeamMemberException(string $exception, int $code): void
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testRemoveTeamMemberThrows(string $exception, int $code): void
     {
+        $response = $this->buildResponse($code);
+
+        $this->expectRequest('DELETE', '/teams/'.self::TEAM_ID.'/members/'.self::USER_UUID, [], $response);
+        $this->expectHydration($response, Error::class);
         $this->expectException($exception);
-        $teamId = '12345';
-        $userId = '98765';
-        $this->configureMessage('DELETE', '/teams/'.$teamId.'/members/'.$userId);
-        $this->configureRequestAndResponse($code);
-        $this->client->removeTeamMember($teamId, $userId);
+
+        $this->client->removeTeamMember(self::TEAM_ID, self::USER_UUID);
     }
 
     public function testRemoveTeamMemberEmpty(): void
     {
         $this->expectException(InvalidArgumentException::class);
+
         $this->client->removeTeamMember('', '');
     }
 
     public function testRemoveTeamMemberEmptyTeamId(): void
     {
         $this->expectException(InvalidArgumentException::class);
+
         $this->client->removeTeamMember('', 'user-id');
     }
 
     public function testRemoveTeamMemberEmptyUserId(): void
     {
         $this->expectException(InvalidArgumentException::class);
+
         $this->client->removeTeamMember('team-id', '');
     }
 
-    public function testGetTeamMemberSuccess(): void
+    public function testGetTeamMemberSucceeds(): void
     {
-        $teamId = '12345';
-        $userId = '98765';
-        $this->configureMessage('GET', '/teams/'.$teamId.'/members/'.$userId);
-        $this->configureRequestAndResponse(200);
-        $this->configureHydrator(TeamMember::class, TeamMember::createFromArray([]));
-        $this->client->getTeamMember($teamId, $userId);
+        $responseData = [];
+        $response = $this->buildResponse(200, $responseData);
+
+        $this->expectRequest('GET', '/teams/'.self::TEAM_ID.'/members/'.self::USER_UUID, [], $response);
+        $this->expectHydration($response, TeamMember::class);
+
+        $this->client->getTeamMember(self::TEAM_ID, self::USER_UUID);
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
-    public function testGetTeamMemberException(string $exception, int $code): void
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testGetTeamMemberThrows(string $exception, int $code): void
     {
+        $response = $this->buildResponse($code);
+
+        $this->expectRequest('GET', '/teams/'.self::TEAM_ID.'/members/'.self::USER_UUID, [], $response);
+        $this->expectHydration($response, Error::class);
         $this->expectException($exception);
-        $teamId = '12345';
-        $userId = '98765';
-        $this->configureMessage('GET', '/teams/'.$teamId.'/members/'.$userId);
-        $this->configureRequestAndResponse($code);
-        $this->client->getTeamMember($teamId, $userId);
+
+        $this->client->getTeamMember(self::TEAM_ID, self::USER_UUID);
     }
 
     public function testGetTeamMemberEmpty(): void
     {
         $this->expectException(InvalidArgumentException::class);
+
         $this->client->getTeamMember('', '');
     }
 
     public function testGetTeamMemberEmptyTeamId(): void
     {
         $this->expectException(InvalidArgumentException::class);
+
         $this->client->getTeamMember('', 'user-id');
     }
 
     public function testGetTeamMemberEmptyUserId(): void
     {
         $this->expectException(InvalidArgumentException::class);
+
         $this->client->getTeamMember('team-id', '');
     }
 
-    public function testAddTeamMemberSuccess(): void
+    public function testAddTeamMemberSucceeds(): void
     {
-        $teamId = '12345';
-        $userId = '98765';
         $roles = 'role1, role2';
+        $requestData = ['team_id' => self::TEAM_ID, 'user_id' => self::USER_UUID, 'roles' => $roles];
+        $response = $this->buildResponse(201);
 
-        $data = [
-            'team_id' => $teamId,
-            'user_id' => $userId,
-            'roles' => $roles,
-        ];
-        $this->configureMessage('POST', '/teams/'.$teamId.'/members', [], Json::encode($data));
-        $this->configureRequestAndResponse(201);
-        $this->client->addTeamMember($teamId, $userId, $roles);
+        $this->expectRequest('POST', '/teams/'.self::TEAM_ID.'/members', $requestData, $response);
+        $this->expectHydration($response, TeamMember::class);
+
+        $this->client->addTeamMember(self::TEAM_ID, self::USER_UUID, $roles);
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
-    public function testAddTeamMemberException(string $exception, int $code): void
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testAddTeamMemberThrows(string $exception, int $code): void
     {
-        $this->expectException($exception);
-        $teamId = '12345';
-        $userId = '98765';
         $roles = 'role1, role2';
+        $requestData = ['team_id' => self::TEAM_ID, 'user_id' => self::USER_UUID, 'roles' => $roles];
+        $response = $this->buildResponse($code);
 
-        $data = [
-            'team_id' => $teamId,
-            'user_id' => $userId,
-            'roles' => $roles,
-        ];
-        $this->configureMessage('POST', '/teams/'.$teamId.'/members', [], Json::encode($data));
-        $this->configureRequestAndResponse($code);
-        $this->client->addTeamMember($teamId, $userId, $roles);
+        $this->expectRequest('POST', '/teams/'.self::TEAM_ID.'/members', $requestData, $response);
+        $this->expectHydration($response, Error::class);
+        $this->expectException($exception);
+
+        $this->client->addTeamMember(self::TEAM_ID, self::USER_UUID, $roles);
     }
 
     public function testAddTeamMemberEmpty(): void
     {
         $this->expectException(InvalidArgumentException::class);
+
         $this->client->addTeamMember('', '');
     }
 
     public function testAddTeamMemberEmptyTeamId(): void
     {
         $this->expectException(InvalidArgumentException::class);
+
         $this->client->addTeamMember('', 'user-id');
     }
 
     public function testAddTeamMemberEmptyUserId(): void
     {
         $this->expectException(InvalidArgumentException::class);
+
         $this->client->addTeamMember('team-id', '');
     }
 
-    public function testGetTeamMembersSuccess(): void
+    public function testGetTeamMembersSucceeds(): void
     {
-        $teamId = '12345';
-        $this->configureMessage(
-            'GET',
-            '/teams/'.$teamId.'/members'.
-            '?per_page=1&page=2'
-        );
-        $this->configureRequestAndResponse(200);
-        $this->configureHydrator(TeamMembers::class, TeamMembers::createFromArray([]));
-        $this->client->getTeamMembers($teamId, [
-            'per_page' => 1,
-            'page' => 2,
-        ]);
+        $response = $this->buildResponse(200);
+
+        $this->expectRequest('GET', '/teams/'.self::TEAM_ID.'/members?per_page=1&page=2', [], $response);
+        $this->expectHydration($response, TeamMembers::class);
+
+        $this->client->getTeamMembers(self::TEAM_ID, ['per_page' => 1, 'page' => 2]);
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
-    public function testGetTeamMembersException(string $exception, int $code): void
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testGetTeamMembersThrows(string $exception, int $code): void
     {
+        $response = $this->buildResponse($code);
+
+        $this->expectRequest('GET', '/teams/'.self::TEAM_ID.'/members', [], $response);
+        $this->expectHydration($response, Error::class);
         $this->expectException($exception);
-        $teamId = '12345';
-        $this->configureMessage('GET', '/teams/'.$teamId.'/members');
-        $this->configureRequestAndResponse($code);
-        $this->client->getTeamMembers($teamId);
+
+        $this->client->getTeamMembers(self::TEAM_ID);
     }
 
     public function testGetTeamMembersEmptyId(): void
     {
         $this->expectException(InvalidArgumentException::class);
+
         $this->client->getTeamMembers('');
     }
 
-    public function testGetTeamPublicChannelsSuccess(): void
+    public function testGetTeamPublicChannelsSucceeds(): void
     {
-        $teamId = '12345';
-        $this->configureMessage(
+        $response = $this->buildResponse(200);
+
+        $this->expectRequest(
             'GET',
-            '/teams/'.$teamId.'/channels'.
-            '?per_page=1&page=2'
+            '/teams/'.self::TEAM_ID.'/channels?per_page=1&page=2',
+            [],
+            $response
         );
-        $this->configureRequestAndResponse(200);
-        $this->configureHydrator(Channels::class);
-        $this->client->getTeamPublicChannels($teamId, [
+        $this->expectHydration($response, Channels::class);
+
+        $this->client->getTeamPublicChannels(self::TEAM_ID, [
             'per_page' => 1,
             'page' => 2,
         ]);
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
-    public function testGetTeamPublicChannelsException(string $exception, int $code): void
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testGetTeamPublicChannelsThrows(string $exception, int $code): void
     {
+        $response = $this->buildResponse($code);
+
+        $this->expectRequest('GET', '/teams/'.self::TEAM_ID.'/channels', [], $response);
+        $this->expectHydration($response, Error::class);
         $this->expectException($exception);
-        $teamId = '12345';
-        $this->configureMessage('GET', '/teams/'.$teamId.'/channels');
-        $this->configureRequestAndResponse($code);
-        $this->client->getTeamPublicChannels($teamId);
+
+        $this->client->getTeamPublicChannels(self::TEAM_ID);
     }
 
     public function testGetTeamPublicChannelsEmptyId(): void
     {
         $this->expectException(InvalidArgumentException::class);
+
         $this->client->getTeamPublicChannels('');
     }
 
-    public function testGetTeamsSuccess(): void
+    public function testGetTeamsSucceeds(): void
     {
-        $this->configureMessage(
-            'GET',
-            '/teams'.
-            '?per_page=1&page=2'
-        );
-        $this->configureRequestAndResponse(200);
-        $this->configureHydrator(Teams::class);
-        $this->client->getTeams([
-            'per_page' => 1,
-            'page' => 2,
-        ]);
+        $response = $this->buildResponse(200);
+
+        $this->expectRequest('GET', '/teams?per_page=1&page=2', [], $response);
+        $this->expectHydration($response, Teams::class);
+
+        $this->client->getTeams(['per_page' => 1, 'page' => 2]);
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
-    public function testGetTeamsException(string $exception, int $code): void
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testGetTeamsThrows(string $exception, int $code): void
     {
+        $response = $this->buildResponse($code);
+
+        $this->expectRequest('GET', '/teams', [], $response);
+        $this->expectHydration($response, Error::class);
         $this->expectException($exception);
-        $this->configureMessage('GET', '/teams');
-        $this->configureRequestAndResponse($code);
+
         $this->client->getTeams();
     }
 }

@@ -18,54 +18,20 @@ class MattermostAuthentication implements Authentication
 {
     private const AUTHORIZATION_URL = '/users/login';
 
-    /**
-     * @var ClientInterface
-     */
-    private $client;
-
-    /**
-     * @var string
-     */
-    private $loginId;
-
-    /**
-     * @var string string
-     */
-    private $password;
-
-    /**
-     * @var string|null
-     */
-    private $token;
-
-    /**
-     * @var RequestFactoryInterface
-     */
-    private $requestFactory;
-
-    /**
-     * @var StreamFactoryInterface
-     */
-    private $streamFactory;
+    private ?string $token = null;
 
     public function __construct(
-        string $loginId,
-        string $password,
-        ClientInterface $client,
-        RequestFactoryInterface $requestFactory,
-        StreamFactoryInterface $streamFactory
-    ) {
-        $this->loginId = $loginId;
-        $this->password = $password;
-        $this->requestFactory = $requestFactory;
-        $this->streamFactory = $streamFactory;
-        $this->client = $client;
-    }
+        private readonly string $loginId,
+        private readonly string $password,
+        private readonly ClientInterface $client,
+        private readonly RequestFactoryInterface $requestFactory,
+        private readonly StreamFactoryInterface $streamFactory
+    ) {}
 
     public function authenticate(RequestInterface $request): RequestInterface
     {
-        if (!$this->token) {
-            $this->getToken();
+        if (null === $this->token) {
+            $this->token = $this->obtainTokenByLogin();
         }
 
         $header = sprintf('Bearer %s', $this->token);
@@ -73,7 +39,7 @@ class MattermostAuthentication implements Authentication
         return $request->withHeader('Authorization', $header);
     }
 
-    private function getToken(): void
+    private function obtainTokenByLogin(): string
     {
         $credentials = [
             'login_id' => $this->loginId,
@@ -82,24 +48,23 @@ class MattermostAuthentication implements Authentication
 
         $request = $this->requestFactory->createRequest('POST', self::AUTHORIZATION_URL)
             ->withBody($this->streamFactory->createStream(
-                Json::encode($credentials, JSON_FORCE_OBJECT)
+                json_encode($credentials, \JSON_FORCE_OBJECT | \JSON_THROW_ON_ERROR)
             ))
         ;
 
         $response = $this->client->sendRequest($request);
 
         // We got a non-json response, can not continue!
-        if (0 !== strpos($response->getHeaderLine('Content-Type'), 'application/json')) {
+        if (!str_starts_with($response->getHeaderLine('Content-Type'), 'application/json')) {
             throw new ApiException($response);
         }
 
         switch ($response->getStatusCode()) {
             case 200:
-                $this->token = $response->getHeaderLine('Token');
+                return $response->getHeaderLine('Token');
 
-                return;
             case 401:
-                $contents = Json::decode((string) $response->getBody(), true);
+                $contents = json_decode((string) $response->getBody(), true, 512, \JSON_THROW_ON_ERROR);
                 $error = Error::createFromArray($contents);
                 throw new LoginFailedException($response, $error);
         }

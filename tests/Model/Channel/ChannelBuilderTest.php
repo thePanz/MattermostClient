@@ -4,40 +4,41 @@ declare(strict_types=1);
 
 namespace Pnz\MattermostClient\Tests\Model\Channel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Pnz\MattermostClient\Exception\InvalidArgumentException;
 use Pnz\MattermostClient\Model\Channel\ChannelBuilder;
-use Pnz\MattermostClient\Model\ModelBuilder;
+use Pnz\MattermostClient\Model\ModelBuildTargetEnum;
 
 /**
- * @coversDefaultClass \Pnz\MattermostClient\Model\Channel\ChannelBuilder
+ * @internal
  */
-class ChannelBuilderTest extends TestCase
+#[CoversClass(ChannelBuilder::class)]
+final class ChannelBuilderTest extends TestCase
 {
-    /**
-     * @var ChannelBuilder
-     */
-    private $builder;
+    private ChannelBuilder $builder;
 
     protected function setUp(): void
     {
         $this->builder = new ChannelBuilder();
     }
 
-    public function provideBuildTypesForFailure(): iterable
+    /**
+     * @return iterable<string, array{ModelBuildTargetEnum, string}>
+     */
+    public static function provideChannelBuilderNoParamsCases(): iterable
     {
-        yield 'create' => [ChannelBuilder::BUILD_FOR_CREATE, 'Required parameters missing: team_id, name, display_name, type'];
-        yield 'update' => [ChannelBuilder::BUILD_FOR_PATCH, 'Required parameters missing: id'];
+        yield 'create' => [ModelBuildTargetEnum::BUILD_FOR_CREATE, 'Required parameters missing: team_id, name, display_name, type'];
+        yield 'update' => [ModelBuildTargetEnum::BUILD_FOR_PATCH, 'Required parameters missing: id'];
     }
 
-    /**
-     * @dataProvider provideBuildTypesForFailure
-     */
-    public function testChannelBuilderNoParams(string $buildType, string $expectedFailureMessage): void
+    #[DataProvider('provideChannelBuilderNoParamsCases')]
+    public function testChannelBuilderNoParams(ModelBuildTargetEnum $target, string $expectedFailureMessage): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage($expectedFailureMessage);
-        $this->builder->build($buildType);
+        $this->builder->build($target);
     }
 
     public function testChannelBuilderMinimal(): void
@@ -83,6 +84,6 @@ class ChannelBuilderTest extends TestCase
     public function testChannelBuilderUpdate(): void
     {
         $expected = [];
-        $this->assertSame($expected, $this->builder->build(ModelBuilder::BUILD_FOR_UPDATE));
+        $this->assertSame($expected, $this->builder->build(ModelBuildTargetEnum::BUILD_FOR_UPDATE));
     }
 }

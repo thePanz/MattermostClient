@@ -4,17 +4,21 @@ declare(strict_types=1);
 
 namespace Pnz\MattermostClient\Model;
 
-abstract class ModelCollectionOrdered extends ModelCollection
+/**
+ * @template T
+ *
+ * @extends AbstractCollection<T>
+ */
+abstract class ModelCollectionOrdered extends AbstractCollection
 {
     /**
      * @var string[]
      */
-    protected $order = [];
+    protected array $order = [];
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function createFromArray(array $data)
+    final private function __construct() {}
+
+    public static function createFromArray(array $data): static
     {
         $collection = new static();
 
@@ -26,18 +30,12 @@ abstract class ModelCollectionOrdered extends ModelCollection
         return $collection;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function current()
+    public function current(): mixed
     {
         return $this->items[$this->order[$this->key]];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function key()
+    public function key(): string
     {
         return $this->order[$this->key];
     }

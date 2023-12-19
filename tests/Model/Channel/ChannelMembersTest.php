@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace Pnz\MattermostClient\Tests\Model\Channel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Pnz\MattermostClient\Model\Channel\ChannelMembers;
 
 /**
- * @coversDefaultClass \Pnz\MattermostClient\Model\Channel\ChannelMembers
+ * @internal
  */
-class ChannelMembersTest extends TestCase
+#[CoversClass(ChannelMembers::class)]
+final class ChannelMembersTest extends TestCase
 {
     public function testChannelCreation(): void
     {
@@ -19,8 +21,8 @@ class ChannelMembersTest extends TestCase
             'user_id' => 'user-id',
             'msg_count' => 10,
             'roles' => 'role1, role2',
-            'last_update_at' => 1234567890,
-            'last_viewed_at' => 1234567891,
+            'last_update_at' => 1_234_567_890,
+            'last_viewed_at' => 1_234_567_891,
             'mention_count' => 30,
             'notify_props' => [],
         ];

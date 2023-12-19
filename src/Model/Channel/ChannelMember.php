@@ -38,6 +38,9 @@ final class ChannelMember extends Model
         return $this->data['mention_count'];
     }
 
+    /**
+     * @return array<mixed>|null
+     */
     public function getNotifyProps(): ?array
     {
         return $this->data['notify_props'];

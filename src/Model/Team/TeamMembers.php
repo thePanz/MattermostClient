@@ -6,12 +6,12 @@ namespace Pnz\MattermostClient\Model\Team;
 
 use Pnz\MattermostClient\Model\ModelCollection;
 
+/**
+ * @extends ModelCollection<TeamMember>
+ */
 final class TeamMembers extends ModelCollection
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected function createItem(array $data)
+    protected function createItem(array $data): TeamMember
     {
         return TeamMember::createFromArray($data);
     }

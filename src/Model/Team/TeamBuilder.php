@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Pnz\MattermostClient\Model\Team;
 
 use Pnz\MattermostClient\Model\ModelBuilder;
+use Pnz\MattermostClient\Model\ModelBuildTargetEnum;
 
 class TeamBuilder extends ModelBuilder
 {
@@ -38,13 +39,11 @@ class TeamBuilder extends ModelBuilder
         return $this;
     }
 
-    protected function getRequiredFields(string $buildType = self::BUILD_FOR_CREATE): array
+    protected function getRequiredFields(ModelBuildTargetEnum $target = ModelBuildTargetEnum::BUILD_FOR_CREATE): array
     {
-        switch ($buildType) {
-            case self::BUILD_FOR_CREATE:
-                return ['type', 'name', 'display_name'];
-            default:
-                return [];
-        }
+        return match ($target) {
+            ModelBuildTargetEnum::BUILD_FOR_CREATE => ['type', 'name', 'display_name'],
+            default => [],
+        };
     }
 }

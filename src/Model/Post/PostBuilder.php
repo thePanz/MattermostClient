@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Pnz\MattermostClient\Model\Post;
 
 use Pnz\MattermostClient\Model\ModelBuilder;
+use Pnz\MattermostClient\Model\ModelBuildTargetEnum;
 
 class PostBuilder extends ModelBuilder
 {
@@ -54,13 +55,11 @@ class PostBuilder extends ModelBuilder
         return $this;
     }
 
-    protected function getRequiredFields(string $buildType = self::BUILD_FOR_CREATE): array
+    protected function getRequiredFields(ModelBuildTargetEnum $target = ModelBuildTargetEnum::BUILD_FOR_CREATE): array
     {
-        switch ($buildType) {
-            case self::BUILD_FOR_CREATE:
-                return ['channel_id', 'message'];
-            default:
-                return [];
-        }
+        return match ($target) {
+            ModelBuildTargetEnum::BUILD_FOR_CREATE => ['channel_id', 'message'],
+            default => [],
+        };
     }
 }

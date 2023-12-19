@@ -103,9 +103,6 @@ class FileInfo extends Model
         return $this->data['has_preview_image'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected static function getFields(): array
     {
         return [

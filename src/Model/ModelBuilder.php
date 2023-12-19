@@ -8,15 +8,15 @@ use Pnz\MattermostClient\Exception\InvalidArgumentException;
 
 abstract class ModelBuilder implements ModelBuilderInterface
 {
-    public const BUILD_FOR_CREATE = 'create';
-    public const BUILD_FOR_UPDATE = 'update';
-    public const BUILD_FOR_PATCH = 'patch';
+    /** @var array<string, mixed> */
+    protected array $params = [];
 
-    protected $params = [];
-
-    public function build(string $buildType = self::BUILD_FOR_CREATE): array
+    /**
+     * @return array<string, mixed>
+     */
+    public function build(ModelBuildTargetEnum $buildTarget = ModelBuildTargetEnum::BUILD_FOR_CREATE): array
     {
-        $this->validate($buildType);
+        $this->validate($buildTarget);
 
         return $this->params;
     }
@@ -24,18 +24,16 @@ abstract class ModelBuilder implements ModelBuilderInterface
     /**
      * Defined the required fields for the given build type.
      *
-     * @param string $buildType the build type see BUILD_FOR_* consts
+     * @return list<string>
      */
-    abstract protected function getRequiredFields(string $buildType = self::BUILD_FOR_CREATE): array;
+    abstract protected function getRequiredFields(ModelBuildTargetEnum $target = ModelBuildTargetEnum::BUILD_FOR_CREATE): array;
 
     /**
      * Validate the parameters.
-     *
-     * @param string $buildType the build type to validate the parameters
      */
-    protected function validate(string $buildType = self::BUILD_FOR_CREATE): void
+    protected function validate(ModelBuildTargetEnum $buildTarget = ModelBuildTargetEnum::BUILD_FOR_CREATE): void
     {
-        $requiredFields = $this->getRequiredFields($buildType);
+        $requiredFields = $this->getRequiredFields($buildTarget);
 
         if (empty($requiredFields)) {
             return;

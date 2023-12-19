@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Pnz\MattermostClient\Model;
 
-/**
- * @author Tobias Nyholm <tobias.nyholm@gmail.com>
- */
 interface CreatableFromArray
 {
     /**
      * Create an API response object from the HTTP response from the API server.
+     *
+     * @param mixed[] $data
      */
-    public static function createFromArray(array $data);
+    public static function createFromArray(array $data): static;
 }

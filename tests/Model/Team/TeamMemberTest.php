@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace Pnz\MattermostClient\Tests\Model\Team;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Pnz\MattermostClient\Model\Team\TeamMember;
 
 /**
- * @coversDefaultClass \Pnz\MattermostClient\Model\Team\TeamMember
+ * @internal
  */
-class TeamMemberTest extends TestCase
+#[CoversClass(TeamMember::class)]
+final class TeamMemberTest extends TestCase
 {
     public function testTeamCreationEmpty(): void
     {
@@ -30,7 +32,7 @@ class TeamMemberTest extends TestCase
             'team_id' => 'team-id',
             'user_id' => 'user-id',
             'roles' => 'Roles',
-            'create_at' => 1234567890,
+            'create_at' => 1_234_567_890,
         ];
 
         $teamMember = TeamMember::createFromArray($data);

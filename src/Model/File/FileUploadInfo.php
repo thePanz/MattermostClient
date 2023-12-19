@@ -8,12 +8,12 @@ use Pnz\MattermostClient\Model\Model;
 
 class FileUploadInfo extends Model
 {
-    protected function __construct(array $data)
+    protected static function prepareData(array $data): array
     {
-        parent::__construct([
+        return [
             'client_ids' => $data['client_ids'],
             'file_infos' => FileInfos::createFromArray($data['file_infos']),
-        ]);
+        ];
     }
 
     public function getFileInfos(): FileInfos
@@ -29,9 +29,6 @@ class FileUploadInfo extends Model
         return $this->data['client_ids'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected static function getFields(): array
     {
         return [

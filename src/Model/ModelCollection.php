@@ -4,25 +4,22 @@ declare(strict_types=1);
 
 namespace Pnz\MattermostClient\Model;
 
-abstract class ModelCollection implements CreatableFromArray, \Countable, \Iterator
+/**
+ * @template T
+ *
+ * @extends AbstractCollection<T>
+ */
+abstract class ModelCollection extends AbstractCollection
 {
-    /**
-     * @var array
-     */
-    protected $items = [];
+    protected array $items = [];
+    protected int $key = 0;
+
+    final private function __construct() {}
 
     /**
-     * Current iterator key.
-     *
-     * @var int
+     * @param list<array<mixed>> $data
      */
-    protected $key = 0;
-
-    protected function __construct()
-    {
-    }
-
-    public static function createFromArray(array $data)
+    public static function createFromArray(array $data): static
     {
         $collection = new static();
         foreach ($data as $itemData) {
@@ -31,41 +28,4 @@ abstract class ModelCollection implements CreatableFromArray, \Countable, \Itera
 
         return $collection;
     }
-
-    public function getItems(): array
-    {
-        return $this->items;
-    }
-
-    public function count(): int
-    {
-        return \count($this->items);
-    }
-
-    public function key()
-    {
-        return $this->key;
-    }
-
-    public function next(): void
-    {
-        ++$this->key;
-    }
-
-    public function valid(): bool
-    {
-        return $this->key < $this->count();
-    }
-
-    public function current()
-    {
-        return $this->items[$this->key];
-    }
-
-    public function rewind(): void
-    {
-        $this->key = 0;
-    }
-
-    abstract protected function createItem(array $data);
 }

@@ -31,9 +31,6 @@ final class Error extends Model
         return $this->data['request_id'] ?? '';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected static function getFields(): array
     {
         return ['id', 'message', 'status_code', 'request_id', 'detailed_error'];

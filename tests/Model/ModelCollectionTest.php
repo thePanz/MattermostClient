@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Pnz\MattermostClient\Tests\Model;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
+use Pnz\MattermostClient\Model\ModelCollection;
 
 /**
- * @coversDefaultClass \Pnz\MattermostClient\Model\ModelCollection
+ * @internal
  */
-class ModelCollectionTest extends TestCase
+#[CoversClass(ModelCollection::class)]
+final class ModelCollectionTest extends TestCase
 {
     public function testCreateModelCollection(): void
     {
@@ -18,18 +21,17 @@ class ModelCollectionTest extends TestCase
             ['element1'],
         ];
 
-        $models = WrappedModelCollection::createFromArray($data);
+        $models = MockModelCollection::createFromArray($data);
 
         $this->assertCount(2, $models);
-        $this->assertSame($data, $models->getItems());
 
         $this->assertSame(0, $models->key());
-        $this->assertSame(['element0'], $models->current());
+        $this->assertSame(['element0'], $models->current()->data);
         $models->next();
         $this->assertTrue($models->valid());
 
         $this->assertSame(1, $models->key());
-        $this->assertSame(['element1'], $models->current());
+        $this->assertSame(['element1'], $models->current()->data);
 
         $models->next();
         $this->assertFalse($models->valid());

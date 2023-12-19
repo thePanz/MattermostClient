@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace Pnz\MattermostClient\Tests\Model\Post;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Pnz\MattermostClient\Model\Post\Post;
 
 /**
- * @coversDefaultClass \Pnz\MattermostClient\Model\Post\Post
+ * @internal
  */
-class PostTest extends TestCase
+#[CoversClass(Post::class)]
+final class PostTest extends TestCase
 {
     public function testPostCreationEmpty(): void
     {

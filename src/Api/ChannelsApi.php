@@ -11,16 +11,13 @@ use Pnz\MattermostClient\Model\Channel\ChannelMembers;
 use Pnz\MattermostClient\Model\Channel\ChannelStats;
 use Pnz\MattermostClient\Model\Post\Posts;
 use Pnz\MattermostClient\Model\Status;
-use Psr\Http\Message\ResponseInterface;
 
 final class ChannelsApi extends HttpApi
 {
     /**
      * Returns an channel by its ID.
-     *
-     * @return Channel|ResponseInterface
      */
-    public function getChannelById(string $channelId)
+    public function getChannelById(string $channelId): Channel
     {
         if (empty($channelId)) {
             throw new InvalidArgumentException('Id can not be empty');
@@ -34,12 +31,12 @@ final class ChannelsApi extends HttpApi
     /**
      * Returns a channel given the team ID and the channel name.
      *
-     * @param array $parameters Associative array of additional parameters for the request:
-     *                          - 'include_deleted'=>'true': allow to fetch deleted channels too
+     * @param array<string, int|string> $parameters Associative array of additional parameters for the request
      *
-     * @return Channel|ResponseInterface
+     * Example:
+     *  - 'include_deleted'=>'true': allow to fetch deleted channels too
      */
-    public function getChannelByName(string $teamId, string $channelName, array $parameters = [])
+    public function getChannelByName(string $teamId, string $channelName, array $parameters = []): Channel
     {
         if (empty($teamId) || empty($channelName)) {
             throw new InvalidArgumentException('Team ID and channel name can not be empty');
@@ -55,10 +52,8 @@ final class ChannelsApi extends HttpApi
 
     /**
      * Returns an channel by the team name and the chanel name.
-     *
-     * @return Channel|ResponseInterface
      */
-    public function getChannelByNameAndTeamName(string $teamName, string $channelName)
+    public function getChannelByNameAndTeamName(string $teamName, string $channelName): Channel
     {
         if (empty($teamName) || empty($channelName)) {
             throw new InvalidArgumentException('Team ID and channel name can not be empty');
@@ -71,10 +66,8 @@ final class ChannelsApi extends HttpApi
 
     /**
      * Retrieve the channel statistics of the given channelId.
-     *
-     * @return ChannelStats|ResponseInterface
      */
-    public function getChannelStats(string $channelId)
+    public function getChannelStats(string $channelId): ChannelStats
     {
         if (empty($channelId)) {
             throw new InvalidArgumentException('Channel ID can not be empty');
@@ -88,9 +81,14 @@ final class ChannelsApi extends HttpApi
     /**
      * Create a Channel. Required parameters: 'team_id', 'name', 'display_name' and 'type'.
      *
-     * @return Channel|ResponseInterface
+     * @param array{
+     *     team_id: string,
+     *     name: string,
+     *     display_name: string,
+     *     type: string
+     * } $params
      */
-    public function createChannel(array $params)
+    public function createChannel(array $params): Channel
     {
         $response = $this->httpPost('/channels', $params);
 
@@ -99,10 +97,8 @@ final class ChannelsApi extends HttpApi
 
     /**
      * Creates and returns a direct channel between two users.
-     *
-     * @return Channel|ResponseInterface
      */
-    public function createDirectChannel(string $userId1, string $userId2)
+    public function createDirectChannel(string $userId1, string $userId2): Channel
     {
         if (empty($userId1) || empty($userId2)) {
             throw new InvalidArgumentException('Two user IDs must be provided');
@@ -118,12 +114,10 @@ final class ChannelsApi extends HttpApi
      *
      * @see https://api.mattermost.com/v4/#tag/channels%2Fpaths%2F~1channels~1%7Bchannel_id%7D%2Fdelete
      *
-     * @param array $params Query parameters
-     *  - permanent => "true"|"false" (Mattermost >= 5.28)
-     *
-     * @return Status|ResponseInterface
+     * @param array<string, int|string> $params Query parameters
+     *                                          - permanent => "true"|"false" (Mattermost >= 5.28)
      */
-    public function deleteChannel(string $channelId, array $params = [])
+    public function deleteChannel(string $channelId, array $params = []): Status
     {
         if (empty($channelId)) {
             throw new InvalidArgumentException('Channel ID can not be empty');
@@ -138,10 +132,8 @@ final class ChannelsApi extends HttpApi
      * Restore channel from the provided channel id string.
      *
      * @see https://api.mattermost.com/v4/#tag/channels%2Fpaths%2F~1channels~1%7Bchannel_id%7D~1restore%2Fpost
-     *
-     * @return Channel|ResponseInterface
      */
-    public function restoreChannel(string $channelId)
+    public function restoreChannel(string $channelId): Channel
     {
         if (empty($channelId)) {
             throw new InvalidArgumentException('ChannelId can not be empty');
@@ -155,17 +147,17 @@ final class ChannelsApi extends HttpApi
     /**
      * Patch a channel.
      *
-     * @see https://api.mattermost.com/v4/#tag/channels%2Fpaths%2F~1channels~1%7Bchannel_id%7D~1patch%2Fput
+     * @param array<mixed> $data
      *
-     * @return Channel|ResponseInterface
+     * @see https://api.mattermost.com/v4/#tag/channels%2Fpaths%2F~1channels~1%7Bchannel_id%7D~1patch%2Fput
      */
-    public function patchChannel(string $channelId, array $params)
+    public function patchChannel(string $channelId, array $data): Channel
     {
         if (empty($channelId)) {
             throw new InvalidArgumentException('ChannelId can not be empty');
         }
 
-        $response = $this->httpPut(sprintf('/channels/%s/patch', $channelId), $params);
+        $response = $this->httpPut(sprintf('/channels/%s/patch', $channelId), $data);
 
         return $this->handleResponse($response, Channel::class);
     }
@@ -173,17 +165,17 @@ final class ChannelsApi extends HttpApi
     /**
      * Update a channel.
      *
-     * @see https://api.mattermost.com/v4/#tag/channels%2Fpaths%2F~1channels~1%7Bchannel_id%7D%2Fput
+     * @param array<mixed> $data
      *
-     * @return Channel|ResponseInterface
+     * @see https://api.mattermost.com/v4/#tag/channels%2Fpaths%2F~1channels~1%7Bchannel_id%7D%2Fput
      */
-    public function updateChannel(string $channelId, array $params)
+    public function updateChannel(string $channelId, array $data): Channel
     {
         if (empty($channelId)) {
             throw new InvalidArgumentException('ChannelId can not be empty');
         }
 
-        $response = $this->httpPut(sprintf('/channels/%s', $channelId), $params);
+        $response = $this->httpPut(sprintf('/channels/%s', $channelId), $data);
 
         return $this->handleResponse($response, Channel::class);
     }
@@ -192,10 +184,8 @@ final class ChannelsApi extends HttpApi
      * Add a user to a channel.
      *
      * @see https://api.mattermost.com/v4/#tag/channels%2Fpaths%2F~1channels~1%7Bchannel_id%7D~1members%2Fpost
-     *
-     * @return ChannelMember|ResponseInterface
      */
-    public function addChannelMember(string $channelId, string $userId, string $postRootId = '')
+    public function addChannelMember(string $channelId, string $userId, string $postRootId = ''): ChannelMember
     {
         if (empty($channelId) || empty($userId)) {
             throw new InvalidArgumentException('Channel ID or user ID can not be empty');
@@ -214,10 +204,8 @@ final class ChannelsApi extends HttpApi
 
     /**
      * Remove a user from a channel.
-     *
-     * @return Status|ResponseInterface
      */
-    public function removeChannelMember(string $channelId, string $userId)
+    public function removeChannelMember(string $channelId, string $userId): Status
     {
         if (empty($channelId) || empty($userId)) {
             throw new InvalidArgumentException('Channel ID or user ID can not be empty');
@@ -231,11 +219,9 @@ final class ChannelsApi extends HttpApi
     /**
      * Get members of a channel.
      *
-     * @param array $params The listing params, 'page', 'per_page'
-     *
-     * @return ChannelMembers|ResponseInterface
+     * @param array<string, int|string> $params The listing params, 'page', 'per_page'
      */
-    public function getChannelMembers(string $channelId, array $params = [])
+    public function getChannelMembers(string $channelId, array $params = []): ChannelMembers
     {
         if (empty($channelId)) {
             throw new InvalidArgumentException('ChannelID can not be empty');
@@ -249,13 +235,11 @@ final class ChannelsApi extends HttpApi
     /**
      * Get the posts for a channel.
      *
-     * @param array $params The listing params: 'page', 'per_page', 'before', 'after', 'since'
+     * @param array<string, mixed> $params The listing params: 'page', 'per_page', 'before', 'after', 'since'
      *
      * @see: https://api.mattermost.com/v4/#tag/posts%2Fpaths%2F~1channels~1%7Bchannel_id%7D~1posts%2Fget
-     *
-     * @return Posts|ResponseInterface
      */
-    public function getChannelPosts(string $channelId, array $params = [])
+    public function getChannelPosts(string $channelId, array $params = []): Posts
     {
         if (empty($channelId)) {
             throw new InvalidArgumentException('ChannelID can not be empty');

@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace Pnz\MattermostClient\Tests\Model;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Pnz\MattermostClient\Model\Status;
 
 /**
- * @coversDefaultClass \Pnz\MattermostClient\Model\Status
+ * @internal
  */
-class StatusTest extends TestCase
+#[CoversClass(Status::class)]
+final class StatusTest extends TestCase
 {
     public function testStatusCreationEmpty(): void
     {

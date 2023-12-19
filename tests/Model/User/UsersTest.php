@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace Pnz\MattermostClient\Tests\Model\User;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Pnz\MattermostClient\Model\User\Users;
 
 /**
- * @coversDefaultClass \Pnz\MattermostClient\Model\User\Users
+ * @internal
  */
-class UsersTest extends TestCase
+#[CoversClass(Users::class)]
+final class UsersTest extends TestCase
 {
     public function testUsersCreation(): void
     {
@@ -26,8 +28,8 @@ class UsersTest extends TestCase
             'auth_data' => 'Data for: auth_data',
             'email_verified' => false,
             'nickname' => 'Data for: nickname',
-            'create_at' => 1234567890,
-            'update_at' => 1234567891,
+            'create_at' => 1_234_567_890,
+            'update_at' => 1_234_567_891,
         ];
 
         $users = Users::createFromArray([$data]);

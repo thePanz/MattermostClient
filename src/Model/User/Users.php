@@ -6,12 +6,12 @@ namespace Pnz\MattermostClient\Model\User;
 
 use Pnz\MattermostClient\Model\ModelCollection;
 
+/**
+ * @extends ModelCollection<User>
+ */
 final class Users extends ModelCollection
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected function createItem(array $data)
+    protected function createItem(array $data): User
     {
         return User::createFromArray($data);
     }

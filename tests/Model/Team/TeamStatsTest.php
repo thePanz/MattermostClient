@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace Pnz\MattermostClient\Tests\Model\Team;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Pnz\MattermostClient\Model\Team\TeamStats;
 
 /**
- * @coversDefaultClass \Pnz\MattermostClient\Model\Team\TeamStats
+ * @internal
  */
-class TeamStatsTest extends TestCase
+#[CoversClass(TeamStats::class)]
+final class TeamStatsTest extends TestCase
 {
     public function testTeamStatsCreationEmpty(): void
     {

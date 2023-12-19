@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Pnz\MattermostClient\Model\Channel;
 
 use Pnz\MattermostClient\Model\ModelBuilder;
+use Pnz\MattermostClient\Model\ModelBuildTargetEnum;
 
 class ChannelBuilder extends ModelBuilder
 {
@@ -50,22 +51,17 @@ class ChannelBuilder extends ModelBuilder
         return $this;
     }
 
-    protected function getRequiredFields(string $buildType = self::BUILD_FOR_CREATE): array
+    protected function getRequiredFields(ModelBuildTargetEnum $buildType = ModelBuildTargetEnum::BUILD_FOR_CREATE): array
     {
-        switch ($buildType) {
-            case self::BUILD_FOR_CREATE:
-                return [
-                    'team_id',
-                    'name',
-                    'display_name',
-                    'type',
-                ];
-
-            case self::BUILD_FOR_PATCH:
-                return ['id'];
-            case self::BUILD_FOR_UPDATE:
-            default:
-                return [];
-        }
+        return match ($buildType) {
+            ModelBuildTargetEnum::BUILD_FOR_CREATE => [
+                'team_id',
+                'name',
+                'display_name',
+                'type',
+            ],
+            ModelBuildTargetEnum::BUILD_FOR_PATCH => ['id'],
+            default => [],
+        };
     }
 }

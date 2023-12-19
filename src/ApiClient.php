@@ -4,114 +4,93 @@ declare(strict_types=1);
 
 namespace Pnz\MattermostClient;
 
-use Http\Client\HttpClient;
-use Http\Discovery\HttpClientDiscovery;
-use Http\Discovery\MessageFactoryDiscovery;
-use Http\Message\RequestFactory;
+use Http\Discovery\Psr17FactoryDiscovery;
+use Http\Discovery\Psr18ClientDiscovery;
 use Pnz\MattermostClient\Api\ChannelsApi;
 use Pnz\MattermostClient\Api\FilesApi;
 use Pnz\MattermostClient\Api\PostsApi;
 use Pnz\MattermostClient\Api\TeamsApi;
 use Pnz\MattermostClient\Api\UsersApi;
-use Pnz\MattermostClient\Hydrator\Hydrator;
+use Pnz\MattermostClient\Contract\HydratorInterface;
 use Pnz\MattermostClient\Hydrator\ModelHydrator;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 final class ApiClient
 {
-    /**
-     * @var HttpClient
-     */
-    private $httpClient;
-
-    /**
-     * @var Hydrator
-     */
-    private $hydrator;
-
-    /**
-     * @var RequestFactory
-     */
-    private $requestFactory;
+    private readonly ClientInterface $httpClient;
+    private readonly HydratorInterface $hydrator;
+    private readonly RequestFactoryInterface $requestFactory;
+    private readonly StreamFactoryInterface $streamFactory;
 
     /**
      * Construct an ApiClient instance.
      *
-     * @param HttpClient|null     $httpClient     The HttpClient;  if null, the auto-discover will be used
-     * @param RequestFactory|null $requestFactory The RequestFactory; if null, the auto-discover will be used
-     * @param Hydrator|null       $hydrator       The Hydrator to use, default to the ModelHydrator
+     * @param ClientInterface|null         $httpClient     The HttpClient;  if null, the auto-discover will be used
+     * @param RequestFactoryInterface|null $requestFactory The RequestFactory; if null, the auto-discover will be used
      */
     public function __construct(
-        HttpClient $httpClient = null,
-        RequestFactory $requestFactory = null,
-        Hydrator $hydrator = null
+        ClientInterface $httpClient = null,
+        RequestFactoryInterface $requestFactory = null,
+        StreamFactoryInterface $streamFactory = null,
     ) {
-        $this->httpClient = $httpClient ?: HttpClientDiscovery::find();
-        $this->requestFactory = $requestFactory ?: MessageFactoryDiscovery::find();
-        $this->hydrator = $hydrator ?: new ModelHydrator();
+        $this->httpClient = $httpClient ?: Psr18ClientDiscovery::find();
+        $this->requestFactory = $requestFactory ?: Psr17FactoryDiscovery::findRequestFactory();
+        $this->streamFactory = $streamFactory ?: Psr17FactoryDiscovery::findStreamFactory();
+        $this->hydrator = new ModelHydrator();
     }
 
     /**
-     * Returns configured ApiClient from the given Configurator, Hydrator and RequestFactory.
-     *
-     * @return ApiClient
+     * Returns configured ApiClient from the given Configurator and RequestFactory.
      */
     public static function configure(
         HttpClientConfigurator $httpClientConfigurator,
-        RequestFactory $requestFactory = null,
-        Hydrator $hydrator = null
+        RequestFactoryInterface $requestFactory = null,
+        StreamFactoryInterface $streamFactory = null,
     ): self {
         $httpClient = $httpClientConfigurator->createConfiguredClient();
 
-        return new self($httpClient, $requestFactory, $hydrator);
+        return new self($httpClient, $requestFactory, $streamFactory);
     }
 
     /**
      * Return a client handling the Users resources.
-     *
-     * @return Api\UsersApi
      */
     public function users(): UsersApi
     {
-        return new Api\UsersApi($this->httpClient, $this->requestFactory, $this->hydrator);
+        return new UsersApi($this->httpClient, $this->requestFactory, $this->streamFactory, $this->hydrator);
     }
 
     /**
      * Return a client handling the Teams resources.
-     *
-     * @return Api\TeamsApi
      */
     public function teams(): TeamsApi
     {
-        return new Api\TeamsApi($this->httpClient, $this->requestFactory, $this->hydrator);
+        return new TeamsApi($this->httpClient, $this->requestFactory, $this->streamFactory, $this->hydrator);
     }
 
     /**
      * Return a client handling the Channels resources.
-     *
-     * @return Api\ChannelsApi
      */
     public function channels(): ChannelsApi
     {
-        return new Api\ChannelsApi($this->httpClient, $this->requestFactory, $this->hydrator);
+        return new ChannelsApi($this->httpClient, $this->requestFactory, $this->streamFactory, $this->hydrator);
     }
 
     /**
      * Return a client handling the Posts resources.
-     *
-     * @return Api\PostsApi
      */
     public function posts(): PostsApi
     {
-        return new Api\PostsApi($this->httpClient, $this->requestFactory, $this->hydrator);
+        return new PostsApi($this->httpClient, $this->requestFactory, $this->streamFactory, $this->hydrator);
     }
 
     /**
      * Return a client handling the Files resources.
-     *
-     * @return Api\FilesApi
      */
     public function files(): FilesApi
     {
-        return new Api\FilesApi($this->httpClient, $this->requestFactory, $this->hydrator);
+        return new FilesApi($this->httpClient, $this->requestFactory, $this->streamFactory, $this->hydrator);
     }
 }

@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Pnz\MattermostClient\Tests\Model;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
+use Pnz\MattermostClient\Model\ModelCollectionOrdered;
 
 /**
- * @coversDefaultClass \Pnz\MattermostClient\Model\ModelCollectionOrdered
+ * @internal
  */
-class ModelCollectionOrderedTest extends TestCase
+#[CoversClass(ModelCollectionOrdered::class)]
+final class ModelCollectionOrderedTest extends TestCase
 {
     public function testCreateModelCollectionOrdered(): void
     {
@@ -24,27 +27,26 @@ class ModelCollectionOrderedTest extends TestCase
             'el-1',
         ];
 
-        $models = WrappedModelCollectionOrdered::createFromArray([
+        $models = MockModelCollectionOrdered::createFromArray([
             'items' => $elements,
             'order' => $order,
         ]);
 
         $this->assertCount(3, $models);
-        $this->assertSame($elements, $models->getItems());
         $this->assertSame($order, $models->getOrder());
 
         $this->assertSame('el-2', $models->key());
-        $this->assertSame($elements['el-2'], $models->current());
+        $this->assertSame($elements['el-2'], $models->current()->data);
         $models->next();
         $this->assertTrue($models->valid());
 
         $this->assertSame('el-0', $models->key());
-        $this->assertSame($elements['el-0'], $models->current());
+        $this->assertSame($elements['el-0'], $models->current()->data);
         $models->next();
         $this->assertTrue($models->valid());
 
         $this->assertSame('el-1', $models->key());
-        $this->assertSame($elements['el-1'], $models->current());
+        $this->assertSame($elements['el-1'], $models->current()->data);
         $models->next();
         $this->assertFalse($models->valid());
 

@@ -6,11 +6,14 @@ namespace Pnz\MattermostClient\Tests\Model;
 
 use Pnz\MattermostClient\Model\ModelCollectionOrdered;
 
-class WrappedModelCollectionOrdered extends ModelCollectionOrdered
+/**
+ * @extends ModelCollectionOrdered<MockModel>
+ */
+final class MockModelCollectionOrdered extends ModelCollectionOrdered
 {
-    protected function createItem(array $data)
+    protected function createItem(array $data): MockModel
     {
-        return $data;
+        return new MockModel($data);
     }
 
     protected static function getItemsDataName(): string

@@ -4,524 +4,537 @@ declare(strict_types=1);
 
 namespace Pnz\MattermostClient\Tests\Api;
 
-use Pnz\JsonException\Json;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Pnz\MattermostClient\Api\ChannelsApi;
+use Pnz\MattermostClient\Exception\DomainException;
 use Pnz\MattermostClient\Exception\InvalidArgumentException;
 use Pnz\MattermostClient\Model\Channel\Channel;
+use Pnz\MattermostClient\Model\Channel\ChannelMember;
 use Pnz\MattermostClient\Model\Channel\ChannelMembers;
 use Pnz\MattermostClient\Model\Channel\ChannelStats;
+use Pnz\MattermostClient\Model\Error;
 use Pnz\MattermostClient\Model\Post\Posts;
 use Pnz\MattermostClient\Model\Status;
 
 /**
- * @coversDefaultClass \Pnz\MattermostClient\Api\ChannelsApi
+ * @internal
  */
-class ChannelsTest extends BaseHttpApiTest
+#[CoversClass(ChannelsApi::class)]
+final class ChannelsTest extends AbstractHttpApiTestCase
 {
-    /**
-     * @var ChannelsApi
-     */
-    private $client;
+    private ChannelsApi $client;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->client = new ChannelsApi($this->httpClient, $this->requestFactory, $this->hydrator);
+        $this->client = new ChannelsApi($this->httpClient, $this->psr17factory, $this->psr17factory, $this->hydrator);
     }
 
-    public function testCreateChannelSuccess(): void
+    public function testCreateChannelSucceeds(): void
     {
-        $data = [
-            'name' => 'name',
-            'display_name' => 'display_name,',
-        ];
-        $this->configureMessage('POST', '/channels', [], Json::encode($data));
-        $this->configureRequestAndResponse(201);
-        $this->configureHydrator(Channel::class);
+        $requestData = ['name' => 'name', 'display_name' => 'display_name', 'team_id' => '12345', 'type' => 'P'];
+        $responseData = ['name' => 'name', 'id' => self::CHANNEL_UUID];
 
-        $this->client->createChannel($data);
+        $response = $this->buildResponse(201, $responseData);
+        $this->expectRequest('POST', '/channels', $requestData, $response);
+        $this->expectHydration($response, Channel::class);
+
+        $c = $this->client->createChannel($requestData);
+        $this->assertSame(self::CHANNEL_UUID, $c->getId());
+        $this->assertSame('name', $c->getName());
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
-    public function testCreateChannelException(string $exception, int $code): void
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testCreateChannelThrows(string $exception, int $code): void
     {
-        $this->expectException($exception);
-        $data = [
-            'name' => 'name',
-            'display_name' => 'display_name,',
-        ];
-        $this->configureMessage('POST', '/channels', [], Json::encode($data));
-        $this->configureRequestAndResponse($code);
+        $requestData = ['name' => 'name', 'display_name' => 'display_name', 'team_id' => '12345', 'type' => 'P'];
+        $response = $this->buildResponse($code);
 
-        $this->client->createChannel($data);
+        $this->expectRequest('POST', '/channels', $requestData, $response);
+        $this->expectHydration($response, Error::class);
+        $this->expectException($exception);
+
+        $this->client->createChannel($requestData);
     }
 
-    public function testCreateDirectChannelSuccess(): void
+    public function testCreateDirectChannelSucceeds(): void
     {
-        $data = ['uid1', 'uid2'];
-        $this->configureMessage('POST', '/channels/direct', [], Json::encode($data));
-        $this->configureRequestAndResponse(201);
-        $this->configureHydrator(Channel::class);
+        $requestData = ['uid1', 'uid2'];
+        $responseData = ['name' => 'name', 'id' => self::CHANNEL_UUID];
+
+        $response = $this->buildResponse(201, $responseData);
+        $this->expectRequest('POST', '/channels/direct', $requestData, $response);
+        $this->expectHydration($response, Channel::class);
+
+        $c = $this->client->createDirectChannel('uid1', 'uid2');
+        $this->assertSame(self::CHANNEL_UUID, $c->getId());
+        $this->assertSame('name', $c->getName());
+    }
+
+    /**
+     * @param class-string<DomainException> $exception
+     */
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testCreateDirectChannelThrows(string $exception, int $code): void
+    {
+        $requestData = ['uid1', 'uid2'];
+
+        $response = $this->buildResponse($code);
+        $this->expectRequest('POST', '/channels/direct', $requestData, $response);
+        $this->expectHydration($response, Error::class);
+        $this->expectException($exception);
 
         $this->client->createDirectChannel('uid1', 'uid2');
     }
 
-    /**
-     * @dataProvider getErrorCodesExceptions
-     */
-    public function testCreateDirectChannelException(string $exception, int $code): void
+    public function testCreateDirectChannelWithEmptyUserIdThrows(): void
     {
-        $this->expectException($exception);
-
-        $data = ['uid1', 'uid2'];
-        $this->configureMessage('POST', '/channels/direct', [], Json::encode($data));
-        $this->configureRequestAndResponse($code);
-
-        $this->client->createDirectChannel('uid1', 'uid2');
-    }
-
-    public function testCreateDirectChannelEmptyUserId(): void
-    {
-        $this->expectException(InvalidArgumentException ::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->client->createDirectChannel('uid1', '');
     }
 
-    public function testUpdateChannelSuccess(): void
+    public function testUpdateChannelSucceeds(): void
     {
-        $channelId = '111';
-        $data = [
-            'name' => 'name,',
-            'display_name' => 'display_name',
-        ];
+        $requestData = ['name' => 'name'];
+        $responseData = ['name' => 'name', 'id' => self::CHANNEL_UUID];
 
-        $this->configureMessage('PUT', '/channels/'.$channelId, [], Json::encode($data));
-        $this->configureRequestAndResponse(201);
-        $this->configureHydrator(Channel::class);
-        $this->client->updateChannel($channelId, $data);
+        $response = $this->buildResponse(201, $responseData);
+        $this->expectRequest('PUT', '/channels/'.self::CHANNEL_UUID, $requestData, $response);
+        $this->expectHydration($response, Channel::class);
+        $c = $this->client->updateChannel(self::CHANNEL_UUID, $requestData);
+
+        $this->assertSame(self::CHANNEL_UUID, $c->getId());
     }
 
-    public function testUpdateChannelEmptyId(): void
+    public function testUpdateChannelWithEmptyIdThrows(): void
     {
-        $this->expectException(InvalidArgumentException ::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->client->updateChannel('', []);
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
-    public function testUpdateChannelException(string $exception, int $code): void
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testUpdateChannelThrows(string $exception, int $code): void
     {
-        $this->expectException($exception);
-        $channelId = '111';
-        $data = [
-            'display_name' => 'display_name',
-            'name' => 'name,',
-        ];
+        $requestData = ['name' => 'name'];
 
-        $this->configureMessage('PUT', '/channels/'.$channelId, [], Json::encode($data));
-        $this->configureRequestAndResponse($code);
-        $this->client->updateChannel($channelId, $data);
+        $response = $this->buildResponse($code);
+        $this->expectRequest('PUT', '/channels/'.self::CHANNEL_UUID, $requestData, $response);
+        $this->expectHydration($response, Error::class);
+        $this->expectException($exception);
+
+        $this->client->updateChannel(self::CHANNEL_UUID, $requestData);
     }
 
-    public function testPatchChannelSuccess(): void
+    public function testPatchChannelSucceeds(): void
     {
-        $channelId = '111';
-        $data = [
-            'username' => 'username',
-            'name' => 'name,',
-        ];
-        $this->configureMessage('PUT', '/channels/'.$channelId.'/patch', [], Json::encode($data));
-        $this->configureRequestAndResponse(201);
-        $this->configureHydrator(Channel::class);
+        $requestData = ['name' => 'name'];
+        $responseData = ['name' => 'name', 'id' => self::CHANNEL_UUID];
 
-        $this->client->patchChannel($channelId, $data);
+        $response = $this->buildResponse(201, $responseData);
+        $this->expectRequest('PUT', '/channels/'.self::CHANNEL_UUID.'/patch', $requestData, $response);
+        $this->expectHydration($response, Channel::class);
+        $c = $this->client->patchChannel(self::CHANNEL_UUID, $requestData);
+
+        $this->assertSame(self::CHANNEL_UUID, $c->getId());
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
-    public function testPatchChannelException(string $exception, int $code): void
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testPatchChannelThrows(string $exception, int $code): void
     {
-        $this->expectException($exception);
-        $channelId = '111';
-        $data = [
-            'username' => 'username',
-            'name' => 'name,',
-        ];
-        $this->configureMessage('PUT', '/channels/'.$channelId.'/patch', [], Json::encode($data));
-        $this->configureRequestAndResponse($code);
+        $requestData = ['name' => 'name'];
 
-        $this->client->patchChannel($channelId, $data);
+        $response = $this->buildResponse($code);
+        $this->expectRequest('PUT', '/channels/'.self::CHANNEL_UUID.'/patch', $requestData, $response);
+        $this->expectHydration($response, Error::class);
+        $this->expectException($exception);
+
+        $this->client->patchChannel(self::CHANNEL_UUID, $requestData);
     }
 
-    public function testPatchChannelsEmptyId(): void
+    public function testPatchChannelWithEmptyIdThrows(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->client->patchChannel('', []);
     }
 
-    public function testGetChannelByIdSuccess(): void
+    public function testGetChannelByIdSucceeds(): void
     {
-        $channelId = '12345';
-        $this->configureMessage('GET', '/channels/'.$channelId);
-        $this->configureRequestAndResponse(200);
-        $this->configureHydrator(Channel::class);
-        $this->client->getChannelById($channelId);
+        $responseData = ['name' => 'name', 'id' => self::CHANNEL_UUID];
+
+        $response = $this->buildResponse(200, $responseData);
+        $this->expectRequest('GET', '/channels/'.self::CHANNEL_UUID, [], $response);
+        $this->expectHydration($response, Channel::class);
+        $c = $this->client->getChannelById(self::CHANNEL_UUID);
+
+        $this->assertSame(self::CHANNEL_UUID, $c->getId());
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
-    public function testGetChannelByIdException(string $exception, int $code): void
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testGetChannelByIdThrows(string $exception, int $code): void
     {
+        $response = $this->buildResponse($code);
+        $this->expectRequest('GET', '/channels/'.self::CHANNEL_UUID, [], $response);
+        $this->expectHydration($response, Error::class);
         $this->expectException($exception);
-        $channelId = '12345';
-        $this->configureMessage('GET', '/channels/'.$channelId);
-        $this->configureRequestAndResponse($code);
-        $this->client->getChannelById($channelId);
+
+        $this->client->getChannelById(self::CHANNEL_UUID);
     }
 
-    public function testGetChannelByIdEmptyId(): void
+    public function testGetChannelByIdWithEmptyIdThrows(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->client->getChannelById('');
     }
 
-    public function testGetChannelByNameSuccess(): void
+    public function testGetChannelByNameSucceeds(): void
     {
-        $channelName = 'channel-name';
-        $teamId = '12345';
-        $this->configureMessage('GET', '/teams/'.$teamId.'/channels/name/'.$channelName);
-        $this->configureRequestAndResponse(200);
-        $this->configureHydrator(Channel::class);
-        $this->client->getChannelByName($teamId, $channelName);
+        $responseData = ['name' => self::CHANNEL_NAME, 'id' => self::CHANNEL_UUID];
+
+        $response = $this->buildResponse(200, $responseData);
+        $this->expectRequest('GET', '/teams/'.self::TEAM_ID.'/channels/name/'.self::CHANNEL_NAME, [], $response);
+        $this->expectHydration($response, Channel::class);
+        $c = $this->client->getChannelByName(self::TEAM_ID, self::CHANNEL_NAME);
+
+        $this->assertSame(self::CHANNEL_UUID, $c->getId());
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
-    public function testGetChannelByNameException(string $exception, int $code): void
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testGetChannelByNameThrows(string $exception, int $code): void
     {
+        $response = $this->buildResponse($code);
+        $this->expectRequest('GET', '/teams/'.self::TEAM_ID.'/channels/name/'.self::CHANNEL_NAME, [], $response);
+        $this->expectHydration($response, Error::class);
         $this->expectException($exception);
-        $channelName = 'channel-name';
-        $teamId = '12345';
-        $this->configureMessage('GET', '/teams/'.$teamId.'/channels/name/'.$channelName);
-        $this->configureRequestAndResponse($code);
-        $this->client->getChannelByName($teamId, $channelName);
-    }
 
-    public function testGetChannelByNameEmpty(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->client->getChannelByName('', '');
-    }
-
-    public function testGetChannelByNameEmptyName(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->client->getChannelByName('12345', '');
-    }
-
-    public function testGetChannelByNameEmptyTeamId(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->client->getChannelByName('', 'channel-name');
-    }
-
-    public function testGetChannelByNameAndTeamNameSuccess(): void
-    {
-        $channelName = 'channel-name';
-        $teamName = 'team-name';
-        $this->configureMessage('GET', '/teams/name/'.$teamName.'/channels/name/'.$channelName);
-        $this->configureRequestAndResponse(200);
-        $this->configureHydrator(Channel::class);
-        $this->client->getChannelByNameAndTeamName($teamName, $channelName);
+        $this->client->getChannelByName(self::TEAM_ID, self::CHANNEL_NAME);
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @return iterable<array{string, string}>
      */
-    public function testGetChannelByNameAndTeamNameException(string $exception, int $code): void
+    public static function provideEmtpyStringParam1AndParam2(): iterable
     {
+        yield ['', ''];
+        yield ['team', ''];
+        yield ['', 'channel'];
+    }
+
+    #[DataProvider('provideEmtpyStringParam1AndParam2')]
+    public function testGetChannelByNameWithEmptyThrows(string $teamId, string $channelName): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->client->getChannelByName($teamId, $channelName);
+    }
+
+    public function testGetChannelByNameAndTeamNameSucceeds(): void
+    {
+        $responseData = ['name' => self::CHANNEL_NAME, 'id' => self::CHANNEL_UUID];
+
+        $response = $this->buildResponse(200, $responseData);
+        $this->expectRequest('GET', '/teams/name/'.self::TEAM_NAME.'/channels/name/'.self::CHANNEL_NAME, [], $response);
+        $this->expectHydration($response, Channel::class);
+        $c = $this->client->getChannelByNameAndTeamName(self::TEAM_NAME, self::CHANNEL_NAME);
+
+        $this->assertSame(self::CHANNEL_UUID, $c->getId());
+    }
+
+    /**
+     * @param class-string<DomainException> $exception
+     */
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testGetChannelByNameAndTeamNameThrows(string $exception, int $code): void
+    {
+        $response = $this->buildResponse($code);
+        $this->expectRequest('GET', '/teams/name/'.self::TEAM_NAME.'/channels/name/'.self::CHANNEL_NAME, [], $response);
+        $this->expectHydration($response, Error::class);
         $this->expectException($exception);
-        $channelName = 'channel-name';
-        $teamName = 'team-name';
-        $this->configureMessage('GET', '/teams/name/'.$teamName.'/channels/name/'.$channelName);
-        $this->configureRequestAndResponse($code);
-        $this->client->getChannelByNameAndTeamName($teamName, $channelName);
+
+        $this->client->getChannelByNameAndTeamName(self::TEAM_NAME, self::CHANNEL_NAME);
     }
 
-    public function testGetChannelByNameAndTeamNameEmpty(): void
+    #[DataProvider('provideEmtpyStringParam1AndParam2')]
+    public function testGetChannelByNameAndTeamNameWithEmptyThrows(string $team, string $channel): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->client->getChannelByNameAndTeamName('', '');
+        $this->client->getChannelByNameAndTeamName($team, $channel);
     }
 
-    public function testGetChannelByNameAndTeamNameEmptyName(): void
+    public function testGetChannelPostsSucceeds(): void
     {
-        $this->expectException(InvalidArgumentException::class);
-        $this->client->getChannelByNameAndTeamName('12345', '');
+        $responseData = ['posts' => [], 'order' => []];
+
+        $response = $this->buildResponse(200, $responseData);
+        $this->expectRequest('GET', '/channels/'.self::CHANNEL_UUID.'/posts', [], $response);
+        $this->expectHydration($response, Posts::class);
+        $p = $this->client->getChannelPosts(self::CHANNEL_UUID);
+
+        $this->assertCount(0, $p);
     }
 
-    public function testGetChannelByNameAndTeamNameEmptyTeamId(): void
+    public function testGetChannelPostsParametersSucceeds(): void
     {
-        $this->expectException(InvalidArgumentException::class);
-        $this->client->getChannelByNameAndTeamName('', 'channel-name');
-    }
+        $responseData = ['posts' => [], 'order' => []];
 
-    public function testGetChannelPostsSuccess(): void
-    {
-        $channelId = '12345';
-        $this->configureMessage('GET', '/channels/'.$channelId.'/posts');
-        $this->configureRequestAndResponse(200);
-        $this->configureHydrator(Posts::class);
-        $this->client->getChannelPosts($channelId);
-    }
-
-    public function testGetChannelPostsParametersSuccess(): void
-    {
-        $channelId = '12345';
-        $this->configureMessage(
+        $response = $this->buildResponse(200, $responseData);
+        $this->expectRequest(
             'GET',
-            '/channels/'.$channelId.'/posts?per_page=10&page=10&before=1111&after=0000&since=9999'
+            '/channels/'.self::CHANNEL_UUID.'/posts?per_page=10&page=10&before=1111&after=0000&since=9999',
+            [],
+            $response
         );
-        $this->configureRequestAndResponse(200);
-        $this->configureHydrator(Posts::class, Posts::createFromArray(['posts' => [], 'order' => []]));
-        $this->client->getChannelPosts($channelId, [
+        $this->expectHydration($response, Posts::class);
+        $p = $this->client->getChannelPosts(self::CHANNEL_UUID, [
             'per_page' => 10,
             'page' => 10,
             'before' => '1111',
             'after' => '0000',
             'since' => '9999',
         ]);
+
+        $this->assertCount(0, $p);
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
-    public function testGetChannelPostsException(string $exception, int $code): void
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testGetChannelPostsThrows(string $exception, int $code): void
     {
+        $response = $this->buildResponse($code);
+        $this->expectRequest('GET', '/channels/'.self::CHANNEL_UUID.'/posts', [], $response);
+        $this->expectHydration($response, Error::class);
         $this->expectException($exception);
-        $channelId = '12345';
-        $this->configureMessage('GET', '/channels/'.$channelId.'/posts');
-        $this->configureRequestAndResponse($code);
-        $this->client->getChannelPosts($channelId);
+
+        $this->client->getChannelPosts(self::CHANNEL_UUID);
     }
 
-    public function testGetChannelPostsEmptyId(): void
+    public function testGetChannelPostsWithEmptyIdThrows(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->client->getChannelPosts('');
     }
 
-    public function testDeleteChannelSuccess(): void
+    public function testDeleteChannelSucceeds(): void
     {
-        $channelId = '12345';
-        $this->configureMessage('DELETE', '/channels/'.$channelId);
-        $this->configureRequestAndResponse(200);
-        $this->configureHydrator(Status::class);
-        $this->client->deleteChannel($channelId);
+        $responseData = ['status' => 'OK'];
+
+        $response = $this->buildResponse(200, $responseData);
+        $this->expectRequest('DELETE', '/channels/'.self::CHANNEL_UUID, [], $response);
+        $this->expectHydration($response, Status::class);
+        $s = $this->client->deleteChannel(self::CHANNEL_UUID);
+        $this->assertSame('OK', $s->getStatus());
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
-    public function testDeleteChannelException(string $exception, int $code): void
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testDeleteChannelThrows(string $exception, int $code): void
     {
+        $response = $this->buildResponse($code);
+        $this->expectRequest('DELETE', '/channels/'.self::CHANNEL_UUID, [], $response);
+        $this->expectHydration($response, Error::class);
         $this->expectException($exception);
-        $channelId = '12345';
-        $this->configureMessage('DELETE', '/channels/'.$channelId);
-        $this->configureRequestAndResponse($code);
-        $this->client->deleteChannel($channelId);
+
+        $this->client->deleteChannel(self::CHANNEL_UUID);
     }
 
-    public function testDeleteChannelEmptyId(): void
+    public function testDeleteChannelEmptyIdThrows(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->client->deleteChannel('');
     }
 
-    public function testGetChannelStatsSuccess(): void
+    public function testGetChannelStatsSucceeds(): void
     {
-        $channelId = '12345';
-        $this->configureMessage('GET', '/channels/'.$channelId.'/stats');
-        $this->configureRequestAndResponse(200);
-        $this->configureHydrator(ChannelStats::class);
-        $this->client->getChannelStats($channelId);
+        $responseData = ['member_count' => 123];
+
+        $response = $this->buildResponse(200, $responseData);
+        $this->expectRequest('GET', '/channels/'.self::CHANNEL_UUID.'/stats', [], $response);
+        $this->expectHydration($response, ChannelStats::class);
+        $s = $this->client->getChannelStats(self::CHANNEL_UUID);
+
+        $this->assertSame(123, $s->getMemberCount());
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
+    #[DataProvider('provideErrorCodesExceptionsCases')]
     public function testGetChannelStatsException(string $exception, int $code): void
     {
+        $response = $this->buildResponse($code);
+        $this->expectRequest('GET', '/channels/'.self::CHANNEL_UUID.'/stats', [], $response);
+        $this->expectHydration($response, Error::class);
         $this->expectException($exception);
-        $channelId = '12345';
-        $this->configureMessage('GET', '/channels/'.$channelId.'/stats');
-        $this->configureRequestAndResponse($code);
-        $this->client->getChannelStats($channelId);
+
+        $this->client->getChannelStats(self::CHANNEL_UUID);
     }
 
-    public function testGetChannelStatsEmptyId(): void
+    public function testGetChannelStatsEmptyIdThrows(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->client->getChannelStats('');
     }
 
-    public function testRestoreChannelSuccess(): void
+    public function testRestoreChannelSucceeds(): void
     {
-        $channelId = '12345';
-        $this->configureMessage('POST', '/channels/'.$channelId.'/restore');
-        $this->configureRequestAndResponse(200);
-        $this->configureHydrator(Channel::class);
-        $this->client->restoreChannel($channelId);
+        $responseData = ['name' => 'name', 'id' => self::CHANNEL_UUID];
+
+        $response = $this->buildResponse(200, $responseData);
+        $this->expectRequest('POST', '/channels/'.self::CHANNEL_UUID.'/restore', [], $response);
+        $this->expectHydration($response, Channel::class);
+
+        $c = $this->client->restoreChannel(self::CHANNEL_UUID);
+
+        $this->assertSame(self::CHANNEL_UUID, $c->getId());
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
+    #[DataProvider('provideErrorCodesExceptionsCases')]
     public function testRestoreChannelException(string $exception, int $code): void
     {
+        $response = $this->buildResponse($code);
+        $this->expectRequest('POST', '/channels/'.self::CHANNEL_UUID.'/restore', [], $response);
+        $this->expectHydration($response, Error::class);
         $this->expectException($exception);
-        $channelId = '12345';
-        $this->configureMessage('POST', '/channels/'.$channelId.'/restore');
-        $this->configureRequestAndResponse($code);
-        $this->client->restoreChannel($channelId);
+
+        $this->client->restoreChannel(self::CHANNEL_UUID);
     }
 
-    public function testRestoreChannelEmptyId(): void
+    public function testRestoreChannelEmptyIdThrows(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->client->restoreChannel('');
     }
 
-    public function testRemoveChannelMemberSuccess(): void
+    public function testRemoveChannelMemberSucceeds(): void
     {
-        $channelId = '12345';
-        $userId = '98765';
-        $this->configureMessage('DELETE', '/channels/'.$channelId.'/members/'.$userId);
-        $this->configureRequestAndResponse(200);
-        $this->configureHydrator(Status::class);
-        $this->client->removeChannelMember($channelId, $userId);
+        $responseData = ['status' => 'OK'];
+
+        $response = $this->buildResponse(200, $responseData);
+        $this->expectRequest('DELETE', '/channels/'.self::CHANNEL_UUID.'/members/'.self::USER_UUID, [], $response);
+        $this->expectHydration($response, Status::class);
+
+        $this->client->removeChannelMember(self::CHANNEL_UUID, self::USER_UUID);
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
+    #[DataProvider('provideErrorCodesExceptionsCases')]
     public function testRemoveChannelMemberException(string $exception, int $code): void
     {
+        $response = $this->buildResponse($code);
+        $this->expectRequest('DELETE', '/channels/'.self::CHANNEL_UUID.'/members/'.self::USER_UUID, [], $response);
+        $this->expectHydration($response, Error::class);
         $this->expectException($exception);
-        $channelId = '12345';
-        $userId = '98765';
-        $this->configureMessage('DELETE', '/channels/'.$channelId.'/members/'.$userId);
-        $this->configureRequestAndResponse($code);
-        $this->client->removeChannelMember($channelId, $userId);
+
+        $this->client->removeChannelMember(self::CHANNEL_UUID, self::USER_UUID);
     }
 
-    public function testRemoveChannelMemberEmpty(): void
+    #[DataProvider('provideEmtpyStringParam1AndParam2')]
+    public function testRemoveChannelMemberEmptyThrows(string $param1, string $param2): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->client->removeChannelMember('', '');
+        $this->client->removeChannelMember($param1, $param2);
     }
 
-    public function testRemoveChannelMemberEmptyChannelId(): void
+    public function testAddChannelMemberSucceeds(): void
     {
-        $this->expectException(InvalidArgumentException::class);
-        $this->client->removeChannelMember('', 'user-id');
-    }
-
-    public function testRemoveChannelMemberEmptyUserId(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->client->removeChannelMember('channel-id', '');
-    }
-
-    public function testAddChannelMemberSuccess(): void
-    {
-        $channelId = '12345';
-        $userId = '98765';
-        $roles = 'role1, role2';
-
-        $data = [
-            'channel_id' => $channelId,
-            'user_id' => $userId,
-            'roles' => $roles,
+        $requestData = [
+            'channel_id' => self::CHANNEL_UUID,
+            'user_id' => self::USER_UUID,
         ];
-        $this->configureMessage('POST', '/channels/'.$channelId.'/members', [], Json::encode($data));
-        $this->configureRequestAndResponse(201);
-        $this->client->addChannelMember($channelId, $userId, $roles);
+        $responseData = ['channel_id' => self::CHANNEL_UUID];
+
+        $response = $this->buildResponse(201, $responseData);
+        $this->expectRequest('POST', '/channels/'.self::CHANNEL_UUID.'/members', $requestData, $response);
+        $this->expectHydration($response, ChannelMember::class);
+
+        $m = $this->client->addChannelMember(self::CHANNEL_UUID, self::USER_UUID);
+
+        $this->assertSame(self::CHANNEL_UUID, $m->getChannelId());
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
-    public function testAddChannelMemberException(string $exception, int $code): void
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testAddChannelMemberThrows(string $exception, int $code): void
     {
+        $requestData = ['channel_id' => self::CHANNEL_UUID, 'user_id' => self::USER_UUID];
+
+        $response = $this->buildResponse($code);
+        $this->expectRequest('POST', '/channels/'.self::CHANNEL_UUID.'/members', $requestData, $response);
+        $this->expectHydration($response, Error::class);
         $this->expectException($exception);
-        $channelId = '12345';
-        $userId = '98765';
-        $roles = 'role1, role2';
 
-        $data = [
-            'channel_id' => $channelId,
-            'user_id' => $userId,
-            'roles' => $roles,
-        ];
-        $this->configureMessage('POST', '/channels/'.$channelId.'/members', [], Json::encode($data));
-        $this->configureRequestAndResponse($code);
-        $this->client->addChannelMember($channelId, $userId, $roles);
+        $this->client->addChannelMember(self::CHANNEL_UUID, self::USER_UUID);
     }
 
-    public function testAddChannelMemberEmpty(): void
+    #[DataProvider('provideEmtpyStringParam1AndParam2')]
+    public function testAddChannelMemberEmpty(string $param1, string $param2): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->client->addChannelMember('', '');
+        $this->client->addChannelMember($param1, $param2);
     }
 
-    public function testAddChannelMemberEmptyChannelId(): void
+    public function testGetChannelMembersSucceeds(): void
     {
-        $this->expectException(InvalidArgumentException::class);
-        $this->client->addChannelMember('', 'user-id');
-    }
+        $responseData = [];
 
-    public function testAddChannelMemberEmptyUserId(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->client->addChannelMember('channel-id', '');
-    }
-
-    public function testGetChannelMembersSuccess(): void
-    {
-        $channelId = '12345';
-        $this->configureMessage(
+        $response = $this->buildResponse(200, $responseData);
+        $this->expectRequest(
             'GET',
-            '/channels/'.$channelId.'/members'.
-            '?per_page=1&page=2'
+            '/channels/'.self::CHANNEL_UUID.'/members?per_page=1&page=2',
+            [],
+            $response
         );
-        $this->configureRequestAndResponse(200);
-        $this->configureHydrator(ChannelMembers::class);
-        $this->client->getChannelMembers($channelId, [
+        $this->expectHydration($response, ChannelMembers::class);
+
+        $m = $this->client->getChannelMembers(self::CHANNEL_UUID, [
             'per_page' => 1,
             'page' => 2,
         ]);
+
+        $this->assertCount(0, $m);
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
+    #[DataProvider('provideErrorCodesExceptionsCases')]
     public function testGetChannelMembersException(string $exception, int $code): void
     {
+        $response = $this->buildResponse($code);
+        $this->expectRequest('GET', '/channels/'.self::CHANNEL_UUID.'/members', [], $response);
+        $this->expectHydration($response, Error::class);
         $this->expectException($exception);
-        $channelId = '12345';
-        $this->configureMessage('GET', '/channels/'.$channelId.'/members');
-        $this->configureRequestAndResponse($code);
-        $this->client->getChannelMembers($channelId);
+
+        $this->client->getChannelMembers(self::CHANNEL_UUID);
     }
 
-    public function testGetChannelMembersEmptyId(): void
+    public function testGetChannelMembersEmptyIdThrows(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->client->getChannelMembers('');

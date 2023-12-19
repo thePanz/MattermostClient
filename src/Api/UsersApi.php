@@ -11,7 +11,6 @@ use Pnz\MattermostClient\Model\Team\Teams;
 use Pnz\MattermostClient\Model\User\User;
 use Pnz\MattermostClient\Model\User\Users;
 use Pnz\MattermostClient\Model\User\UserStatus;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
 final class UsersApi extends HttpApi
@@ -20,10 +19,8 @@ final class UsersApi extends HttpApi
      * @param string $loginId  The login Id
      * @param string $password The password
      * @param string $token    The login token, as output variable
-     *
-     * @return User|ResponseInterface
      */
-    public function login(string $loginId, string $password, string &$token = null)
+    public function login(string $loginId, string $password, string &$token = null): User
     {
         if (empty($loginId) || empty($password)) {
             throw new InvalidArgumentException('LoginId and Password cannot be empty');
@@ -51,10 +48,8 @@ final class UsersApi extends HttpApi
      * Returns an user by its ID, use "me" to get the current logged in user.
      *
      * @param string $userId User GUID
-     *
-     * @return User|ResponseInterface
      */
-    public function getUserById(string $userId)
+    public function getUserById(string $userId): User
     {
         if (empty($userId)) {
             throw new InvalidArgumentException('UserId can not be empty');
@@ -69,10 +64,8 @@ final class UsersApi extends HttpApi
      * Get a list of teams that a user is on.
      *
      * @param string $userId User GUID
-     *
-     * @return User|ResponseInterface
      */
-    public function getUserTeams(string $userId)
+    public function getUserTeams(string $userId): Teams
     {
         if (empty($userId)) {
             throw new InvalidArgumentException('UserId can not be empty');
@@ -87,10 +80,8 @@ final class UsersApi extends HttpApi
      * Returns a collection of users matching the given IDs.
      *
      * @param string[] $userIds
-     *
-     * @return Users|ResponseInterface
      */
-    public function getUsersByIds(array $userIds)
+    public function getUsersByIds(array $userIds): Users
     {
         if (empty($userIds)) {
             throw new InvalidArgumentException('UserIDs can not be empty');
@@ -104,11 +95,9 @@ final class UsersApi extends HttpApi
     /**
      * Returns a collection of users.
      *
-     * @param array $params The listing params, 'page', 'per_page', 'in_channel', 'in_team', 'not_in_channel'
-     *
-     * @return Users|ResponseInterface
+     * @param array<string, string|int> $params The listing params, 'page', 'per_page', 'in_channel', 'in_team', 'not_in_channel'
      */
-    public function getUsers(array $params = [])
+    public function getUsers(array $params = []): Users
     {
         $response = $this->httpGet('/users', $params);
 
@@ -117,10 +106,8 @@ final class UsersApi extends HttpApi
 
     /**
      * Returns a user given its email.
-     *
-     * @return User|ResponseInterface
      */
-    public function getUserByEmail(string $email)
+    public function getUserByEmail(string $email): User
     {
         if (empty($email)) {
             throw new InvalidArgumentException('Email can not be empty');
@@ -137,10 +124,8 @@ final class UsersApi extends HttpApi
      * @param string[] $userNames
      *
      * @see https://api.mattermost.com/v4/#tag/users%2Fpaths%2F~1users~1usernames%2Fpost
-     *
-     * @return Users|ResponseInterface
      */
-    public function getUsersByUsernames(array $userNames)
+    public function getUsersByUsernames(array $userNames): Users
     {
         if (empty($userNames)) {
             throw new InvalidArgumentException('Usernames can not be empty');
@@ -156,10 +141,8 @@ final class UsersApi extends HttpApi
      *
      * @param string $userId       The user ID
      * @param bool   $activeStatus Use `true` to set the user active, `false` for inactive
-     *
-     * @return Status|ResponseInterface
      */
-    public function setUserActive(string $userId, bool $activeStatus)
+    public function setUserActive(string $userId, bool $activeStatus): Status
     {
         if (empty($userId)) {
             throw new InvalidArgumentException('User ID can not be empty');
@@ -178,10 +161,8 @@ final class UsersApi extends HttpApi
      * @param string $userId The user GUID
      *
      * @see https://api.mattermost.com/v4/#tag/users%2Fpaths%2F~1users~1%7Buser_id%7D%2Fdelete
-     *
-     * @return Status|ResponseInterface
      */
-    public function deactivateUser(string $userId)
+    public function deactivateUser(string $userId): Status
     {
         if (empty($userId)) {
             throw new InvalidArgumentException('User ID can not be empty');
@@ -199,10 +180,8 @@ final class UsersApi extends HttpApi
      *
      * @param string $userId The user GUID
      * @param string $roles  Space-delimited system roles to assign to the user
-     *
-     * @return Status|ResponseInterface
      */
-    public function updateUserRoles(string $userId, string $roles)
+    public function updateUserRoles(string $userId, string $roles): Status
     {
         if (empty($userId)) {
             throw new InvalidArgumentException('User ID can not be empty');
@@ -218,13 +197,13 @@ final class UsersApi extends HttpApi
     /**
      * Create a user. Required parameters: 'username', 'email' and 'password'.
      *
-     * @see https://api.mattermost.com/v4/#tag/users%2Fpaths%2F~1users%2Fpost
+     * @param array<mixed> $data
      *
-     * @return User|ResponseInterface
+     * @see https://api.mattermost.com/v4/#tag/users%2Fpaths%2F~1users%2Fpost
      */
-    public function createUser(array $params)
+    public function createUser(array $data): User
     {
-        $response = $this->httpPost('/users', $params);
+        $response = $this->httpPost('/users', $data);
 
         return $this->handleResponse($response, User::class);
     }
@@ -232,17 +211,17 @@ final class UsersApi extends HttpApi
     /**
      * Patch a user.
      *
-     * @see https://api.mattermost.com/v4/#tag/users%2Fpaths%2F~1users~1%7Buser_id%7D~1patch%2Fput
+     * @param array<mixed> $data
      *
-     * @return User|ResponseInterface
+     * @see https://api.mattermost.com/v4/#tag/users%2Fpaths%2F~1users~1%7Buser_id%7D~1patch%2Fput
      */
-    public function patchUser(string $userId, array $params)
+    public function patchUser(string $userId, array $data): User
     {
         if (empty($userId)) {
             throw new InvalidArgumentException('UserId can not be empty');
         }
 
-        $response = $this->httpPut(sprintf('/users/%s/patch', $userId), $params);
+        $response = $this->httpPut(sprintf('/users/%s/patch', $userId), $data);
 
         return $this->handleResponse($response, User::class);
     }
@@ -250,17 +229,17 @@ final class UsersApi extends HttpApi
     /**
      * Update a user.
      *
-     * @see https://api.mattermost.com/v4/#tag/users%2Fpaths%2F~1users~1%7Buser_id%7D%2Fput
+     * @param array<mixed> $data
      *
-     * @return User|ResponseInterface
+     * @see https://api.mattermost.com/v4/#tag/users%2Fpaths%2F~1users~1%7Buser_id%7D%2Fput
      */
-    public function updateUser(string $userId, array $params)
+    public function updateUser(string $userId, array $data): User
     {
         if (empty($userId)) {
             throw new InvalidArgumentException('UserId can not be empty');
         }
 
-        $response = $this->httpPut(sprintf('/users/%s', $userId), $params);
+        $response = $this->httpPut(sprintf('/users/%s', $userId), $data);
 
         return $this->handleResponse($response, User::class);
     }
@@ -270,10 +249,8 @@ final class UsersApi extends HttpApi
      *
      * @param string $currentPassword The current password for the user
      * @param string $newPassword     The new password for the user
-     *
-     * @return Status|ResponseInterface
      */
-    public function updateUserPassword(string $userId, string $currentPassword, string $newPassword)
+    public function updateUserPassword(string $userId, string $currentPassword, string $newPassword): Status
     {
         if (empty($userId)) {
             throw new InvalidArgumentException('UserId can not be empty');
@@ -292,10 +269,8 @@ final class UsersApi extends HttpApi
 
     /**
      * Returns an user by its username, use "me" to get the current logged in user.
-     *
-     * @return User|ResponseInterface
      */
-    public function getUserByUsername(string $username)
+    public function getUserByUsername(string $username): User
     {
         if (empty($username)) {
             throw new InvalidArgumentException('Username can not be empty');
@@ -308,10 +283,8 @@ final class UsersApi extends HttpApi
 
     /**
      * Get the user status by its ID.
-     *
-     * @return UserStatus|ResponseInterface
      */
-    public function getUserStatus(string $userId)
+    public function getUserStatus(string $userId): UserStatus
     {
         if (empty($userId)) {
             throw new InvalidArgumentException('UserId can not be empty');
@@ -324,10 +297,8 @@ final class UsersApi extends HttpApi
 
     /**
      * Delete a user's picture.
-     *
-     * @return Status|ResponseInterface
      */
-    public function deleteProfileImage(string $userId)
+    public function deleteProfileImage(string $userId): Status
     {
         if (empty($userId)) {
             throw new InvalidArgumentException('UserId can not be empty');
@@ -342,10 +313,8 @@ final class UsersApi extends HttpApi
      * Update a user's picture.
      *
      * @param string|resource|StreamInterface|null $image The image contents to use as profile image
-     *
-     * @return Status|ResponseInterface
      */
-    public function updateProfileImage(string $userId, $image)
+    public function updateProfileImage(string $userId, $image): Status
     {
         if (empty($userId)) {
             throw new InvalidArgumentException('UserId can not be empty');

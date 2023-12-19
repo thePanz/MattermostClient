@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Pnz\MattermostClient\Model\User;
 
 use Pnz\MattermostClient\Model\ModelBuilder;
+use Pnz\MattermostClient\Model\ModelBuildTargetEnum;
 
 class UserBuilder extends ModelBuilder
 {
@@ -62,16 +63,12 @@ class UserBuilder extends ModelBuilder
         return $this;
     }
 
-    protected function getRequiredFields(string $buildType = self::BUILD_FOR_CREATE): array
+    protected function getRequiredFields(ModelBuildTargetEnum $buildType = ModelBuildTargetEnum::BUILD_FOR_CREATE): array
     {
-        switch ($buildType) {
-            case self::BUILD_FOR_CREATE:
-                return ['username', 'email', 'password'];
-            case self::BUILD_FOR_UPDATE:
-                return ['id'];
-            case self::BUILD_FOR_PATCH:
-            default:
-                return [];
-        }
+        return match ($buildType) {
+            ModelBuildTargetEnum::BUILD_FOR_CREATE => ['username', 'email', 'password'],
+            ModelBuildTargetEnum::BUILD_FOR_UPDATE => ['id'],
+            default => [],
+        };
     }
 }

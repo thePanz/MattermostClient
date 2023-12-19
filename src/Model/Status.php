@@ -11,9 +11,6 @@ final class Status extends Model
         return $this->data['status'] ?? '';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected static function getFields(): array
     {
         return ['status'];

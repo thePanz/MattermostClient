@@ -6,12 +6,12 @@ namespace Pnz\MattermostClient\Model\Post;
 
 use Pnz\MattermostClient\Model\ModelCollectionOrdered;
 
+/**
+ * @extends ModelCollectionOrdered<Post>
+ */
 final class Posts extends ModelCollectionOrdered
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected function createItem(array $data)
+    protected function createItem(array $data): Post
     {
         return Post::createFromArray($data);
     }

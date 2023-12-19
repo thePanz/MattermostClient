@@ -4,235 +4,254 @@ declare(strict_types=1);
 
 namespace Pnz\MattermostClient\Tests\Api;
 
-use Pnz\JsonException\Json;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Pnz\MattermostClient\Api\PostsApi;
+use Pnz\MattermostClient\Exception\DomainException;
 use Pnz\MattermostClient\Exception\InvalidArgumentException;
+use Pnz\MattermostClient\Model\Error;
 use Pnz\MattermostClient\Model\Post\Post;
 use Pnz\MattermostClient\Model\Status;
 
 /**
- * @coversDefaultClass \Pnz\MattermostClient\Api\PostsApi
+ * @internal
  */
-class PostsTest extends BaseHttpApiTest
+#[CoversClass(PostsApi::class)]
+final class PostsTest extends AbstractHttpApiTestCase
 {
-    /**
-     * @var PostsApi
-     */
-    private $client;
+    private PostsApi $client;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->client = new PostsApi($this->httpClient, $this->requestFactory, $this->hydrator);
+        $this->client = new PostsApi($this->httpClient, $this->psr17factory, $this->psr17factory, $this->hydrator);
     }
 
-    public function testCreatePostSuccess(): void
+    public function testCreatePostSucceeds(): void
     {
-        $data = [
-            'message' => 'message',
-            'channel_id' => 'channel_id,',
-        ];
-        $this->configureMessage('POST', '/posts', [], Json::encode($data));
-        $this->configureRequestAndResponse(201);
-        $this->configureHydrator(Post::class);
+        $requestData = ['message' => 'Lorem Ipsum', 'channel_id' => self::CHANNEL_UUID];
+        $responseData = ['id' => self::POST_UUID, 'channel_id' => self::CHANNEL_UUID];
+        $response = $this->buildResponse(201, $responseData);
 
-        $this->client->createPost($data);
+        $this->expectRequest('POST', '/posts', $requestData, $response);
+        $this->expectHydration($response, Post::class);
+
+        $p = $this->client->createPost($requestData);
+
+        $this->assertSame(self::CHANNEL_UUID, $p->getChannelId());
+        $this->assertSame(self::POST_UUID, $p->getId());
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
-    public function testCreatePostException(string $exception, int $code): void
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testCreatePostThrows(string $exception, int $code): void
     {
+        $requestData = ['message' => 'Lorem Ipsum', 'channel_id' => self::CHANNEL_UUID];
+        $response = $this->buildResponse($code);
+
+        $this->expectRequest('POST', '/posts', $requestData, $response);
+        $this->expectHydration($response, Error::class);
         $this->expectException($exception);
-        $data = [
-            'message' => 'message',
-            'channel_id' => 'channel_id,',
-        ];
-        $this->configureMessage('POST', '/posts', [], Json::encode($data));
-        $this->configureRequestAndResponse($code);
 
-        $this->client->createPost($data);
+        $this->client->createPost($requestData);
     }
 
-    public function testUpdatePostSuccess(): void
+    public function testUpdatePostSucceeds(): void
     {
-        $postId = '111';
-        $data = [
-            'message' => 'message,',
-            'channel_id' => 'channel_id',
-        ];
+        $requestData = ['message' => 'Lorem Ipsum', 'channel_id' => self::CHANNEL_UUID];
+        $responseData = ['id' => self::POST_UUID, 'channel_id' => self::CHANNEL_UUID];
+        $response = $this->buildResponse(201, $responseData);
 
-        $this->configureMessage('PUT', '/posts/'.$postId, [], Json::encode($data));
-        $this->configureRequestAndResponse(201);
-        $this->configureHydrator(Post::class);
-        $this->client->updatePost($postId, $data);
+        $this->expectRequest('PUT', '/posts/'.self::POST_UUID, $requestData, $response);
+        $this->expectHydration($response, Post::class);
+
+        $p = $this->client->updatePost(self::POST_UUID, $requestData);
+
+        $this->assertSame(self::CHANNEL_UUID, $p->getChannelId());
+        $this->assertSame(self::POST_UUID, $p->getId());
     }
 
-    public function testUpdatePostEmptyId(): void
+    public function testUpdatePostWithEmptyIdThrows(): void
     {
-        $this->expectException(InvalidArgumentException ::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->client->updatePost('', []);
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
-    public function testUpdatePostException(string $exception, int $code): void
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testUpdatePostThrows(string $exception, int $code): void
     {
-        $this->expectException($exception);
-        $postId = '111';
-        $data = [
-            'channel_id' => 'channel_id',
-            'message' => 'message,',
-        ];
+        $requestData = ['message' => 'Lorem Ipsum', 'channel_id' => self::CHANNEL_UUID];
+        $response = $this->buildResponse($code);
 
-        $this->configureMessage('PUT', '/posts/'.$postId, [], Json::encode($data));
-        $this->configureRequestAndResponse($code);
-        $this->client->updatePost($postId, $data);
+        $this->expectRequest('PUT', '/posts/'.self::POST_UUID, $requestData, $response);
+        $this->expectHydration($response, Error::class);
+        $this->expectException($exception);
+
+        $this->client->updatePost(self::POST_UUID, $requestData);
     }
 
-    public function testPatchPostSuccess(): void
+    public function testPatchPostSucceeds(): void
     {
-        $postId = '111';
-        $data = [
-            'username' => 'username',
-            'message' => 'message,',
-        ];
-        $this->configureMessage('PUT', '/posts/'.$postId.'/patch', [], Json::encode($data));
-        $this->configureRequestAndResponse(201);
-        $this->configureHydrator(Post::class);
+        $requestData = ['message' => 'Lorem Lipsum'];
+        $responseData = ['id' => self::POST_UUID, 'channel_id' => self::CHANNEL_UUID];
 
-        $this->client->patchPost($postId, $data);
+        $response = $this->buildResponse(201, $responseData);
+        $this->expectRequest('PUT', '/posts/'.self::POST_UUID.'/patch', $requestData, $response);
+        $this->expectHydration($response, Post::class);
+
+        $p = $this->client->patchPost(self::POST_UUID, $requestData);
+
+        $this->assertSame(self::CHANNEL_UUID, $p->getChannelId());
+        $this->assertSame(self::POST_UUID, $p->getId());
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
-    public function testPatchPostException(string $exception, int $code): void
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testPatchPostThrows(string $exception, int $code): void
     {
-        $this->expectException($exception);
-        $postId = '111';
-        $data = [
-            'username' => 'username',
-            'message' => 'message,',
-        ];
-        $this->configureMessage('PUT', '/posts/'.$postId.'/patch', [], Json::encode($data));
-        $this->configureRequestAndResponse($code);
+        $requestData = ['message' => 'Lorem Ipsum'];
+        $response = $this->buildResponse($code);
 
-        $this->client->patchPost($postId, $data);
+        $this->expectRequest('PUT', '/posts/'.self::POST_UUID.'/patch', $requestData, $response);
+        $this->expectHydration($response, Error::class);
+        $this->expectException($exception);
+
+        $this->client->patchPost(self::POST_UUID, $requestData);
     }
 
-    public function testPatchPostsEmptyId(): void
+    public function testPatchPostWithEmptyIdThrows(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->client->patchPost('', []);
     }
 
-    public function testGetPostSuccess(): void
+    public function testGetPostSucceeds(): void
     {
-        $postId = '12345';
-        $this->configureMessage('GET', '/posts/'.$postId);
-        $this->configureRequestAndResponse(200);
-        $this->configureHydrator(Post::class);
-        $this->client->getPost($postId);
+        $responseData = ['id' => self::POST_UUID, 'channel_id' => self::CHANNEL_UUID];
+
+        $response = $this->buildResponse(200, $responseData);
+        $this->expectRequest('GET', '/posts/'.self::POST_UUID, [], $response);
+        $this->expectHydration($response, Post::class);
+
+        $p = $this->client->getPost(self::POST_UUID);
+
+        $this->assertSame(self::CHANNEL_UUID, $p->getChannelId());
+        $this->assertSame(self::POST_UUID, $p->getId());
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
-    public function testGetPostException(string $exception, int $code): void
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testGetPostThrows(string $exception, int $code): void
     {
+        $response = $this->buildResponse($code);
+
+        $this->expectRequest('GET', '/posts/'.self::POST_UUID, [], $response);
+        $this->expectHydration($response, Error::class);
         $this->expectException($exception);
-        $postId = '12345';
-        $this->configureMessage('GET', '/posts/'.$postId);
-        $this->configureRequestAndResponse($code);
-        $this->client->getPost($postId);
+
+        $this->client->getPost(self::POST_UUID);
     }
 
-    public function testGetPostEmptyId(): void
+    public function testGetPostWithEmptyIdThrows(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->client->getPost('');
     }
 
-    public function testDeletePostSuccess(): void
+    public function testDeletePostSucceeds(): void
     {
-        $postId = '12345';
-        $this->configureMessage('DELETE', '/posts/'.$postId);
-        $this->configureRequestAndResponse(200);
-        $this->configureHydrator(Status::class);
-        $this->client->deletePost($postId);
+        $response = $this->buildResponse(200);
+        $this->expectRequest('DELETE', '/posts/'.self::POST_UUID, [], $response);
+        $this->expectHydration($response, Status::class);
+        $this->client->deletePost(self::POST_UUID);
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
-    public function testDeletePostException(string $exception, int $code): void
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testDeletePostThrows(string $exception, int $code): void
     {
+        $response = $this->buildResponse($code);
+
+        $this->expectRequest('DELETE', '/posts/'.self::POST_UUID, [], $response);
+        $this->expectHydration($response, Error::class);
         $this->expectException($exception);
-        $postId = '12345';
-        $this->configureMessage('DELETE', '/posts/'.$postId);
-        $this->configureRequestAndResponse($code);
-        $this->client->deletePost($postId);
+
+        $this->client->deletePost(self::POST_UUID);
     }
 
-    public function testDeletePostEmptyId(): void
+    public function testDeletePostWithEmptyIdThrows(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->client->deletePost('');
     }
 
-    public function testPinPostSuccess(): void
+    public function testPinPostSucceeds(): void
     {
-        $postId = '12345';
-        $this->configureMessage('POST', '/posts/'.$postId.'/pin');
-        $this->configureRequestAndResponse(200);
-        $this->configureHydrator(Status::class);
-        $this->client->pinPost($postId);
+        $response = $this->buildResponse(200);
+        $this->expectRequest('POST', '/posts/'.self::POST_UUID.'/pin', [], $response);
+        $this->expectHydration($response, Status::class);
+
+        $this->client->pinPost(self::POST_UUID);
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
-    public function testPinPostException(string $exception, int $code): void
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testPinPostThrows(string $exception, int $code): void
     {
+        $response = $this->buildResponse($code);
+
+        $this->expectRequest('POST', '/posts/'.self::POST_UUID.'/pin', [], $response);
+        $this->expectHydration($response, Error::class);
         $this->expectException($exception);
-        $postId = '12345';
-        $this->configureMessage('POST', '/posts/'.$postId.'/pin');
-        $this->configureRequestAndResponse($code);
-        $this->client->pinPost($postId);
+
+        $this->client->pinPost(self::POST_UUID);
     }
 
-    public function testPinPostEmptyId(): void
+    public function testPinPostWithEmptyIdThrows(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->client->pinPost('');
     }
 
-    public function testUnpinPostSuccess(): void
+    public function testUnpinPostSucceeds(): void
     {
-        $postId = '12345';
-        $this->configureMessage('POST', '/posts/'.$postId.'/unpin');
-        $this->configureRequestAndResponse(200);
-        $this->configureHydrator(Status::class);
-        $this->client->unpinPost($postId);
+        $response = $this->buildResponse(200);
+        $this->expectRequest('POST', '/posts/'.self::POST_UUID.'/unpin', [], $response);
+        $this->expectHydration($response, Status::class);
+
+        $this->client->unpinPost(self::POST_UUID);
     }
 
     /**
-     * @dataProvider getErrorCodesExceptions
+     * @param class-string<DomainException> $exception
      */
-    public function testUnpinPostException(string $exception, int $code): void
+    #[DataProvider('provideErrorCodesExceptionsCases')]
+    public function testUnpinPostThrows(string $exception, int $code): void
     {
+        $response = $this->buildResponse($code);
+
+        $this->expectRequest('POST', '/posts/'.self::POST_UUID.'/unpin', [], $response);
+        $this->expectHydration($response, Error::class);
         $this->expectException($exception);
-        $postId = '12345';
-        $this->configureMessage('POST', '/posts/'.$postId.'/unpin');
-        $this->configureRequestAndResponse($code);
-        $this->client->unpinPost($postId);
+
+        $this->client->unpinPost(self::POST_UUID);
     }
 
-    public function testUnpinPostEmptyId(): void
+    public function testUnpinPostWithEmptyIdThrows(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->client->unpinPost('');
