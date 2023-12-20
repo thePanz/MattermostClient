@@ -32,6 +32,6 @@ final class ModelHydrator implements HydratorInterface
             return $class::createFromArray($data);
         }
 
-            return new $class($data);
+        return new $class($data);
     }
 }

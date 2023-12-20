@@ -63,7 +63,7 @@ final class HttpClientConfigurator
             throw new \InvalidArgumentException('Unable to configure the client, no API Endpoint provided');
         }
 
-        if (!$this->token || (!$this->loginId && !$this->password)) {
+        if (!$this->token && !($this->loginId && $this->password)) {
             throw new \InvalidArgumentException('Unable to configure the client, no LoginId/Password or Token provided');
         }
 
@@ -71,10 +71,12 @@ final class HttpClientConfigurator
         $plugins = $this->prependPlugins;
 
         $plugins[] = new BaseUriPlugin($baseUri);
-        if ($this->loginId && $this->password) {
-            $plugins[] = new AuthenticationPlugin($this->createAuthentication($baseUri, $this->loginId, $this->password));
-        } else {
+
+        // Build the authentication using the token and fallback to username and password if provided
+        if ($this->token) {
             $plugins[] = new AuthenticationPlugin(new Bearer($this->token));
+        } elseif ($this->loginId && $this->password) {
+            $plugins[] = new AuthenticationPlugin($this->createAuthentication($baseUri, $this->loginId, $this->password));
         }
 
         return new PluginClient($this->httpClient, array_merge($plugins, $this->appendPlugins));
