@@ -116,6 +116,8 @@ abstract class HttpApi
      * @param class-string<T> $class The Class to hydrate the response
      *
      * @return T
+     *
+     * @throws ApiException
      */
     protected function handleResponse(ResponseInterface $response, string $class): object
     {
