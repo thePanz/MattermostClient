@@ -46,10 +46,10 @@ final class HttpClientConfigurator
     private array $appendPlugins = [];
 
     public function __construct(
-        ClientInterface $httpClient = null,
-        UriFactoryInterface $uriFactory = null,
-        RequestFactoryInterface $requestFactory = null,
-        StreamFactoryInterface $streamFactory = null
+        ?ClientInterface $httpClient = null,
+        ?UriFactoryInterface $uriFactory = null,
+        ?RequestFactoryInterface $requestFactory = null,
+        ?StreamFactoryInterface $streamFactory = null
     ) {
         $this->httpClient = $httpClient ?? Psr18ClientDiscovery::find();
         $this->uriFactory = $uriFactory ?? Psr17FactoryDiscovery::findUriFactory();

@@ -27,13 +27,14 @@ final class ApiClient
     /**
      * Construct an ApiClient instance.
      *
-     * @param ClientInterface|null         $httpClient     The HttpClient;  if null, the auto-discover will be used
-     * @param RequestFactoryInterface|null $requestFactory The RequestFactory; if null, the auto-discover will be used
+     * @param ClientInterface|null         $httpClient     The HttpClient;  if null it will be auto-discovered
+     * @param RequestFactoryInterface|null $requestFactory The RequestFactory; if null it will be auto-discovered
+     * @param StreamFactoryInterface|null  $streamFactory  The StreamFactory; if null it will be auto-discovered
      */
     public function __construct(
-        ClientInterface $httpClient = null,
-        RequestFactoryInterface $requestFactory = null,
-        StreamFactoryInterface $streamFactory = null,
+        ?ClientInterface $httpClient = null,
+        ?RequestFactoryInterface $requestFactory = null,
+        ?StreamFactoryInterface $streamFactory = null,
     ) {
         $this->httpClient = $httpClient ?: Psr18ClientDiscovery::find();
         $this->requestFactory = $requestFactory ?: Psr17FactoryDiscovery::findRequestFactory();
@@ -46,8 +47,8 @@ final class ApiClient
      */
     public static function configure(
         HttpClientConfigurator $httpClientConfigurator,
-        RequestFactoryInterface $requestFactory = null,
-        StreamFactoryInterface $streamFactory = null,
+        ?RequestFactoryInterface $requestFactory = null,
+        ?StreamFactoryInterface $streamFactory = null,
     ): self {
         $httpClient = $httpClientConfigurator->createConfiguredClient();
 
