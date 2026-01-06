@@ -16,11 +16,11 @@ use Psr\Http\Message\StreamInterface;
 final class UsersApi extends HttpApi
 {
     /**
-     * @param string $loginId  The login Id
-     * @param string $password The password
-     * @param string $token    The login token, as output variable
+     * @param string      $loginId  The login Id
+     * @param string      $password The password
+     * @param string|null $token    The login token, as an output variable
      */
-    public function login(string $loginId, string $password, string &$token = null): User
+    public function login(string $loginId, string $password, ?string &$token = null): User
     {
         if (empty($loginId) || empty($password)) {
             throw new InvalidArgumentException('LoginId and Password cannot be empty');

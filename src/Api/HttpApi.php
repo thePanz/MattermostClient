@@ -29,7 +29,7 @@ abstract class HttpApi
         private readonly ClientInterface $httpClient,
         protected RequestFactoryInterface $requestFactory,
         protected StreamFactoryInterface $streamFactory,
-        HydratorInterface $hydrator = null
+        ?HydratorInterface $hydrator = null
     ) {
         $this->hydrator = $hydrator ?: new ModelHydrator();
     }
@@ -182,7 +182,7 @@ abstract class HttpApi
     /**
      * @param RequestHeaders $headers
      */
-    private function prepareRequest(RequestInterface $request, array $headers, StreamInterface $body = null): RequestInterface
+    private function prepareRequest(RequestInterface $request, array $headers, ?StreamInterface $body = null): RequestInterface
     {
         foreach ($headers as $header => $value) {
             $request = $request->withAddedHeader($header, $value);
