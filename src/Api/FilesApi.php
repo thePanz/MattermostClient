@@ -23,7 +23,7 @@ final class FilesApi extends HttpApi
      *
      * @return FileUploadInfo|ResponseInterface
      */
-    public function sendFile($file, string $filename, string $channelId, string $clientId = null)
+    public function sendFile($file, string $filename, string $channelId, ?string $clientId = null)
     {
         if (!($file instanceof StreamInterface || \is_resource($file) || \is_string($file))) {
             throw new InvalidArgumentException('File must be a string, resource or StreamInterface');
