@@ -29,7 +29,7 @@ abstract class HttpApi
         private readonly ClientInterface $httpClient,
         protected RequestFactoryInterface $requestFactory,
         protected StreamFactoryInterface $streamFactory,
-        ?HydratorInterface $hydrator = null
+        ?HydratorInterface $hydrator = null,
     ) {
         $this->hydrator = $hydrator ?: new ModelHydrator();
     }

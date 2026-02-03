@@ -25,7 +25,7 @@ final class ModelHydrator implements HydratorInterface
         try {
             $data = json_decode($body, true, 512, \JSON_THROW_ON_ERROR);
         } catch (\JsonException $exception) {
-            throw new HydrationException(sprintf('Error when trying to decode the JSON response: %s', $exception->getMessage()), 0, $exception);
+            throw new HydrationException(\sprintf('Error when trying to decode the JSON response: %s', $exception->getMessage()), 0, $exception);
         }
 
         if (is_subclass_of($class, CreatableFromArray::class)) {

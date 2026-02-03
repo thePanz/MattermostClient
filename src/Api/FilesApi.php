@@ -67,7 +67,7 @@ final class FilesApi extends HttpApi
             throw new InvalidArgumentException('FileID can not be empty');
         }
 
-        $response = $this->httpGet(sprintf('/files/%s/info', $fileId));
+        $response = $this->httpGet(\sprintf('/files/%s/info', $fileId));
 
         return $this->handleResponse($response, FileInfo::class);
     }
@@ -83,7 +83,7 @@ final class FilesApi extends HttpApi
             throw new InvalidArgumentException('FileID can not be empty');
         }
 
-        $response = $this->httpGet(sprintf('/files/%s', $fileId));
+        $response = $this->httpGet(\sprintf('/files/%s', $fileId));
 
         $status = $response->getStatusCode();
         if (200 !== $status && 201 !== $status) {
@@ -106,7 +106,7 @@ final class FilesApi extends HttpApi
             throw new InvalidArgumentException('FileID can not be empty');
         }
 
-        $response = $this->httpGet(sprintf('/files/%s/link', $fileId));
+        $response = $this->httpGet(\sprintf('/files/%s/link', $fileId));
 
         if (200 !== $response->getStatusCode() && 201 !== $response->getStatusCode()) {
             $this->handleErrors($response);

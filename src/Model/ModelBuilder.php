@@ -41,7 +41,7 @@ abstract class ModelBuilder implements ModelBuilderInterface
 
         $missingFields = array_diff_key(array_flip($requiredFields), $this->params);
         if (!empty($missingFields)) {
-            throw new InvalidArgumentException(sprintf('Required parameters missing: %s', implode(', ', array_keys($missingFields))));
+            throw new InvalidArgumentException(\sprintf('Required parameters missing: %s', implode(', ', array_keys($missingFields))));
         }
     }
 }

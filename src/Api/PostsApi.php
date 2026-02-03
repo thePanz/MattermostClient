@@ -36,7 +36,7 @@ final class PostsApi extends HttpApi
             throw new InvalidArgumentException('PostId can not be empty');
         }
 
-        $response = $this->httpPut(sprintf('/posts/%s/patch', $postId), $data);
+        $response = $this->httpPut(\sprintf('/posts/%s/patch', $postId), $data);
 
         return $this->handleResponse($response, Post::class);
     }
@@ -55,7 +55,7 @@ final class PostsApi extends HttpApi
             throw new InvalidArgumentException('PostId can not be empty');
         }
 
-        $response = $this->httpPut(sprintf('/posts/%s', $postId), $data);
+        $response = $this->httpPut(\sprintf('/posts/%s', $postId), $data);
 
         return $this->handleResponse($response, Post::class);
     }
@@ -71,7 +71,7 @@ final class PostsApi extends HttpApi
             throw new InvalidArgumentException('PostId can not be empty');
         }
 
-        $response = $this->httpGet(sprintf('/posts/%s', $postId));
+        $response = $this->httpGet(\sprintf('/posts/%s', $postId));
 
         return $this->handleResponse($response, Post::class);
     }
@@ -89,7 +89,7 @@ final class PostsApi extends HttpApi
             throw new InvalidArgumentException('PostId can not be empty');
         }
 
-        $response = $this->httpPost(sprintf('/posts/%s/pin', $postId));
+        $response = $this->httpPost(\sprintf('/posts/%s/pin', $postId));
 
         return $this->handleResponse($response, Status::class);
     }
@@ -107,7 +107,7 @@ final class PostsApi extends HttpApi
             throw new InvalidArgumentException('PostId can not be empty');
         }
 
-        $response = $this->httpPost(sprintf('/posts/%s/unpin', $postId));
+        $response = $this->httpPost(\sprintf('/posts/%s/unpin', $postId));
 
         return $this->handleResponse($response, Status::class);
     }
@@ -125,7 +125,7 @@ final class PostsApi extends HttpApi
             throw new InvalidArgumentException('PostId can not be empty');
         }
 
-        $response = $this->httpDelete(sprintf('/posts/%s', $postId));
+        $response = $this->httpDelete(\sprintf('/posts/%s', $postId));
 
         return $this->handleResponse($response, Status::class);
     }

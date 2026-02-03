@@ -49,7 +49,7 @@ final class HttpClientConfigurator
         ?ClientInterface $httpClient = null,
         ?UriFactoryInterface $uriFactory = null,
         ?RequestFactoryInterface $requestFactory = null,
-        ?StreamFactoryInterface $streamFactory = null
+        ?StreamFactoryInterface $streamFactory = null,
     ) {
         $this->httpClient = $httpClient ?? Psr18ClientDiscovery::find();
         $this->uriFactory = $uriFactory ?? Psr17FactoryDiscovery::findUriFactory();

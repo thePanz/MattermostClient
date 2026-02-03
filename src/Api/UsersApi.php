@@ -55,7 +55,7 @@ final class UsersApi extends HttpApi
             throw new InvalidArgumentException('UserId can not be empty');
         }
 
-        $response = $this->httpGet(sprintf('/users/%s', $userId));
+        $response = $this->httpGet(\sprintf('/users/%s', $userId));
 
         return $this->handleResponse($response, User::class);
     }
@@ -71,7 +71,7 @@ final class UsersApi extends HttpApi
             throw new InvalidArgumentException('UserId can not be empty');
         }
 
-        $response = $this->httpGet(sprintf('/users/%s/teams', $userId));
+        $response = $this->httpGet(\sprintf('/users/%s/teams', $userId));
 
         return $this->handleResponse($response, Teams::class);
     }
@@ -113,7 +113,7 @@ final class UsersApi extends HttpApi
             throw new InvalidArgumentException('Email can not be empty');
         }
 
-        $response = $this->httpGet(sprintf('/users/email/%s', $email));
+        $response = $this->httpGet(\sprintf('/users/email/%s', $email));
 
         return $this->handleResponse($response, User::class);
     }
@@ -148,7 +148,7 @@ final class UsersApi extends HttpApi
             throw new InvalidArgumentException('User ID can not be empty');
         }
 
-        $response = $this->httpPut(sprintf('/users/%s/active', $userId), [
+        $response = $this->httpPut(\sprintf('/users/%s/active', $userId), [
             'active' => $activeStatus,
         ]);
 
@@ -168,7 +168,7 @@ final class UsersApi extends HttpApi
             throw new InvalidArgumentException('User ID can not be empty');
         }
 
-        $response = $this->httpDelete(sprintf('/users/%s', $userId));
+        $response = $this->httpDelete(\sprintf('/users/%s', $userId));
 
         return $this->handleResponse($response, Status::class);
     }
@@ -187,7 +187,7 @@ final class UsersApi extends HttpApi
             throw new InvalidArgumentException('User ID can not be empty');
         }
 
-        $response = $this->httpPut(sprintf('/users/%s/roles', $userId), [
+        $response = $this->httpPut(\sprintf('/users/%s/roles', $userId), [
             'roles' => $roles,
         ]);
 
@@ -221,7 +221,7 @@ final class UsersApi extends HttpApi
             throw new InvalidArgumentException('UserId can not be empty');
         }
 
-        $response = $this->httpPut(sprintf('/users/%s/patch', $userId), $data);
+        $response = $this->httpPut(\sprintf('/users/%s/patch', $userId), $data);
 
         return $this->handleResponse($response, User::class);
     }
@@ -239,7 +239,7 @@ final class UsersApi extends HttpApi
             throw new InvalidArgumentException('UserId can not be empty');
         }
 
-        $response = $this->httpPut(sprintf('/users/%s', $userId), $data);
+        $response = $this->httpPut(\sprintf('/users/%s', $userId), $data);
 
         return $this->handleResponse($response, User::class);
     }
@@ -259,7 +259,7 @@ final class UsersApi extends HttpApi
             throw new InvalidArgumentException('The current password and the new password can not be empty');
         }
 
-        $response = $this->httpPut(sprintf('/users/%s/password', $userId), [
+        $response = $this->httpPut(\sprintf('/users/%s/password', $userId), [
             'current_password' => $currentPassword,
             'new_password' => $newPassword,
         ]);
@@ -276,7 +276,7 @@ final class UsersApi extends HttpApi
             throw new InvalidArgumentException('Username can not be empty');
         }
 
-        $response = $this->httpGet(sprintf('/users/username/%s', $username));
+        $response = $this->httpGet(\sprintf('/users/username/%s', $username));
 
         return $this->handleResponse($response, User::class);
     }
@@ -290,7 +290,7 @@ final class UsersApi extends HttpApi
             throw new InvalidArgumentException('UserId can not be empty');
         }
 
-        $response = $this->httpGet(sprintf('/users/%s/status', $userId));
+        $response = $this->httpGet(\sprintf('/users/%s/status', $userId));
 
         return $this->handleResponse($response, UserStatus::class);
     }
@@ -304,7 +304,7 @@ final class UsersApi extends HttpApi
             throw new InvalidArgumentException('UserId can not be empty');
         }
 
-        $response = $this->httpDelete(sprintf('/users/%s/image', $userId));
+        $response = $this->httpDelete(\sprintf('/users/%s/image', $userId));
 
         return $this->handleResponse($response, Status::class);
     }
@@ -329,7 +329,7 @@ final class UsersApi extends HttpApi
         $headers = ['Content-Type' => 'multipart/form-data; boundary='.$multipartStreamBuilder->getBoundary()];
         $multipartStream = $multipartStreamBuilder->build();
 
-        $response = $this->httpPostRaw(sprintf('/users/%s/image', $userId), $multipartStream, $headers);
+        $response = $this->httpPostRaw(\sprintf('/users/%s/image', $userId), $multipartStream, $headers);
 
         return $this->handleResponse($response, Status::class);
     }

@@ -25,7 +25,7 @@ class MattermostAuthentication implements Authentication
         private readonly string $password,
         private readonly ClientInterface $client,
         private readonly RequestFactoryInterface $requestFactory,
-        private readonly StreamFactoryInterface $streamFactory
+        private readonly StreamFactoryInterface $streamFactory,
     ) {}
 
     public function authenticate(RequestInterface $request): RequestInterface
@@ -34,7 +34,7 @@ class MattermostAuthentication implements Authentication
             $this->token = $this->obtainTokenByLogin();
         }
 
-        $header = sprintf('Bearer %s', $this->token);
+        $header = \sprintf('Bearer %s', $this->token);
 
         return $request->withHeader('Authorization', $header);
     }

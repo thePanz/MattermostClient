@@ -12,7 +12,7 @@
         }
     ],
     "require": {
-        "php": "^8.1",
+        "php": "^8.3",
         "ext-json": "*",
         "php-http/client-common": "^2.0",
         "php-http/discovery": "^1.17",
@@ -51,13 +51,14 @@
         }
     },
     "scripts": {
-        "ci": ["@phpcs", "@phpstan", "@phpunit-ci" ],
-        "cs:fix": "vendor/bin/php-cs-fixer fix --verbose --ansi",
-        "cs:check": "vendor/bin/php-cs-fixer fix --dry-run --verbose --ansi",
+        "ci": ["@cs:check", "@phpstan", "@phpunit" ],
+        "cs:fix": "tools/php-cs-fixer.phar fix --verbose --ansi",
+        "cs:check": "tools/php-cs-fixer.phar fix --dry-run --verbose --ansi",
         "phpstan": "vendor/bin/phpstan analyze",
-        "phpunit": "vendor/bin/phpunit",
-        "phpunit-ci": "vendor/bin/phpunit --coverage-text --coverage-clover=build/coverage.xml",
-        "rector:check": "vendor/bin/rector --dry-run",
-        "rector:fix": "vendor/bin/rector"
+        "phpunit": "tools/phpunit.phar",
+        "phpunit:coverage:text": "tools/phpunit.phar --coverage-text",
+        "phpunit:coverage:ci": "tools/phpunit.phar --coverage-clover=build/coverage.xml",
+        "rector:fix": "vendor/bin/rector",
+        "rector:check": "vendor/bin/rector --dry-run"
     }
 }

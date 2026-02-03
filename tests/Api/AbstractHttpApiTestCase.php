@@ -58,7 +58,7 @@ abstract class AbstractHttpApiTestCase extends TestCase
         int $code,
         array|string $body = [],
         array $headers = [],
-        string $contentType = 'application/json'
+        string $contentType = 'application/json',
     ): ResponseInterface {
         $response = $this->psr17factory->createResponse($code);
 
@@ -119,6 +119,6 @@ abstract class AbstractHttpApiTestCase extends TestCase
         yield '501' => [DisabledFeatureException::class, 501];
         yield '500' => [ApiException::class, 500];
         // Weird response
-        yield '000' => [ApiException::class, 000];
+        yield '000' => [ApiException::class, 0o00];
     }
 }

@@ -4,19 +4,17 @@ return (new PhpCsFixer\Config())
     ->setCacheFile('.cache/php-cs-fixer.cache')
     ->setRiskyAllowed(true)
     ->setRules([
-        '@PhpCsFixer' => true,
-        '@PhpCsFixer:risky' => true,
+        '@PER-CS' => true,
+        '@autoPHPMigration' => true,
+        '@PHPUnit10x0Migration:risky' => true,
         '@Symfony' => true,
         '@Symfony:risky' => true,
-        '@PHPUnit84Migration:risky' => true,
         'static_lambda' => true,
         'strict_comparison' => true,
-        'array_syntax' => ['syntax' => 'short'],
-        'strict_param' => true,
         'ternary_to_null_coalescing' => true,
         'php_unit_test_class_requires_covers' => false,
         'php_unit_test_case_static_method_calls' => ['call_type' => 'this'],
-        'void_return' => true,
+        'single_line_empty_body' => true,
 
         // Adjust grouping of annotations
         'phpdoc_separation' => [

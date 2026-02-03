@@ -24,7 +24,7 @@ final class TeamsApi extends HttpApi
             throw new InvalidArgumentException('Id can not be empty');
         }
 
-        $response = $this->httpGet(sprintf('/teams/%s', $id));
+        $response = $this->httpGet(\sprintf('/teams/%s', $id));
 
         return $this->handleResponse($response, Team::class);
     }
@@ -69,7 +69,7 @@ final class TeamsApi extends HttpApi
 
         $params = $permanent ? ['permanent' => true] : [];
 
-        $response = $this->httpDelete(sprintf('/teams/%s', $teamId), [], $params);
+        $response = $this->httpDelete(\sprintf('/teams/%s', $teamId), [], $params);
 
         return $this->handleResponse($response, Status::class);
     }
@@ -83,7 +83,7 @@ final class TeamsApi extends HttpApi
             throw new InvalidArgumentException('TeamName can not be empty');
         }
 
-        $response = $this->httpGet(sprintf('/teams/name/%s', $name));
+        $response = $this->httpGet(\sprintf('/teams/name/%s', $name));
 
         return $this->handleResponse($response, Team::class);
     }
@@ -107,7 +107,7 @@ final class TeamsApi extends HttpApi
             'roles' => $roles,
         ];
 
-        $response = $this->httpPost(sprintf('/teams/%s/members', $teamId), $body, $params);
+        $response = $this->httpPost(\sprintf('/teams/%s/members', $teamId), $body, $params);
 
         return $this->handleResponse($response, TeamMember::class);
     }
@@ -126,7 +126,7 @@ final class TeamsApi extends HttpApi
             throw new InvalidArgumentException('TeamID can not be empty');
         }
 
-        $response = $this->httpGet(sprintf('/teams/%s/members', $teamId), $params);
+        $response = $this->httpGet(\sprintf('/teams/%s/members', $teamId), $params);
 
         return $this->handleResponse($response, TeamMembers::class);
     }
@@ -143,7 +143,7 @@ final class TeamsApi extends HttpApi
             throw new InvalidArgumentException('TeamID and UserId can not be empty');
         }
 
-        $response = $this->httpGet(sprintf('/teams/%s/members/%s', $teamId, $userId));
+        $response = $this->httpGet(\sprintf('/teams/%s/members/%s', $teamId, $userId));
 
         return $this->handleResponse($response, TeamMember::class);
     }
@@ -162,7 +162,7 @@ final class TeamsApi extends HttpApi
             throw new InvalidArgumentException('TeamID and UserId can not be empty');
         }
 
-        $response = $this->httpDelete(sprintf('/teams/%s/members/%s', $teamId, $userId));
+        $response = $this->httpDelete(\sprintf('/teams/%s/members/%s', $teamId, $userId));
 
         return $this->handleResponse($response, Status::class);
     }
@@ -179,7 +179,7 @@ final class TeamsApi extends HttpApi
             throw new InvalidArgumentException('TeamID can not be empty');
         }
 
-        $response = $this->httpGet(sprintf('/teams/%s/channels', $teamId), $params);
+        $response = $this->httpGet(\sprintf('/teams/%s/channels', $teamId), $params);
 
         return $this->handleResponse($response, Channels::class);
     }
@@ -195,7 +195,7 @@ final class TeamsApi extends HttpApi
             throw new InvalidArgumentException('TeamID can not be empty');
         }
 
-        $response = $this->httpGet(sprintf('/teams/%s/stats', $teamId));
+        $response = $this->httpGet(\sprintf('/teams/%s/stats', $teamId));
 
         return $this->handleResponse($response, TeamStats::class);
     }
@@ -213,7 +213,7 @@ final class TeamsApi extends HttpApi
             throw new InvalidArgumentException('TeamId can not be empty');
         }
 
-        $response = $this->httpPut(sprintf('/teams/%s/patch', $teamId), $data);
+        $response = $this->httpPut(\sprintf('/teams/%s/patch', $teamId), $data);
 
         return $this->handleResponse($response, Team::class);
     }
@@ -231,7 +231,7 @@ final class TeamsApi extends HttpApi
             throw new InvalidArgumentException('TeamId can not be empty');
         }
 
-        $response = $this->httpPut(sprintf('/teams/%s', $teamId), $data);
+        $response = $this->httpPut(\sprintf('/teams/%s', $teamId), $data);
 
         return $this->handleResponse($response, Team::class);
     }
