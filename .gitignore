@@ -1,3 +1,4 @@
 .cache/
+tools/
 vendor/
 composer.lock
