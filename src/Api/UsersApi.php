@@ -346,7 +346,7 @@ final class UsersApi extends HttpApi
     public function createAccessToken(string $userId): AccessToken
     {
         if (empty($userId)) {
-            throw new InvalidArgumentException('UserId can not be empty', 1781069217);
+            throw new InvalidArgumentException('UserId can not be empty');
         }
 
         $response = $this->httpPost(
@@ -369,7 +369,7 @@ final class UsersApi extends HttpApi
     public function getUserAccessTokens(string $userId): AccessTokens
     {
         if (empty($userId)) {
-            throw new InvalidArgumentException('UserId can not be empty', 1781069217);
+            throw new InvalidArgumentException('UserId can not be empty');
         }
 
         $response = $this->httpGet(\sprintf('/users/%s/tokens', $userId));
@@ -387,7 +387,7 @@ final class UsersApi extends HttpApi
     public function revokeAccessToken(string $tokenId): Status
     {
         if (empty($tokenId)) {
-            throw new InvalidArgumentException('TokenId can not be empty', 1781526778);
+            throw new InvalidArgumentException('TokenId can not be empty');
         }
 
         $response = $this->httpPost('/users/tokens/revoke', ['token_id' => $tokenId]);
