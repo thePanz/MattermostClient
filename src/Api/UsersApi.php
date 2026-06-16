@@ -369,16 +369,17 @@ final class UsersApi extends HttpApi
      * Get list of user's access tokens
      *
      * @param string $userId
+     * @param array<string, string|int> $params The listing params, 'page', 'per_page'
      * @return AccessTokens
      * @throws \Pnz\MattermostClient\Exception\ApiException
      */
-    public function getUserAccessTokens(string $userId): AccessTokens
+    public function getUserAccessTokens(string $userId, array $params = []): AccessTokens
     {
         if (empty($userId)) {
             throw new InvalidArgumentException('UserId can not be empty');
         }
 
-        $response = $this->httpGet(\sprintf('/users/%s/tokens', $userId));
+        $response = $this->httpGet(\sprintf('/users/%s/tokens', $userId), $params);
 
         return $this->handleResponse($response, AccessTokens::class);
     }
