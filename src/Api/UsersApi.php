@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Pnz\MattermostClient\Api;
 
 use Http\Message\MultipartStream\MultipartStreamBuilder;
+use Pnz\MattermostClient\Exception\ApiException;
 use Pnz\MattermostClient\Exception\InvalidArgumentException;
 use Pnz\MattermostClient\Model\Status;
 use Pnz\MattermostClient\Model\Team\Teams;
@@ -340,19 +341,24 @@ final class UsersApi extends HttpApi
      * Create user access token
      *
      * @param string $userId
+     * @param string $description
      * @return AccessToken
-     * @throws \Pnz\MattermostClient\Exception\ApiException
+     * @throws ApiException
      */
-    public function createAccessToken(string $userId): AccessToken
+    public function createAccessToken(string $userId, string $description): AccessToken
     {
         if (empty($userId)) {
             throw new InvalidArgumentException('UserId can not be empty');
         }
 
+        if (empty($description)) {
+            throw new InvalidArgumentException('Description can not be empty');
+        }
+
         $response = $this->httpPost(
             \sprintf('/users/%s/tokens', $userId),
             [
-                'description' => 'Access token generated through API'
+                'description' => $description
             ]
         );
 
