@@ -8,6 +8,8 @@ use Http\Message\MultipartStream\MultipartStreamBuilder;
 use Pnz\MattermostClient\Exception\InvalidArgumentException;
 use Pnz\MattermostClient\Model\Status;
 use Pnz\MattermostClient\Model\Team\Teams;
+use Pnz\MattermostClient\Model\User\AccessToken;
+use Pnz\MattermostClient\Model\User\AccessTokens;
 use Pnz\MattermostClient\Model\User\User;
 use Pnz\MattermostClient\Model\User\Users;
 use Pnz\MattermostClient\Model\User\UserStatus;
@@ -330,6 +332,65 @@ final class UsersApi extends HttpApi
         $multipartStream = $multipartStreamBuilder->build();
 
         $response = $this->httpPostRaw(\sprintf('/users/%s/image', $userId), $multipartStream, $headers);
+
+        return $this->handleResponse($response, Status::class);
+    }
+
+    /**
+     * Create user access token
+     *
+     * @param string $userId
+     * @return AccessToken
+     * @throws \Pnz\MattermostClient\Exception\ApiException
+     */
+    public function createAccessToken(string $userId): AccessToken
+    {
+        if (empty($userId)) {
+            throw new InvalidArgumentException('UserId can not be empty', 1781069217);
+        }
+
+        $response = $this->httpPost(
+            \sprintf('/users/%s/tokens', $userId),
+            [
+                'description' => 'Access token generated through API'
+            ]
+        );
+
+        return $this->handleResponse($response, AccessToken::class);
+    }
+
+    /**
+     * Get list of user's access tokens
+     *
+     * @param string $userId
+     * @return AccessTokens
+     * @throws \Pnz\MattermostClient\Exception\ApiException
+     */
+    public function getUserAccessTokens(string $userId): AccessTokens
+    {
+        if (empty($userId)) {
+            throw new InvalidArgumentException('UserId can not be empty', 1781069217);
+        }
+
+        $response = $this->httpGet(\sprintf('/users/%s/tokens', $userId));
+
+        return $this->handleResponse($response, AccessTokens::class);
+    }
+
+    /**
+     * Revoke a single access token
+     *
+     * @param string $tokenId
+     * @return Status
+     * @throws \Pnz\MattermostClient\Exception\ApiException
+     */
+    public function revokeAccessToken(string $tokenId): Status
+    {
+        if (empty($tokenId)) {
+            throw new InvalidArgumentException('TokenId can not be empty', 1781526778);
+        }
+
+        $response = $this->httpPost('/users/tokens/revoke', ['token_id' => $tokenId]);
 
         return $this->handleResponse($response, Status::class);
     }
