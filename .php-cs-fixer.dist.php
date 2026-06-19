@@ -15,6 +15,7 @@ return (new PhpCsFixer\Config())
         'php_unit_test_class_requires_covers' => false,
         'php_unit_test_case_static_method_calls' => ['call_type' => 'this'],
         'single_line_empty_body' => true,
+        'declare_strict_types' => true,
 
         // Adjust grouping of annotations
         'phpdoc_separation' => [

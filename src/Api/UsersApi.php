@@ -338,7 +338,8 @@ final class UsersApi extends HttpApi
     }
 
     /**
-     * Create a user access token
+     * Create a user access token.
+     *
      * @throws ApiException
      */
     public function createAccessToken(string $userId, string $description): AccessToken
@@ -357,9 +358,10 @@ final class UsersApi extends HttpApi
     }
 
     /**
-     * Get list of user's access tokens
+     * Get list of user's access tokens.
      *
      * @param array{page?: int, per_page?: int} $params
+     *
      * @throws ApiException
      */
     public function getUserAccessTokens(string $userId, array $params = []): AccessTokens
@@ -374,7 +376,7 @@ final class UsersApi extends HttpApi
     }
 
     /**
-     * Revoke a single access token
+     * Revoke a single access token.
      *
      * @throws ApiException
      */

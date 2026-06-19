@@ -34,7 +34,7 @@ final class AccessToken extends Model
             'id',
             'token',
             'user_id',
-            'description'
+            'description',
         ];
     }
 }
