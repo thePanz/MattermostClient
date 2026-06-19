@@ -62,12 +62,14 @@ final class UsersTest extends AbstractHttpApiTestCase
 
     public function testLoginEmptyLoginId(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
         $this->client->login('', 'password');
     }
 
     public function testLoginEmptyPassword(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
         $this->client->login('login-id', '');
     }
@@ -99,6 +101,7 @@ final class UsersTest extends AbstractHttpApiTestCase
 
     public function testGetUserByEmailEmptyEmail(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
         $this->client->getUserByEmail('');
     }
@@ -130,6 +133,7 @@ final class UsersTest extends AbstractHttpApiTestCase
 
     public function testGetUserByIdEmptyIdThrows(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
         $this->client->getUserById('');
     }
@@ -161,6 +165,7 @@ final class UsersTest extends AbstractHttpApiTestCase
 
     public function testGetUserTeamsEmptyIdThrows(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
         $this->client->getUserTeams('');
     }
@@ -192,6 +197,7 @@ final class UsersTest extends AbstractHttpApiTestCase
 
     public function testGetUserByUsernameEmptyId(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
         $this->client->getUserByUsername('');
     }
@@ -223,6 +229,7 @@ final class UsersTest extends AbstractHttpApiTestCase
 
     public function testDeactivateUserEmptyId(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
         $this->client->deactivateUser('');
     }
@@ -256,6 +263,7 @@ final class UsersTest extends AbstractHttpApiTestCase
 
     public function testSetUserActiveWithEmptyIdThrows(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
         $this->client->setUserActive('', false);
     }
@@ -289,18 +297,21 @@ final class UsersTest extends AbstractHttpApiTestCase
 
     public function testUpdateUserPasswordEmptyIdException(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
         $this->client->updateUserPassword('', 'current-pw', 'new-pw');
     }
 
     public function testUpdateUserPasswordEmptyCurrentPasswordException(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
         $this->client->updateUserPassword('user-12345', '', 'new-pw');
     }
 
     public function testUpdateUserPasswordEmptyNewPasswordException(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
         $this->client->updateUserPassword('user-12345', 'current-pw', '');
     }
@@ -334,6 +345,7 @@ final class UsersTest extends AbstractHttpApiTestCase
 
     public function testUpdateUserRolesEmptyId(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
         $this->client->updateUserRoles('', '');
     }
@@ -367,6 +379,7 @@ final class UsersTest extends AbstractHttpApiTestCase
 
     public function testGetUsersByIdsEmptyIdThrows(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
         $this->client->getUsersByIds([]);
     }
@@ -400,6 +413,7 @@ final class UsersTest extends AbstractHttpApiTestCase
 
     public function testGetUsersByUsernamesEmptyNames(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
         $this->client->getUsersByUsernames([]);
     }
@@ -460,6 +474,7 @@ final class UsersTest extends AbstractHttpApiTestCase
 
     public function testPatchUsersEmptyId(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
         $this->client->patchUser('', []);
     }
@@ -493,6 +508,7 @@ final class UsersTest extends AbstractHttpApiTestCase
 
     public function testUpdateUsersEmptyIdThrows(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
         $this->client->updateUser('', []);
     }
@@ -550,6 +566,7 @@ final class UsersTest extends AbstractHttpApiTestCase
 
     public function testDeleteProfileImageEmptyId(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
         $this->client->deleteProfileImage('');
     }
@@ -566,12 +583,14 @@ final class UsersTest extends AbstractHttpApiTestCase
 
     public function testUpdateProfileImageEmptyId(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
         $this->client->updateProfileImage('', 'some-contents-here');
     }
 
     public function testUpdateProfileImageEmptyResource(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
         $this->client->updateProfileImage(self::USER_UUID, null);
     }

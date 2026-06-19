@@ -2,7 +2,7 @@ parameters:
     level: 8
     tmpDir: .cache/phpstan.phar
     bootstrapFiles:
-      - tools/phpunit
+      - tools/phpunit.phar
     paths:
         - src/
         - tests/

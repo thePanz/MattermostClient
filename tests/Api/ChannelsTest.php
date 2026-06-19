@@ -94,6 +94,7 @@ final class ChannelsTest extends AbstractHttpApiTestCase
 
     public function testCreateDirectChannelWithEmptyUserIdThrows(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
         $this->client->createDirectChannel('uid1', '');
     }
@@ -113,6 +114,7 @@ final class ChannelsTest extends AbstractHttpApiTestCase
 
     public function testUpdateChannelWithEmptyIdThrows(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
         $this->client->updateChannel('', []);
     }
@@ -164,6 +166,7 @@ final class ChannelsTest extends AbstractHttpApiTestCase
 
     public function testPatchChannelWithEmptyIdThrows(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
         $this->client->patchChannel('', []);
     }
@@ -196,6 +199,7 @@ final class ChannelsTest extends AbstractHttpApiTestCase
 
     public function testGetChannelByIdWithEmptyIdThrows(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
         $this->client->getChannelById('');
     }
@@ -239,6 +243,7 @@ final class ChannelsTest extends AbstractHttpApiTestCase
     #[DataProvider('provideEmtpyStringParam1AndParam2')]
     public function testGetChannelByNameWithEmptyThrows(string $teamId, string $channelName): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
         $this->client->getChannelByName($teamId, $channelName);
     }
@@ -272,6 +277,7 @@ final class ChannelsTest extends AbstractHttpApiTestCase
     #[DataProvider('provideEmtpyStringParam1AndParam2')]
     public function testGetChannelByNameAndTeamNameWithEmptyThrows(string $team, string $channel): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
         $this->client->getChannelByNameAndTeamName($team, $channel);
     }
@@ -327,6 +333,7 @@ final class ChannelsTest extends AbstractHttpApiTestCase
 
     public function testGetChannelPostsWithEmptyIdThrows(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
         $this->client->getChannelPosts('');
     }
@@ -358,6 +365,7 @@ final class ChannelsTest extends AbstractHttpApiTestCase
 
     public function testDeleteChannelEmptyIdThrows(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
         $this->client->deleteChannel('');
     }
@@ -390,6 +398,7 @@ final class ChannelsTest extends AbstractHttpApiTestCase
 
     public function testGetChannelStatsEmptyIdThrows(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
         $this->client->getChannelStats('');
     }
@@ -423,6 +432,7 @@ final class ChannelsTest extends AbstractHttpApiTestCase
 
     public function testRestoreChannelEmptyIdThrows(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
         $this->client->restoreChannel('');
     }
@@ -455,6 +465,7 @@ final class ChannelsTest extends AbstractHttpApiTestCase
     #[DataProvider('provideEmtpyStringParam1AndParam2')]
     public function testRemoveChannelMemberEmptyThrows(string $param1, string $param2): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
         $this->client->removeChannelMember($param1, $param2);
     }
@@ -495,6 +506,7 @@ final class ChannelsTest extends AbstractHttpApiTestCase
     #[DataProvider('provideEmtpyStringParam1AndParam2')]
     public function testAddChannelMemberEmpty(string $param1, string $param2): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
         $this->client->addChannelMember($param1, $param2);
     }
@@ -536,6 +548,7 @@ final class ChannelsTest extends AbstractHttpApiTestCase
 
     public function testGetChannelMembersEmptyIdThrows(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
         $this->client->getChannelMembers('');
     }

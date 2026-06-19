@@ -60,6 +60,7 @@ final class TeamsTest extends AbstractHttpApiTestCase
 
     public function testGetTeamByNameEmptyEmail(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
 
         $this->client->getTeamByName('');
@@ -92,6 +93,7 @@ final class TeamsTest extends AbstractHttpApiTestCase
 
     public function testGetTeamByIdEmptyId(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
 
         $this->client->getTeamById('');
@@ -134,6 +136,7 @@ final class TeamsTest extends AbstractHttpApiTestCase
 
     public function testDeleteTeamEmptyId(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
         $this->client->deleteTeam('');
     }
@@ -194,6 +197,7 @@ final class TeamsTest extends AbstractHttpApiTestCase
 
     public function testPatchTeamsEmptyId(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
 
         $this->client->patchTeam('', []);
@@ -229,6 +233,7 @@ final class TeamsTest extends AbstractHttpApiTestCase
 
     public function testUpdateTeamsEmptyId(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
 
         $this->client->updateTeam('', []);
@@ -261,6 +266,7 @@ final class TeamsTest extends AbstractHttpApiTestCase
 
     public function testGetTeamStatsEmptyId(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
 
         $this->client->getTeamStats('');
@@ -293,6 +299,7 @@ final class TeamsTest extends AbstractHttpApiTestCase
 
     public function testRemoveTeamMemberEmpty(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
 
         $this->client->removeTeamMember('', '');
@@ -300,6 +307,7 @@ final class TeamsTest extends AbstractHttpApiTestCase
 
     public function testRemoveTeamMemberEmptyTeamId(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
 
         $this->client->removeTeamMember('', 'user-id');
@@ -307,6 +315,7 @@ final class TeamsTest extends AbstractHttpApiTestCase
 
     public function testRemoveTeamMemberEmptyUserId(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
 
         $this->client->removeTeamMember('team-id', '');
@@ -340,6 +349,7 @@ final class TeamsTest extends AbstractHttpApiTestCase
 
     public function testGetTeamMemberEmpty(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
 
         $this->client->getTeamMember('', '');
@@ -347,6 +357,7 @@ final class TeamsTest extends AbstractHttpApiTestCase
 
     public function testGetTeamMemberEmptyTeamId(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
 
         $this->client->getTeamMember('', 'user-id');
@@ -354,6 +365,7 @@ final class TeamsTest extends AbstractHttpApiTestCase
 
     public function testGetTeamMemberEmptyUserId(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
 
         $this->client->getTeamMember('team-id', '');
@@ -390,6 +402,7 @@ final class TeamsTest extends AbstractHttpApiTestCase
 
     public function testAddTeamMemberEmpty(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
 
         $this->client->addTeamMember('', '');
@@ -397,6 +410,7 @@ final class TeamsTest extends AbstractHttpApiTestCase
 
     public function testAddTeamMemberEmptyTeamId(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
 
         $this->client->addTeamMember('', 'user-id');
@@ -404,6 +418,7 @@ final class TeamsTest extends AbstractHttpApiTestCase
 
     public function testAddTeamMemberEmptyUserId(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
 
         $this->client->addTeamMember('team-id', '');
@@ -436,6 +451,7 @@ final class TeamsTest extends AbstractHttpApiTestCase
 
     public function testGetTeamMembersEmptyId(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
 
         $this->client->getTeamMembers('');
@@ -476,6 +492,7 @@ final class TeamsTest extends AbstractHttpApiTestCase
 
     public function testGetTeamPublicChannelsEmptyId(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
 
         $this->client->getTeamPublicChannels('');

@@ -32,6 +32,7 @@ final class FilesTest extends AbstractHttpApiTestCase
         $fileContents = 'Lorem Ipsum';
         $response = $this->buildResponse(200, $fileContents);
 
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectRequest('GET', '/files/'.self::FILE_UUID, [], $response);
 
         $stream = $this->client->getFile(self::FILE_UUID);
@@ -55,7 +56,9 @@ final class FilesTest extends AbstractHttpApiTestCase
 
     public function testGetFileEmptyIdThrows(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
+
         $this->client->getFile('');
     }
 
@@ -64,6 +67,7 @@ final class FilesTest extends AbstractHttpApiTestCase
         $contents = 'http://somelinks.com/file';
         $response = $this->buildResponse(200, $contents);
 
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectRequest('GET', '/files/'.self::FILE_UUID.'/link', [], $response);
         $link = $this->client->getFileLink(self::FILE_UUID);
 
@@ -87,6 +91,7 @@ final class FilesTest extends AbstractHttpApiTestCase
 
     public function testGetFileLinkEmptyIdThrows(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
         $this->client->getFileLink('');
     }
@@ -118,6 +123,7 @@ final class FilesTest extends AbstractHttpApiTestCase
 
     public function testGetFileInfoEmptyIdThrows(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
         $this->client->getFileInfo('');
     }

@@ -25,8 +25,7 @@ abstract class AbstractHttpApiTestCase extends TestCase
 {
     protected Client $httpClient;
     protected Psr17Factory $psr17factory;
-    /** @var HydratorInterface&MockObject */
-    protected HydratorInterface $hydrator;
+    protected HydratorInterface&MockObject $hydrator;
 
     protected const CHANNEL_UUID = '5f130d6c-496a-4925-b68c-7daacf95e5b5';
     protected const CHANNEL_NAME = 'channel-name';

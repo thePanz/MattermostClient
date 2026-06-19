@@ -76,6 +76,7 @@ final class PostsTest extends AbstractHttpApiTestCase
 
     public function testUpdatePostWithEmptyIdThrows(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
         $this->client->updatePost('', []);
     }
@@ -129,6 +130,7 @@ final class PostsTest extends AbstractHttpApiTestCase
 
     public function testPatchPostWithEmptyIdThrows(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
         $this->client->patchPost('', []);
     }
@@ -164,6 +166,7 @@ final class PostsTest extends AbstractHttpApiTestCase
 
     public function testGetPostWithEmptyIdThrows(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
         $this->client->getPost('');
     }
@@ -193,6 +196,7 @@ final class PostsTest extends AbstractHttpApiTestCase
 
     public function testDeletePostWithEmptyIdThrows(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
         $this->client->deletePost('');
     }
@@ -223,6 +227,7 @@ final class PostsTest extends AbstractHttpApiTestCase
 
     public function testPinPostWithEmptyIdThrows(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
         $this->client->pinPost('');
     }
@@ -253,6 +258,7 @@ final class PostsTest extends AbstractHttpApiTestCase
 
     public function testUnpinPostWithEmptyIdThrows(): void
     {
+        $this->hydrator->expects($this->never())->method('hydrate');
         $this->expectException(InvalidArgumentException::class);
         $this->client->unpinPost('');
     }
