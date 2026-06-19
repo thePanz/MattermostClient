@@ -4,7 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/thePanz/MattermostClient/compare/0.1.0...master)
+## [Unreleased](https://github.com/thePanz/MattermostClient/compare/2.0.0-RC1...master)
+### Added
+### Changed
+### Deprecated
+### Removed
+### Fixed
+### Security
+
+## [2.0.0-RC1](https://github.com/thePanz/MattermostClient/compare/0.1.0...2.0.0-RC1)
 ### Added
 - Add User Personal-Access-Tokens handling (creation/revoking/listings)
 - Add `/users/{user_id}/image` creation and deletion (UsersApi::updateProfileImage(), UsersApi::deleteProfileImage())
@@ -15,13 +23,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Allow string|resource|StreamInterface for file uploads (FilesApi::sendFile, UsersApi::updateProfileImage())
 - Refactored Authentication process
 - Requirements for HttpPlug 2.x
-### Deprecated
-### Removed
 ### Fixed
 - Fix typo in readme
 - Fix issue with php-http/common v1.8
 - Fix deprecations warnings from PHP v8.4 and nullable properties
-### Security
 
 ## v[0.1.0](https://github.com/thePanz/MattermostClient/releases/tag/0.1.0)
 ### Added
