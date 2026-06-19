@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased](https://github.com/thePanz/MattermostClient/compare/0.1.0...master)
 ### Added
+- Add User Personal-Access-Tokens handling (creation/revoking/listings)
 - Add `/users/{user_id}/image` creation and deletion (UsersApi::updateProfileImage(), UsersApi::deleteProfileImage())
 - Expose User's `delete_at` property
 - Enable new scrutinizer analysis
@@ -19,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Fix typo in readme
 - Fix issue with php-http/common v1.8
+- Fix deprecations warnings from PHP v8.4 and nullable properties
 ### Security
 
 ## v[0.1.0](https://github.com/thePanz/MattermostClient/releases/tag/0.1.0)
