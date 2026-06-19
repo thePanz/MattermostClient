@@ -338,11 +338,7 @@ final class UsersApi extends HttpApi
     }
 
     /**
-     * Create user access token
-     *
-     * @param string $userId
-     * @param string $description
-     * @return AccessToken
+     * Create a user access token
      * @throws ApiException
      */
     public function createAccessToken(string $userId, string $description): AccessToken
@@ -355,12 +351,7 @@ final class UsersApi extends HttpApi
             throw new InvalidArgumentException('Description can not be empty');
         }
 
-        $response = $this->httpPost(
-            \sprintf('/users/%s/tokens', $userId),
-            [
-                'description' => $description
-            ]
-        );
+        $response = $this->httpPost(\sprintf('/users/%s/tokens', $userId), ['description' => $description]);
 
         return $this->handleResponse($response, AccessToken::class);
     }
@@ -368,10 +359,8 @@ final class UsersApi extends HttpApi
     /**
      * Get list of user's access tokens
      *
-     * @param string $userId
-     * @param array<string, string|int> $params The listing params, 'page', 'per_page'
-     * @return AccessTokens
-     * @throws \Pnz\MattermostClient\Exception\ApiException
+     * @param array{page?: int, per_page?: int} $params
+     * @throws ApiException
      */
     public function getUserAccessTokens(string $userId, array $params = []): AccessTokens
     {
@@ -387,9 +376,7 @@ final class UsersApi extends HttpApi
     /**
      * Revoke a single access token
      *
-     * @param string $tokenId
-     * @return Status
-     * @throws \Pnz\MattermostClient\Exception\ApiException
+     * @throws ApiException
      */
     public function revokeAccessToken(string $tokenId): Status
     {
