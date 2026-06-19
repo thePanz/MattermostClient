@@ -14,10 +14,10 @@
     "require": {
         "php": "^8.3",
         "ext-json": "*",
-        "php-http/client-common": "^2.0",
-        "php-http/discovery": "^1.17",
-        "php-http/httplug": "^2.1",
-        "php-http/multipart-stream-builder": "^1.1",
+        "php-http/client-common": "^2.7",
+        "php-http/discovery": "^1.20",
+        "php-http/httplug": "^2.4",
+        "php-http/multipart-stream-builder": "^1.4",
         "psr/http-client-implementation": "*",
         "psr/http-factory-implementation": "*",
         "psr/http-message": "^2.0"
